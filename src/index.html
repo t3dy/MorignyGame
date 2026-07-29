@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MORIGNY — Liber Florum</title>
+  <link rel="stylesheet" href="./morigny.css" />
+</head>
+<body>
+  <div id="frame">
+    <div id="codex">
+      <header id="volvelle">
+        <span id="hour-name">—</span>
+        <button id="pencil-toggle" title="Show or hide the modern hand" aria-pressed="true">pencil layer: on</button>
+      </header>
+      <main id="opening">
+        <section id="verso" aria-label="verso">
+          <div id="tier" class="tier"></div>
+          <div id="verso-body"></div>
+        </section>
+        <section id="recto" aria-label="recto">
+          <div id="rubric" class="rubric"></div>
+          <div id="body"></div>
+          <div id="verse" class="verse"></div>
+          <div id="choices"></div>
+        </section>
+        <aside id="margin" aria-label="margin"></aside>
+      </main>
+      <footer id="footnotes"></footer>
+    </div>
+    <aside id="sidebar">
+      <div id="status" aria-label="the state of the soul"></div>
+      <div id="commands" aria-label="commands"></div>
+    </aside>
+    <div id="log" aria-label="message scroll" aria-live="polite"></div>
+  </div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

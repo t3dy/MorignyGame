@@ -1,0 +1,16 @@
+{
+  "name": "morigny",
+  "version": "0.3.0",
+  "description": "MORIGNY — a monastic life & practice simulator of John of Morigny (fl. c. 1300–1323)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test tests/*.test.js",
+    "test:watch": "node --test --watch tests/*.test.js"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
