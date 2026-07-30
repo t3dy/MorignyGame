@@ -16,6 +16,9 @@ import {
   createCopySession, collate, correctableMethods, correctFault, activeFaults,
   drawFigure, grindAndApply, ageCopy, conceal, inventoryFinds, deadlineExceeded,
 } from '../src/engine/scriptorium.js';
+import {
+  SCRIPTORIUM_TEXT, COPY_DISTRACTIONS, SCRIPTORIUM_NOTES, BIBLIO,
+} from '../src/content/content.js';
 
 const STATUSES = ['attested', 'adapted', 'invented'];
 
@@ -450,6 +453,96 @@ describe('Concealment decides how a copy dies', () => {
     const loose = copy(); conceal(loose, 'loose');
     assert.equal(inventoryFinds(fakeRng(0.4), loose), true, 'loose quires are a coin toss');
     assert.equal(inventoryFinds(fakeRng(0.6), loose), false);
+  });
+});
+
+// ── writing coverage (v3c stage) ─────────────────────────────
+
+describe('Scriptorium writing coverage (every state has writing)', () => {
+  test('scene intros, both registers of the same light', () => {
+    for (const key of ['sceneAssigned', 'sceneIllicit']) {
+      const rec = SCRIPTORIUM_TEXT[key];
+      lint(rec, key);
+      assert.ok(rec.rubric.startsWith('¶'), `${key} rubric`);
+      assert.ok(rec.body.length > 40, `${key} body`);
+    }
+  });
+
+  test('every exemplar has its acquisition felt in John\'s hand', () => {
+    for (const e of EXEMPLARS) {
+      const rec = SCRIPTORIUM_TEXT.acquire[e.id];
+      assert.ok(rec, `${e.id} acquisition`);
+      lint(rec, `acquire.${e.id}`);
+      assert.ok(rec.text.length > 40, `${e.id} acquisition text`);
+    }
+    lint(SCRIPTORIUM_TEXT.sewnFirstLook, 'sewnFirstLook');
+  });
+
+  test('every hand has a name and a price in words', () => {
+    for (const id of Object.keys(HANDS)) {
+      const rec = SCRIPTORIUM_TEXT.hands[id];
+      assert.ok(rec, `hand ${id}`);
+      lint(rec, `hands.${id}`);
+      assert.ok(rec.name.length > 3 && rec.line.length > 10, `hands.${id} words`);
+    }
+  });
+
+  test('all three grades, all four correction beats', () => {
+    for (const g of ['recollected', 'distracted', 'scattered']) {
+      lint(SCRIPTORIUM_TEXT.grades[g], `grades.${g}`);
+      assert.ok(SCRIPTORIUM_TEXT.grades[g].text.length > 40, g);
+    }
+    for (const c of ['cleanLie', 'expunctuation', 'firstCopy', 'verbaRefused']) {
+      lint(SCRIPTORIUM_TEXT.correction[c], `correction.${c}`);
+      assert.ok(SCRIPTORIUM_TEXT.correction[c].text.length > 40, c);
+    }
+  });
+
+  test('the figure keeps one face; the clean-lie does not wink', () => {
+    lint(SCRIPTORIUM_TEXT.figure.drawn, 'figure.drawn');
+    lint(SCRIPTORIUM_TEXT.figure.gilded, 'figure.gilded');
+    // D-7: no hedging tells in the silent-failure texts.
+    assert.ok(!/\.\.\.|…|or does it/i.test(SCRIPTORIUM_TEXT.correction.cleanLie.text));
+    assert.ok(!/but|yet|however/i.test(SCRIPTORIUM_TEXT.correction.cleanLie.text),
+      'the lie must be perfect or it is a tell');
+  });
+
+  test('every pigment beat and hazard has writing', () => {
+    for (const p of ['vermilion', 'ultramarine', 'verdigris', 'orpiment',
+      'goldLaid', 'goldRefused', 'sickened', 'reaction']) {
+      lint(SCRIPTORIUM_TEXT.pigment[p], `pigment.${p}`);
+      assert.ok(SCRIPTORIUM_TEXT.pigment[p].text.length > 40, p);
+    }
+  });
+
+  test('the light events speak, including the candle held for later', () => {
+    for (const l of ['noticed', 'fire', 'seen']) {
+      lint(SCRIPTORIUM_TEXT.light[l], `light.${l}`);
+      assert.ok(SCRIPTORIUM_TEXT.light[l].text.length > 40, l);
+    }
+    lint(SCRIPTORIUM_TEXT.caught, 'caught');
+  });
+
+  test('the copy margin has a population, in known registers', () => {
+    const kinds = ['mundane', 'memory', 'flesh', 'pencil'];
+    assert.ok(COPY_DISTRACTIONS.length >= 10, 'a margin needs a population');
+    for (const d of COPY_DISTRACTIONS) {
+      lint(d, `COPY_DISTRACTIONS.${d.id}`);
+      assert.ok(kinds.includes(d.kind), `${d.id} kind`);
+      assert.ok(d.text.length > 10, `${d.id} text`);
+      assert.ok(Number.isFinite(d.effects.pressure) && Number.isFinite(d.effects.despair), `${d.id} effects`);
+    }
+    assert.ok(COPY_DISTRACTIONS.some(d => d.kind === 'pencil'), 'the scholarship must also tempt at the desk');
+  });
+
+  test('the scriptorium pencil notes cite real bibliography', () => {
+    assert.equal(SCRIPTORIUM_NOTES.length, 3);
+    for (const n of SCRIPTORIUM_NOTES) {
+      lint(n, n.id);
+      assert.ok(n.text.length > 60, `${n.id} text`);
+      assert.ok(n.cites?.length > 0, `${n.id} must cite`);
+      for (const c of n.cites) assert.ok(BIBLIO[c], `${n.id} cites unknown key ${c}`);
+    }
   });
 });
 

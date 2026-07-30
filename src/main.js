@@ -34,7 +34,16 @@ import {
   MAPS, createWorld, move, keepOffice, missedOffices, adjacentNpc, npcAt, tileAt,
 } from './engine/world.js';
 import { startTalk, ask, knownKeywords } from './engine/talk.js';
-import { NPCS } from './data/npcs.js';
+import { NPCS, CLOISTER_NPCS } from './data/npcs.js';
+import {
+  createCopySession, drawFigure, grindAndApply,
+  correctableMethods, correctFault, activeFaults, HANDS,
+} from './engine/scriptorium.js';
+import { exemplarById } from './data/exemplars.js';
+import { materialById } from './data/materials.js';
+import {
+  SCRIPTORIUM_TEXT, COPY_DISTRACTIONS, SCRIPTORIUM_NOTES,
+} from './content/content.js';
 import { SIGNPOST_TEXT } from './data/worldmap.js';
 import { TILE, PAINTERS, paintFigure, paintNpc } from './ui/tiles.js';
 
@@ -216,7 +225,7 @@ function start(seed, opts = {}) {
   journal = {
     seed, journey: !!opts.journey,
     prayed: false, night: null, dream: null, confession: null,
-    officesKept: null, talked: [],
+    officesKept: null, talked: [], copies: [],
   };
   $('footnotes').replaceChildren();
 
@@ -418,22 +427,211 @@ const CONFESSION_SOURCES = [
   { work: 'Fanger, Rewriting Magic', locus: 'scrupulosity (frame; verify loci)' },
 ];
 
-function daylight() {
+// ── the scriptorium (daylight stage, v3c) ─────────────────────
+// Spec: docs/SCRIPTORIUM_STAGE_SPEC.md. Silent failures keep success's
+// face on screen by design (docs/NARRATIVE_DESIGN_REPORT.md §4).
+
+function daylight(stage) {
   ui.setHour('Terce · Sext · None');
   ui.scene({ rubric: DAYLIGHT.rubric, verso: TIER_TEXT[pressureTier(john.pressure)] });
   ui.body(passage(DAYLIGHT, DAYLIGHT.body));
-  act('S', 'Scribe: keep to the assigned copying.', 'Obedience is a wall, and walls also shelter.', () => {
-    addResolve(john, 1); renderStatus();
-    ui.body(passage(DAYLIGHT, DAYLIGHT.results.labor));
-    clearActs();
-    act('B', 'To Vespers.', '', next);
+  act('S', 'Scribe: the assigned leaf.', 'Obedience is a wall, and walls also shelter.',
+    () => beginCopy(stage, exemplarById('armarium-lectionary'), true));
+  act('I', 'Illuminate: steal the hour for the Work.', 'The light is where you are watched.',
+    () => chooseWorkExemplar(stage));
+  act('T', 'Talk: the armarius, or the sacrist.', 'Requisitions, and warnings.', () => {
+    subPrompt('Speak with: the armarius (A), or the sacrist (S)?', {
+      A: () => openTalk(CLOISTER_NPCS.find(n => n.id === 'denis')),
+      S: () => openTalk(CLOISTER_NPCS.find(n => n.id === 'maur')),
+    });
   });
-  act('I', 'Illuminate: steal the hour for the Work.', 'Suspicion is a slow reader, but it reads.', () => {
-    addSuspicion(john, 1); addPressure(john, 1); renderStatus();
-    ui.body(passage(DAYLIGHT, DAYLIGHT.results.lectio));
+  act('B', 'Let the hour pass in choir and garden.', 'Nothing gained, nothing risked.', next);
+}
+
+function chooseWorkExemplar(stage) {
+  const held = john.items.exemplars.map(exemplarById).filter(Boolean);
+  if (held.length === 1) return beginCopy(stage, held[0], false);
+  clearActs();
+  held.forEach((ex, i) =>
+    act(String(i + 1), ex.title, ex.hot ? 'Matter for a court, if found.' : '',
+      () => beginCopy(stage, ex, false)));
+}
+
+function beginCopy(stage, exemplar, assigned) {
+  clearActs();
+  const intro = assigned ? SCRIPTORIUM_TEXT.sceneAssigned : SCRIPTORIUM_TEXT.sceneIllicit;
+  $('rubric').textContent = intro.rubric;
+  ui.body(passage(intro));
+  if (!assigned) {
+    const acq = SCRIPTORIUM_TEXT.acquire[exemplar.id];
+    if (acq) ui.body(passage(acq, acq.text));
+  }
+
+  const rng = stageRng(day, `${stage.id}-copy-${exemplar.id}`);
+  const pool = [...COPY_DISTRACTIONS, ...DISTRACTIONS.filter(d => d.kind === 'flesh')];
+  const session = createCopySession(rng, john, { exemplar, light: 'day', pool });
+  let hand = 'textualis';
+  let seenEvents = 0;
+  const verseBox = $('verse');
+
+  const drainEvents = () => {
+    for (; seenEvents < session.events.length; seenEvents++) {
+      const ev = session.events[seenEvents];
+      if (ev.type === 'noticed') { log(SCRIPTORIUM_TEXT.light.noticed.text, 'refused'); }
+      if (ev.type === 'caught') { log(SCRIPTORIUM_TEXT.caught.text); }
+      if (ev.type === 'fire') { log(SCRIPTORIUM_TEXT.light.fire.text, 'refused'); }
+      if (ev.type === 'seen') { log(SCRIPTORIUM_TEXT.light.seen.text, 'refused'); }
+    }
+  };
+
+  const showUnit = () => {
+    verseBox.replaceChildren();
+    renderStatus();
+    const unit = session.layout[session.unitIndex];
+    verseBox.appendChild(el('div', 'latin', unit.kind === 'verba'
+      ? 'A line of the unknown words, letter by letter, construing nothing.'
+      : 'The line under the eye, and the line under the pen.'));
+    verseBox.appendChild(el('div', 'said',
+      `unit ${session.unitIndex + 1} of ${session.layout.length} · ` +
+      `units of light remaining: ${session.layout.length - session.unitIndex} · ` +
+      `${SCRIPTORIUM_TEXT.hands[hand].name}`));
     clearActs();
-    act('B', 'To Vespers.', '', next);
+    act('O', 'Copy the unit.', `In ${SCRIPTORIUM_TEXT.hands[hand].name}.`, () => {
+      session.advance(hand);
+      after();
+    });
+    for (const [key, id] of [['S', 'textualis'], ['C', 'cursive'], ['F', 'trusting']]) {
+      if (id !== hand) {
+        act(key, `Change hand: ${SCRIPTORIUM_TEXT.hands[id].name}.`,
+          SCRIPTORIUM_TEXT.hands[id].line, () => { hand = id; showUnit(); });
+      }
+    }
+  };
+
+  const showDistraction = () => {
+    const d = session.pending;
+    const gloss = el('div', `gloss ${d.kind}`, d.text);
+    gloss.appendChild(el('span', 'provenance', provenance(d)));
+    ui.margin(gloss);
+    log('Something pulls at the edge of the page.', 'refused');
+    clearActs();
+    if (session.canHoldFast()) {
+      act('H', 'Hold fast to the leaf.',
+        `Costs ${session.holdFastCost()} resolve (you have ${john.resolve}).`,
+        () => { session.holdFast(); after(); });
+    }
+    act('E', 'Examine it. Attend.', 'The hand it leaves behind is unsteady.', () => {
+      const record = session.attend();
+      if (record.kind === 'pencil') log(record.text, 'pencil-log');
+      after();
+    });
+  };
+
+  const after = () => {
+    drainEvents();
+    renderStatus();
+    if (session.pending) return showDistraction();
+    if (session.done) return finishCopy();
+    showUnit();
+  };
+
+  const finishCopy = () => {
+    const copy = session.copy;
+    verseBox.replaceChildren(el('div', 'said', `The copying was ${copy.grade}.`));
+    const gradeText = SCRIPTORIUM_TEXT.grades[copy.grade];
+    ui.body(passage(gradeText, gradeText.text));
+    if (assigned) { addResolve(john, 1); renderStatus(); }
+    afterWork(stage, exemplar, assigned, copy, { examined: false });
+  };
+
+  showUnit();
+}
+
+function afterWork(stage, exemplar, assigned, copy, flags) {
+  clearActs();
+
+  act('E', 'Examine: read the leaf over.', 'What reading can show, mend.', () => {
+    const visible = activeFaults(copy)
+      .filter(f => correctableMethods(copy, f).includes('expunctuation'));
+    if (visible.length) {
+      for (const f of visible) correctFault(copy, f, 'expunctuation');
+      log(SCRIPTORIUM_TEXT.correction.expunctuation.text);
+    } else {
+      log(SCRIPTORIUM_TEXT.correction.cleanLie.text);
+    }
+    if (exemplar.sim.verbaShare > 0) log(SCRIPTORIUM_TEXT.correction.verbaRefused.text);
+    if (!flags.examined) {
+      log(SCRIPTORIUM_TEXT.correction.firstCopy.text);
+      ui.footnote(SCRIPTORIUM_NOTES.find(n => n.id === 'note-first-copy'));
+      flags.examined = true;
+    }
+    afterWork(stage, exemplar, assigned, copy, flags);
   });
+
+  if (copy.figures.drawn < copy.figures.needed) {
+    act('G', 'Gaze: draw the figure.', 'Geometry, proportion, the words in their houses.', () => {
+      const rng = stageRng(day, `${stage.id}-figure-${exemplar.id}-${copy.figures.drawn}`);
+      drawFigure(rng, john, copy);
+      log((copy.gilded ? SCRIPTORIUM_TEXT.figure.gilded : SCRIPTORIUM_TEXT.figure.drawn).text,
+        copy.gilded ? 'pencil-log' : undefined);
+      if (!flags.figureNoted) {
+        ui.footnote(SCRIPTORIUM_NOTES.find(n => n.id === 'note-verba-ignota'));
+        flags.figureNoted = true;
+      }
+      renderStatus();
+      afterWork(stage, exemplar, assigned, copy, flags);
+    });
+  }
+
+  act('R', 'Rubricate: lay a color on the leaf.', 'The sacrist counts; the colors keep accounts of their own.', () => {
+    subPrompt('Lay which color? V vermilion · U ultramarine · G verdigris · O orpiment · A gold', {
+      V: () => layPigment(stage, exemplar, assigned, copy, flags, 'vermilion'),
+      U: () => layPigment(stage, exemplar, assigned, copy, flags, 'ultramarine'),
+      G: () => layPigment(stage, exemplar, assigned, copy, flags, 'verdigris'),
+      O: () => layPigment(stage, exemplar, assigned, copy, flags, 'orpiment'),
+      A: () => layPigment(stage, exemplar, assigned, copy, flags, 'gold-leaf'),
+    });
+  });
+
+  act('B', 'Bind up the day’s leaves.', 'To Vespers.', () => {
+    journal.copies.push({
+      exemplarId: exemplar.id,
+      assigned,
+      grade: copy.grade,
+      quality: copy.quality,
+      faultsVisible: copy.faults.filter(f => !f.corrected && f.visible).length,
+      faultsTotal: activeFaults(copy).length,
+      corrupt: copy.corrupt,
+      gilded: copy.gilded,
+      conspicuous: copy.conspicuous,
+      pigments: [...copy.pigments],
+    });
+    ui.footnote(SCRIPTORIUM_NOTES.find(n => n.id === 'note-scribere'));
+    next();
+  });
+}
+
+const PIGMENT_LINES = {
+  'vermilion': 'vermilion', 'ultramarine': 'ultramarine', 'verdigris': 'verdigris',
+  'orpiment': 'orpiment', 'gold-leaf': 'goldLaid',
+};
+
+function layPigment(stage, exemplar, assigned, copy, flags, materialId) {
+  const mat = materialById(materialId);
+  const rng = stageRng(day, `${stage.id}-pigment-${exemplar.id}-${copy.pigments.length}-${materialId}`);
+  const res = grindAndApply(rng, john, copy, mat);
+  if (!res.applied) {
+    log(SCRIPTORIUM_TEXT.pigment.goldRefused.text, 'refused');
+  } else {
+    log(SCRIPTORIUM_TEXT.pigment[PIGMENT_LINES[materialId]].text,
+      materialId === 'gold-leaf' ? 'pencil-log' : undefined);
+    for (const ev of res.events) {
+      if (ev.type === 'sickened') log(SCRIPTORIUM_TEXT.pigment.sickened.text, 'refused');
+      if (ev.type === 'reaction') log(SCRIPTORIUM_TEXT.pigment.reaction.text, 'refused');
+    }
+  }
+  renderStatus();
+  afterWork(stage, exemplar, assigned, copy, flags);
 }
 
 // ── the world stage (journey day) ────────────────────────────
@@ -590,6 +788,19 @@ function applyTalkEffect(effect) {
       log('The pencil hand writes small and fast in the margin.', 'pencil-log');
       ui.footnote(RADICAL_NOTE);
       break;
+    case 'give-exemplar-sewn': {
+      const ex = exemplarById('isabel-sewn-quires');
+      if (!john.items.exemplars.includes(ex.id)) {
+        john.items.exemplars.push(ex.id);
+        addSuspicion(john, ex.sim.suspicionOnAcquire);
+        log(SCRIPTORIUM_TEXT.acquire[ex.id].text);
+        log(SCRIPTORIUM_TEXT.sewnFirstLook.text);
+        log('(The sewn quires ride in your scrip. I, on a cloister day, to copy from them.)', 'pencil-log');
+      } else {
+        log('(You already carry the sewn quires. One story of theirs is enough.)', 'pencil-log');
+      }
+      break;
+    }
   }
   renderStatus();
 }
@@ -699,6 +910,12 @@ function reckoning() {
     journal.journey
       ? `The road: hours kept ${journal.officesKept ?? 0} of 3; souls spoken with, ${journal.talked.length}.`
       : null,
+    ...(journal.copies ?? []).map(c => {
+      const ex = exemplarById(c.exemplarId);
+      return `The desk: ${ex?.title ?? c.exemplarId} — ${c.grade}` +
+        `${c.faultsVisible ? `; ${c.faultsVisible} fault${c.faultsVisible === 1 ? '' : 's'} mended or marked` : ''}` +
+        `${c.gilded ? '; gold laid' : ''}${c.conspicuous ? '; a color past your station' : ''}.`;
+    }),
     john.disposition > 0
       ? `The witness leans. (Disposition +${john.disposition}. The pencil hand is watching.)`
       : null,

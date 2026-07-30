@@ -23,6 +23,9 @@ export const BIBLIO = {
   'newman-speculum':
     'Barbara Newman, "What Did It Mean to Say ‘I Saw’?" Speculum 80 (2005)',
   'camille-margins': 'Michael Camille, Image on the Edge (1992)',
+  'veronese-notoria': 'Julien Véronèse, critical editions and studies of the ars notoria',
+  'page-cloister': 'Sophie Page, Magic in the Cloister (Penn State UP, 2013)',
+  'dehamel-scribes': 'Christopher de Hamel, Scribes and Illuminators (British Museum Press, 1992)',
 };
 
 // ── The hours: arrival text (John's hand) + rubric ──────────────────────
@@ -715,6 +718,387 @@ export const READING_ROOM = {
   ],
   status: 'attested',
 };
+
+// ── The scriptorium (v3c stage) ─────────────────────────────────────────
+// Writing manifest: docs/SCRIPTORIUM_STAGE_SPEC.md §6. Registers per
+// STYLE_GUIDE.md; the silent-failure texts wear success's face by design
+// (docs/NARRATIVE_DESIGN_REPORT.md §4) — do not "fix" their certainty.
+
+const CRAFT_ENV = locus => ({
+  sources: [{ work: 'Standard codicology, summarized in SCRIPTORIUM.md §1', locus }],
+  status: 'attested',
+});
+const SCRIPT_ENV = {
+  sources: [{ work: 'Monastic scriptorium practice (RB 48; silence; the light)', locus: 'SCRIPTORIUM.md §1 "The monastic setting"' }],
+  status: 'invented',
+};
+
+export const SCRIPTORIUM_TEXT = {
+  sceneAssigned: {
+    rubric: '¶ Of the work of the hands, between Terce and None.',
+    body:
+      'I took my place with the house’s book before me, and the light lay on the desk ' +
+      'like a permission. Around me the pens of my brothers went on inside the great ' +
+      'silence, each man his leaf; and I confess the peace of it held me a while entire.',
+    ...SCRIPT_ENV,
+  },
+  sceneIllicit: {
+    rubric: '¶ Of the other work, done in the same light.',
+    body:
+      'I set the assigned leaf where a leaf should be, and under it, the other. My hands ' +
+      'knew the order of the work; my ears learned a new office — the door, the stair, ' +
+      'the pause in a brother’s pen. The light is where a man may write, and the light ' +
+      'is where he is watched.',
+    ...SCRIPT_ENV,
+  },
+
+  acquire: {
+    'armarium-lectionary': {
+      text:
+        'The armarius set the lectionary in my hands without looking up, which is what ' +
+        'trust looks like in that office; and a slip of vellum marked the place where the ' +
+        'last hand’s strength gave out.',
+      ...SCRIPT_ENV,
+    },
+    'loan-glossed-psalter': {
+      text:
+        'Brother Anseau lent it the way the poor lend — freely, and forever after. ' +
+        '"Mind the gloss," he said, "it is smaller than charity." I owe him now a debt no ' +
+        'inventory will ever find.',
+      ...SCRIPT_ENV,
+    },
+    'isabel-sewn-quires': {
+      text:
+        'She did not name a price at first. She looked at me the way a woman looks who is ' +
+        'deciding what she will know about you tomorrow. Then she named it, and it was ' +
+        'fair, which frightened me more. The quires rode home against my ribs, sewn shut, ' +
+        'saying nothing.',
+      sources: [{ work: 'Monks acquiring magic texts (after Sophie Page)', locus: 'SCRIPTORIUM.md §1 "Magic texts specifically"' }],
+      status: 'adapted',
+    },
+    'pecia-orleans': {
+      text:
+        'Three days, the man said, and the next hand’s coin already on the board. A text ' +
+        'by the piece, like meat. What the schools have made of books I do not like to ' +
+        'say; but I took the quire, and I began counting light.',
+      sources: [{ work: 'Pecia rental (university practice, adapted to Orléans)', locus: 'SCRIPTORIUM.md §1, §3.1; Research Queue' }],
+      status: 'adapted',
+    },
+    'old-compilation': {
+      text:
+        'I took up my own first book again. Every fault in it is mine; I know them as a ' +
+        'man knows his scars, which is to say not all of them, and not the worst. To copy ' +
+        'it forward is to choose among my errors. Our Lady willing, I choose fewer than I keep.',
+      sources: [{ work: 'Fanger, Rewriting Magic (rewriting as devotion, frame)', locus: 'Old/New Compilation; loci on Research Queue' }],
+      status: 'adapted',
+    },
+  },
+
+  /** The sewn quires, opened later, alone. */
+  sewnFirstLook: {
+    text:
+      'In the dormitory dark I cut the thread. The unknown words stood in their long ' +
+      'ranks, letter by letter, keeping their counsel. Whoever copied them before me ' +
+      'could not read them either. That is the condition of this art: we carry what we ' +
+      'cannot construe, and it garbles as it goes.',
+    sources: [{ work: 'The ars notoria’s verba ignota (after Véronèse)', locus: 'SCRIPTORIUM.md §1 "Magic texts specifically"' }],
+    status: 'adapted',
+  },
+
+  hands: {
+    textualis: {
+      name: 'the set hand',
+      line: 'Formed and slow; the fingers pay, and the sense keeps watch.',
+      ...CRAFT_ENV('"The craft" — scripts and hands'),
+    },
+    cursive: {
+      name: 'the quick hand',
+      line: 'Running and light; haste is how errors get in.',
+      ...CRAFT_ENV('"The craft" — scripts and hands'),
+    },
+    trusting: {
+      name: 'trusting the exemplar',
+      line: 'Letter by letter, construing nothing; the fastest hand, and the blindest.',
+      ...CRAFT_ENV('"The craft" — errors of copying'),
+    },
+  },
+
+  grades: {
+    recollected: {
+      text:
+        'The leaf is even and the hand held. For an afternoon the writing and the praying ' +
+        'were one work, and I was not two men but one.',
+      ...SCRIPT_ENV,
+    },
+    distracted: {
+      text:
+        'The leaf will serve. Twice or three times I came back to my hand from somewhere ' +
+        'else, and the strokes remember where I went.',
+      ...SCRIPT_ENV,
+    },
+    scattered: {
+      text:
+        'A poor leaf. The letters walk like men in mud, and my mind was in six houses ' +
+        'while my body sat at one desk.',
+      ...SCRIPT_ENV,
+    },
+  },
+
+  correction: {
+    /** Used whether or not invisible faults remain: the lie must be perfect. */
+    cleanLie: {
+      text:
+        'I read the leaf over, word by word, and it read clean, and I thanked Our Lady ' +
+        'for a day without faults.',
+      ...SCRIPT_ENV,
+    },
+    expunctuation: {
+      text:
+        'The doubled words I put to death mercifully: dots beneath the condemned, and the ' +
+        'true reading standing after. The page forgives, but it does not forget; a ' +
+        'correction shows the way a scar shows.',
+      ...CRAFT_ENV('"The craft" — expunctuation, signes-de-renvoi'),
+    },
+    firstCopy: {
+      text:
+        'Against what should I prove it? There is no second witness within these walls. ' +
+        'A first copy is like a first confession: you must trust the teller, and the ' +
+        'teller is you.',
+      ...SCRIPT_ENV,
+    },
+    verbaRefused: {
+      text:
+        'The unknown words I cannot try. Sense would show me a fault; they have none to ' +
+        'show. I copied what stood, stroke for stroke, and prayed the strokes were prayers.',
+      sources: [{ work: 'Verba ignota admit no correction-from-sense (after Véronèse)', locus: 'SCRIPTORIUM.md §3.3' }],
+      status: 'adapted',
+    },
+  },
+
+  figure: {
+    /** One face for success and failure alike (D-7). */
+    drawn: {
+      text:
+        'I drew the figure with compass and rule, the words set each in its house. It is ' +
+        'finished, and it is fair to see. Whether it is true, the eye that made it cannot say.',
+      sources: [{ work: 'Figure fidelity as efficacy (ars notoria; John’s Book of Figures)', locus: 'SCRIPTORIUM.md §3.4; figure program on Research Queue' }],
+      status: 'adapted',
+    },
+    gilded: {
+      text:
+        'On the licensed copy I laid the gold and burnished it with the tooth, and the ' +
+        'figure took the light the way she takes a prayer: entirely, and giving it back changed.',
+      ...SCRIPT_ENV,
+    },
+  },
+
+  pigment: {
+    vermilion: {
+      text: 'Vermilion for the rubrics: instruction’s own red. The leaf begins to speak in two voices, as a book should.',
+      ...CRAFT_ENV('"The craft" — pigments'),
+    },
+    ultramarine: {
+      text:
+        'I ground the blue that is past my station and laid it thin as absolution. A poor ' +
+        'monk’s book with heaven’s own color in it: someone will ask, someday, how it came there.',
+      ...CRAFT_ENV('"The craft" — pigments; §3.5 (cost as statement)'),
+    },
+    verdigris: {
+      text:
+        'The green went on sweetly and dried true. A fair color, verdigris, and patient; ' +
+        'what it is patient for, I did not then know.',
+      ...CRAFT_ENV('"The craft" — pigments; §3.5 (slow corrosion)'),
+    },
+    orpiment: {
+      text:
+        'The yellow that is nearly gold, for those of us who will never afford gold. It ' +
+        'lies handsome on the leaf, and keeps bad company with the other colors.',
+      ...CRAFT_ENV('"The craft" — pigments; §3.5 (hazards)'),
+    },
+    goldLaid: {
+      text:
+        'Gold on the ground of gesso, burnished till it held the window in it. Gold is not ' +
+        'a color; it is a witness. It says: this leaf was permitted.',
+      ...SCRIPT_ENV,
+    },
+    goldRefused: {
+      text:
+        'I weighed the gold in its paper and put it back. She has not said yes. Gold ' +
+        'without leave is not illumination; it is lying in metal.',
+      ...SCRIPT_ENV,
+    },
+    sickened: {
+      text:
+        'By None my head swam and my stomach turned against me, and there was a taste ' +
+        'under my tongue like a coin. The orpiment takes its toll of the grinder; brothers ' +
+        'have warned brothers of it since the colors had names. I offered up what it cost. ' +
+        'It accepted, and took more.',
+      ...CRAFT_ENV('"The craft" — pigments; §3.5 (orpiment)'),
+    },
+    reaction: {
+      text:
+        'Where the yellow touched the other color the leaf turned traitor: a blackness ' +
+        'spreading, slow as suspicion and as sure. Two fair colors, and between them, ' +
+        'ruin. There is a sermon in that. I was too vexed to preach it to myself.',
+      ...CRAFT_ENV('"The craft" — pigments; §3.5 (reactions)'),
+    },
+  },
+
+  light: {
+    noticed: {
+      text:
+        'A shadow held at my shoulder a moment longer than passing needs. I did not look ' +
+        'up. Not looking up is also a kind of confession.',
+      ...SCRIPT_ENV,
+    },
+    fire: {
+      text:
+        'The candle guttered and a bead of flame walked the tallow toward my sleeve, and ' +
+        'for one heartbeat I saw the whole scriptorium as tinder: the herd of skins, the ' +
+        'oil, the dry old wood. I pinched it, and sat shaking, and did not write again that hour.',
+      ...SCRIPT_ENV,
+    },
+    seen: {
+      text:
+        'A light where no light is permitted is a bell that rings by being seen. The ' +
+        'stair had eyes; I heard them go. What comes up a stair at night in silence goes ' +
+        'back down it, in the morning, as a question.',
+      ...SCRIPT_ENV,
+    },
+  },
+
+  caught: {
+    text:
+      'The exemplar stumbled — a word doubled where its parent had doubled it. I caught ' +
+      'it as it passed into my pen, and set it right, and thanked the sense for keeping ' +
+      'watch where the eye alone would have carried it, faithful and wrong.',
+    ...CRAFT_ENV('"The craft" — errors of copying'),
+  },
+};
+
+/** The copy loop’s own margin (joins the pencil notes from DISTRACTIONS). */
+export const COPY_DISTRACTIONS = [
+  {
+    id: 'copy-quill-split',
+    kind: 'mundane',
+    text: 'The quill splits its stroke; the knife is in the other hand before the thought is. Small surgeries, all day long.',
+    effects: { pressure: 0, despair: 0 },
+    sources: [], status: 'invented',
+  },
+  {
+    id: 'copy-ink-flies',
+    kind: 'mundane',
+    text: 'The flies have found the ink again. They die scholars’ deaths, in the middle of the line.',
+    effects: { pressure: 0, despair: 0 },
+    sources: [], status: 'invented',
+  },
+  {
+    id: 'copy-three-fingers',
+    kind: 'mundane',
+    text: 'The fingers stiffen around the pen. Three fingers write, the whole body labors — and today the whole body is cold.',
+    effects: { pressure: 1, despair: 0 },
+    sources: [{ work: 'Medieval colophon commonplace ("three fingers write")', locus: 'SCRIPTORIUM.md §1 (colophons)' }],
+    status: 'adapted',
+  },
+  {
+    id: 'copy-gregorys-rule',
+    kind: 'mundane',
+    text: 'Hair side to hair side, flesh to flesh: the quire is a herd folded in order. I count faces to be sure of it, and lose the line I was on.',
+    effects: { pressure: 0, despair: 0 },
+    sources: [{ work: 'Gregory’s Rule (quire arrangement)', locus: 'SCRIPTORIUM.md §1 "The craft"' }],
+    status: 'adapted',
+  },
+  {
+    id: 'copy-orleans-hand',
+    kind: 'memory',
+    text: 'This stroke — I learned this stroke at Orléans, from a hand I have not prayed for in years. The letters remember their teachers. That is not always a mercy.',
+    effects: { pressure: 1, despair: 0 },
+    sources: [{ work: 'Kieckhefer, Magic in the Middle Ages', locus: 'the "clerical underworld" (frame)' }],
+    status: 'adapted',
+  },
+  {
+    id: 'copy-young-hand',
+    kind: 'memory',
+    text: 'In the margin of my first book, a note in my own young hand, certain of everything. I have not the heart to scrape him, and not the right to keep him.',
+    effects: { pressure: 1, despair: 1 },
+    sources: [], status: 'invented',
+  },
+  {
+    id: 'copy-idle-hand',
+    kind: 'flesh',
+    text: 'The copying hand is busy and the other is idle, and idleness in one member is heard by all the rest. I set the free hand to the penknife’s work, and give it a duty.',
+    effects: { pressure: 2, despair: 0 },
+    sources: [], status: 'invented',
+  },
+  {
+    id: 'copy-enemy-illumination',
+    kind: 'flesh',
+    text: 'Between one letter and the next, unbidden, the enemy offers an illumination of his own devising. I will not gild it. Margin, take what I refuse.',
+    effects: { pressure: 2, despair: 1 },
+    sources: [], status: 'invented',
+  },
+  {
+    id: 'copy-pencil-verba',
+    kind: 'pencil',
+    text:
+      'The strings of unknown words you are copying were garbled before John ever saw ' +
+      'them; the surviving witnesses disagree, and there is no "correct" text to restore. ' +
+      'You are not preserving a signal. You are faithfully preserving the noise. — n.',
+    effects: { pressure: 0, despair: 0 },
+    cites: ['veronese-notoria'],
+    sources: [{ work: 'Véronèse, ars notoria editions', locus: 'transmission of the verba ignota (frame)' }],
+    status: 'adapted',
+  },
+  {
+    id: 'copy-pencil-pecia',
+    kind: 'pencil',
+    text:
+      'Deadline copying against a rented exemplar is documented university practice; ' +
+      'whether Orléans’s trade ran true peciae is on my research queue, so the database ' +
+      'holds that record at adapted. The clock you are feeling is real. The town is my guess. — n.',
+    effects: { pressure: 0, despair: 0 },
+    cites: ['page-cloister'],
+    sources: [{ work: 'Sophie Page, Magic in the Cloister', locus: 'Research Queue — pecia at Orléans' }],
+    status: 'adapted',
+  },
+];
+
+/** Pencil notes shown from the scriptorium stage (not the reckoning pool). */
+export const SCRIPTORIUM_NOTES = [
+  {
+    id: 'note-verba-ignota',
+    text:
+      'Unintelligible text has no error-correction: a scribe who cannot construe cannot ' +
+      'see where he has strayed. The verba ignota garbled catastrophically in real ' +
+      'transmission, and in this game they are the one fault nothing can mend. That is ' +
+      'not a difficulty setting. It is philology.',
+    cites: ['veronese-notoria'],
+    sources: [{ work: 'Véronèse (ars notoria transmission)', locus: 'SCRIPTORIUM.md §1, §3.3' }],
+    status: 'attested',
+  },
+  {
+    id: 'note-scribere',
+    text:
+      'The copy loop reuses the recitation engine function for function, because the ' +
+      'monks’ own metaphor said they were one economy — scribere est orare. The colophons ' +
+      'complain about the body (three fingers write; the whole body labors) the way John ' +
+      'complains about the night. Same attention, different member.',
+    cites: ['rb1980', 'dehamel-scribes'],
+    sources: [{ work: 'RB 48 (labor and lectio); colophon commonplaces', locus: 'SCRIPTORIUM.md §1; display citations pending (R-9)' }],
+    status: 'adapted',
+  },
+  {
+    id: 'note-first-copy',
+    text:
+      'Eyeskip is invisible until you can collate, and you cannot collate until a second ' +
+      'witness exists. Every "it reads clean" this game has told you was said in good ' +
+      'faith and possibly false. The textual tradition you are building has the same ' +
+      'epistemology as the visions: accepted on tells, proven later, or never.',
+    cites: ['fanger-watson-edition'],
+    sources: [{ work: 'Textual criticism (collation); Fanger–Watson apparatus', locus: 'SCRIPTORIUM.md §3.3' }],
+    status: 'adapted',
+  },
+];
 
 // ── Content note (first launch; canonical wording from STYLE_GUIDE.md) ──
 export const CONTENT_NOTE =

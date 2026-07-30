@@ -59,7 +59,15 @@ export const NPCS = [
       },
       orleans: {
         text: '"Orléans." She weighs you with a look. "Law books mostly. And student trash. And once in a while a thing sewn shut that I don\'t buy twice."',
-        unlocks: ['necromancy'],
+        unlocks: ['necromancy', 'student'],
+      },
+      student: {
+        text: '"Student leavings. Grammars, disputations dog-eared to death, and —" she squares the stack, "— now and then a thing that comes north sewn shut, because the seller did not want to know what he was selling."',
+        unlocks: ['sewn'],
+      },
+      sewn: {
+        text: 'She is still a moment. "I told you I don\'t buy such things twice. I bought this one once, and once is what it cost me. Take it, brother, and take its story with it — mine stays here." Coin passes. The quires are heavier than paper should be.',
+        effect: 'give-exemplar-sewn',
       },
       necromancy: {
         text: 'The knife stops. "I don\'t know that word, brother, and neither do you." She turns to another customer who is not there.',
@@ -118,5 +126,77 @@ export const NPCS = [
     },
     default: '"Ask the bowl, brother. It knows what I know."',
     ...TYPE_ENVELOPE,
+  },
+];
+
+/**
+ * The cloister — scene-summoned, not tile-placed (docs/DECISIONS_AND_FORKS.md
+ * D-10): the abbey interior has no map, so the scriptorium stage summons
+ * these two by T. Same keyword contract and envelope as the townsfolk;
+ * the world tests' contract loop runs over both lists, the tile-reach
+ * test over the town list only.
+ */
+const OFFICE_ENVELOPE = {
+  status: 'invented',
+  sources: [
+    { work: 'Monastic offices: the armarius and the sacrist (RB 48 frame)', locus: 'SCRIPTORIUM.md §1 "The monastic setting"' },
+  ],
+};
+
+export const CLOISTER_NPCS = [
+  {
+    id: 'denis',
+    label: 'the armarius, at his ledger',
+    mapId: null, x: null, y: null,
+    greeting:
+      'The armarius looks up from his ledger the way a man surfaces from deep water. ' +
+      '"Brother John. The press is locked, the day is short, and you will want something. ' +
+      'They always want something."',
+    keywords: {
+      name: { text: '"Denis. Twenty years keeper of the press, and every book in it knows my hand better than the priory knows my face."' },
+      job: {
+        text: '"I keep the armarium, and the ledger of what leaves it. At Lent each brother his book; through the year, each desk its leaf. Nothing is lost, brother. Things are only ever somewhere I have not looked yet."',
+        unlocks: ['work', 'ledger'],
+      },
+      work: {
+        text: '"Your leaf is the lectionary — the house\'s own, recopied against its age. Keep to it and the light will love you. The last hand on it failed at the feast of St. Denis, which I take personally."',
+      },
+      ledger: {
+        text: '"Everything issued, everything returned, everything —" he taps the book, "— remembered. When the archdeacon\'s men come counting, it is my ledger that answers. And it answers everything it is asked."',
+      },
+      bye: { text: '"Go with God, brother. And bring it back with both boards."' },
+    },
+    default: '"Not in my press, brother. And if it is not in my press, I have opinions about whether it is anywhere."',
+    ...OFFICE_ENVELOPE,
+  },
+  {
+    id: 'maur',
+    label: 'the sacrist, counting by touch',
+    mapId: null, x: null, y: null,
+    greeting:
+      '"Mind the threshold, brother — the oil." The sacrist is on his knees among boxes, ' +
+      'counting by touch. "Candles, chrism, colors, skins. If it burns, stains, or costs ' +
+      'the house money, it is mine. What do you need?"',
+    keywords: {
+      name: { text: '"Maur. I was given to the church at seven; I have been counting her belongings ever since."' },
+      job: {
+        text: '"Sacrist. The vessels, the vestments, the lights — and the scriptorium\'s stores, which vanish faster than mice can be blamed for."',
+        unlocks: ['parchment', 'colors'],
+      },
+      parchment: {
+        text: 'He weighs you a moment, then draws out a ruled quire. "For the house\'s work, mind. A herd died for this; write nothing a cow would be ashamed of."',
+        effect: 'give-quire',
+      },
+      colors: {
+        text: '"Vermilion I have. The blue is bought by weight of silver, and you shall not touch it without the prior\'s own word. The yellow —" he pauses. "The yellow you will treat with respect."',
+        unlocks: ['orpiment'],
+      },
+      orpiment: {
+        text: '"Respect, I said. Grind it with your face turned and your mouth shut. Brother Guy ground it careless for the great antiphoner; he sang flat for a month and was buried before Advent. And keep it from the lead and the green, or the leaf turns black as your prospects."',
+      },
+      bye: { text: '"Go, and God go with you. The quire comes back written or blank — but it comes back."' },
+    },
+    default: '"If it does not burn, stain, or cost money, brother, it is not my office."',
+    ...OFFICE_ENVELOPE,
   },
 ];

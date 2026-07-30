@@ -16,7 +16,9 @@ export function createJohn() {
     procedure: { prayed: false, quality: null, licentia: false, corrupt: false },
     /** Radical Axis (WORLD_DESIGN.md §4): 0 = the historical center. */
     disposition: 0,
-    items: { draught: 0, quire: 0 },
+    /** The scrip: the Old Compilation is the one exemplar nobody had to
+     *  sell him (docs/DECISIONS_AND_FORKS.md D-11). */
+    items: { draught: 0, quire: 0, exemplars: ['old-compilation'] },
     log: [],
   };
 }

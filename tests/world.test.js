@@ -10,7 +10,7 @@ import {
   keepOffice, missedOffices, adjacentNpc, reachable,
 } from '../src/engine/world.js';
 import { startTalk, ask, knownKeywords } from '../src/engine/talk.js';
-import { NPCS } from '../src/data/npcs.js';
+import { NPCS, CLOISTER_NPCS } from '../src/data/npcs.js';
 import {
   WORLD_MAP, ETAMPES_MAP, SPAWNS, ROAD_BELLS,
 } from '../src/data/worldmap.js';
@@ -165,7 +165,7 @@ describe('NPC content coverage (envelope + contract)', () => {
   const STATUSES = ['attested', 'adapted', 'invented'];
 
   test('every NPC honors the keyword contract and the envelope', () => {
-    for (const npc of NPCS) {
+    for (const npc of [...NPCS, ...CLOISTER_NPCS]) {
       assert.ok(STATUSES.includes(npc.status), `${npc.id} status`);
       assert.ok(Array.isArray(npc.sources), `${npc.id} sources`);
       assert.ok(npc.greeting.length > 20, `${npc.id} greeting`);
@@ -187,6 +187,19 @@ describe('NPC content coverage (envelope + contract)', () => {
     assert.equal(evrart.keywords.scorn.effect, 'radical');
     assert.ok(!startTalk(evrart).known.includes('scorn'), 'scorn must be earned');
   });
+
+  test('the sewn quires are buried a step past Orléans, and the cloister keeps no tiles', () => {
+    const isabel = NPCS.find(n => n.id === 'isabel');
+    const opening = startTalk(isabel).known;
+    assert.ok(!opening.includes('sewn'), 'the underworld connection must be earned');
+    assert.ok(!isabel.keywords.orleans.unlocks.includes('sewn'), 'and earned in two steps, not one');
+    assert.ok(isabel.keywords.student.unlocks.includes('sewn'));
+    assert.equal(isabel.keywords.sewn.effect, 'give-exemplar-sewn');
+    assert.equal(CLOISTER_NPCS.length, 2, 'the armarius and the sacrist');
+    for (const npc of CLOISTER_NPCS) {
+      assert.equal(npc.mapId, null, `${npc.id} is scene-summoned, not tile-placed`);
+    }
+  });
 });
 
 describe('Integration seams', () => {
@@ -196,10 +209,10 @@ describe('Integration seams', () => {
     assert.ok(day.stages.some(s => s.kind === 'world'));
   });
 
-  test('john carries disposition and a scrip', () => {
+  test('john carries disposition and a scrip — with his own first book in it', () => {
     const john = createJohn();
     assert.equal(john.disposition, 0);
-    assert.deepEqual(john.items, { draught: 0, quire: 0 });
+    assert.deepEqual(john.items, { draught: 0, quire: 0, exemplars: ['old-compilation'] });
   });
 
   test('the tileset is in the provenance manifest', () => {
