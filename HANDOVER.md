@@ -128,8 +128,8 @@ Tests: `tests/morigny_engine.test.js`, `morigny_content.test.js`
 1. **v3 Scriptorium** (the victory condition made mechanical)
    - ✓ DONE 2026-07-29: `data/exemplars.js`, `data/materials.js` (5 exemplar sources, materials with sim hazards)
    - ✓ DONE 2026-07-29: `engine/scriptorium.js` with 30 tests (`tests/scriptorium.test.js`), test-first — quire layout, copy loop on the recitation grammar, error classes incl. verba ignota, emendatio, silent figure fail → `procedure.corrupt`, pigment hazards, concealment. Numbers in `SLICE_SPEC.md` §Scriptorium.
-   - **Next: scriptorium stage** — wire into the daylight slot of `main.js`, reuse recitation UI (units/interruption/grade), daylight-units display, author ~40 passages (acquisition, copy distractions, correction, figure, pigment events); extend `data/npcs.js` with armarius/sacrist
-   - Then: transmission choices and stemma integration (witness `copies[]`, framing ending)
+   - ✓ DONE 2026-07-29: **scriptorium stage** — the daylight slot is the scriptorium (S assigned / I the Work / T armarius·sacrist / B pass). Copy session on the recitation UI grammar, units-of-light countdown, hand switching, E/G/R/B after-work verbs, 45 new records, Isabel's buried `sewn` chain, desk line in the reckoning, `journal.copies[]` accumulating for 3d. Spec + reports in `docs/`.
+   - **Next: 3d** — transmission choices (Bridget, the brother, the correspondent — dialogue surface), concealment + Evrart's inventory encounter (F-5), stemma reads `copies[]`, framing-ending variants. Writing list: `docs/WRITING_ASSETS_AUDIT.md` §3 (~49 records; R-11 gates Bridget's wording).
    - Build order and spec: `SCRIPTORIUM.md` §5
 
 2. **v2 Completion** (three cities, NPC encounters, sourced imagery)

@@ -53,24 +53,26 @@ leaves the record only through the departure annotation.
 
 ---
 
-## 2. v3c — The scriptorium stage (THIS WINDOW: 45 records)
+## 2. v3c — The scriptorium stage (SHIPPED 2026-07-29: 45 + ~15 records)
 
-Detailed manifest in `SCRIPTORIUM_STAGE_SPEC.md` §6. Summary:
+Detailed manifest in `SCRIPTORIUM_STAGE_SPEC.md` §6. All records live in
+`SCRIPTORIUM_TEXT` / `COPY_DISTRACTIONS` / `SCRIPTORIUM_NOTES` /
+`CLOISTER_NPCS` and coverage-tested (`tests/scriptorium.test.js`).
 
 | Group | Register | Count | Status |
 |---|---|---|---|
-| Scene intros (assigned S / illicit I) | R+J | 2 | — → this window |
-| Acquisition per exemplar (5) + sewn refusal | J | 6 | — → this window |
-| Hand-choice rubrics (3) | R | 3 | — → this window |
-| Copy distraction pool | J/P | 10 | — → this window |
-| Grade lines (3) | J | 3 | — → this window |
-| Correction beats (clean-lie, expunctuation, first-copy, verba refusal) | J/P | 4 | — → this window |
-| Figure narration (same-face; gilded) | J | 2 | — → this window |
-| Pigment beats (5 lay + sickened + reaction + gold-refused) | J | 8 | — → this window |
-| Light events (noticed / fire / seen — latter two shelved with candle) | J | 3 | — → this window |
-| Caught-inherited-fault line | J | 1 | — → this window |
-| Pencil notes: verba ignota, scribere est orare, first copy | P | 3 | — → this window |
-| Cloister NPCs: armarius (5 kw), sacrist (6 kw) + greetings/defaults | dialogue | ~15 | — → this window |
+| Scene intros (assigned S / illicit I) | R+J | 2 | ✓ |
+| Acquisition per exemplar (5) + the sewn quires opened | J | 6 | ✓ |
+| Hand-choice rubrics (3) | R | 3 | ✓ |
+| Copy distraction pool | J/P | 10 | ✓ |
+| Grade lines (3) | J | 3 | ✓ |
+| Correction beats (clean-lie, expunctuation, first-copy, verba refusal) | J/P | 4 | ✓ |
+| Figure narration (same-face; gilded) | J | 2 | ✓ |
+| Pigment beats (5 lay + sickened + reaction + gold-refused) | J | 8 | ✓ |
+| Light events (noticed live; fire/seen authored, candle shelved F-2) | J | 3 | ✓ |
+| Caught-inherited-fault line | J | 1 | ✓ |
+| Pencil notes: verba ignota, scribere est orare, first copy | P | 3 | ✓ |
+| Cloister NPCs: armarius (5 kw), sacrist (6 kw) + Isabel `student`/`sewn` chain | dialogue | ~15 | ✓ |
 
 Path notes: the stage itself is path-neutral; [O] is expressed by always
 choosing S (and its writing must reward that — the lectionary passage

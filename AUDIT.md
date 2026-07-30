@@ -108,27 +108,24 @@ Pure, seeded-deterministic, reusing the recitation loop's grammar (shared `distr
 | **Concealment** | ✓ §3.6 | ✓ | ✓ | loose/bound/shelved/given → inventory odds; given is the only real survival |
 | **Palimpsest** | ✓ INTERFACE.md | 🟡 data only | — | `materials.palimpsest` carries `undertext: true`; under-text rendering is stage work (3c) |
 
-#### 3c. Stage (scriptorium UI)
+#### 3c. Stage (scriptorium UI) ✓ BUILT 2026-07-29
 
-Reuses `recitation.js` UI grammar: units, distractions, grade at end. Adds daylight constraint on screen.
+Reuses the recitation UI grammar (units, distractions, grade) with the light constraint on screen. Spec: `docs/SCRIPTORIUM_STAGE_SPEC.md`; smoke-tested through a full day loop in the browser (silent figure corruption verified surfacing at the reckoning).
 
 | What | Design | Code | Tests | Writing |
 |------|--------|------|-------|---------|
-| **Scriptorium scene** | ✓ SCRIPTORIUM.md | — | — | — |
-| **Unit loop** (copy by hand) | ✓ §2, §3.2 | — | — | — |
-| **Distraction pool** | ✓ §2 | — | — | Sourced from struggle/temptation + scholarly pencil notes |
-| **Quality grade** | ✓ reuse from recitation | — | — | recollected/distracted/scattered → fidelity score |
-| **Daylight display** | ✓ §3.2 | — | — | Show remaining daylight units + public/hidden unit status |
-| **Correction interface** | ✓ §3.3 | — | — | View errors; choose correction method (expunctuate/marginal insert) |
-| **Figure drawing** (check) | ✓ §3.4 | — | — | Geometry validation; success/fail feedback |
+| **Scriptorium scene** (S/I/T/B entry) | ✓ | ✓ main.js | ✓ coverage | ✓ 2 intros |
+| **Unit loop** (copy by hand, S/C/F switching) | ✓ §2, §3.2 | ✓ | ✓ | ✓ |
+| **Distraction pool** | ✓ §2 | ✓ COPY_DISTRACTIONS + flesh pool | ✓ | ✓ 10 records |
+| **Quality grade** | ✓ | ✓ | ✓ | ✓ 3 grades |
+| **Daylight display** | ✓ §3.2 | ✓ units-of-light countdown | smoke | ✓ |
+| **Correction interface** | ✓ §3.3 | ✓ E proofread (expunctuation; silent faults keep success's face) | ✓ | ✓ 4 beats |
+| **Figure drawing** (check) | ✓ §3.4 | ✓ G (one face for success/fail) | ✓ | ✓ 2 |
+| **Pigments** (R) | ✓ §3.5 | ✓ hazards live | ✓ | ✓ 8 beats |
+| **Cloister NPCs** (armarius, sacrist) | ✓ | ✓ CLOISTER_NPCS | ✓ contract | ✓ |
+| **Acquisition** (Isabel `sewn` chain; Old Compilation in scrip) | ✓ §3.1 | ✓ | ✓ gating | ✓ 6 records |
 
-**Writing coverage needed:**
-- Acquisition narration (getting the exemplar, cost/risk)
-- Copying unit distractions (same pool as recitation? new pool? mixed?)
-- Quality grades (recollected/distracted/scattered at end)
-- Correction narration (success/failure of each method)
-- Figure drawing narration (success feels like mastery; fail is silent)
-- Pigment hazard events (mixing orpiment sickness, verdigris eating through discovered months later)
+Deferred by design (docs/DECISIONS_AND_FORKS.md): candle F-2, pecia deadline UI F-3, collation F-4, inventory encounter F-5 (→3d), palimpsest F-6.
 
 #### 3d. Meta: Witness Copies & Stemma Integration
 
