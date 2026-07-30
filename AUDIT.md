@@ -74,40 +74,39 @@ Tile-world frame, town navigation, NPC dialogue system. Partially shipped; Orlé
 
 ---
 
-### v3 NOT STARTED — The Scriptorium & Campaign Completion
+### v3 IN PROGRESS — The Scriptorium & Campaign Completion
 
-**The core mechanic: copying is the victory condition.** Specification is complete in SCRIPTORIUM.md. The build follows that document's §5 (Build order) step-by-step. No code has shipped yet; all design is solid and testable.
+**The core mechanic: copying is the victory condition.** Specification is complete in SCRIPTORIUM.md. **Data (3a) and engine (3b) shipped 2026-07-29, tested (30 tests, `tests/scriptorium.test.js`); numbers recorded in SLICE_SPEC.md.** Stage (3c) and meta (3d) remain.
 
-#### 3a. Data (`data/exemplars.js`, `data/materials.js`)
+#### 3a. Data (`data/exemplars.js`, `data/materials.js`) ✓ BUILT
 
 | What | Design | Code | Tests |
 |------|--------|------|-------|
-| **Exemplar records** | ✓ SCRIPTORIUM.md §3.1 | — | — |
-| **Exemplar sources** (armarium, loan, Isabel, pecia, Old Compilation) | ✓ §3.1 table | — | — |
-| **Materials** (parchment, ink, pigments + hazards) | ✓ §3.5 | — | — |
-| **Witness extension** (copies[], corruptions[]) | ✓ stem­ma.js existing | ⚠️ extend | — |
-| **Assets manifest entries** (parchment, inks, pigments) | ✓ ART_SOURCES.md | — | — |
+| **Exemplar records** | ✓ SCRIPTORIUM.md §3.1 | ✓ exemplars.js | ✓ lint + contract |
+| **Exemplar sources** (armarium, loan, Isabel, pecia, Old Compilation) | ✓ §3.1 table | ✓ all five | ✓ every channel present |
+| **Materials** (parchment, ink, pigments + hazards) | ✓ §3.5 | ✓ materials.js | ✓ hazards wired |
+| **Witness extension** (copies[], corruptions[]) | ✓ stem­ma.js existing | ⚠️ extend (3d) | — |
+| **Assets manifest entries** (parchment, inks, pigments) | ✓ ART_SOURCES.md | — (no imagery yet) | — |
 
-**Blocking nothing** — can start immediately; `verify` flags move to research queue only.
+`verify` flags carried: pecia at Orléans (`adapted`, Sophie Page queue); Old Compilation redaction details (Fanger–Watson queue).
 
-#### 3b. Engine (`engine/scriptorium.js`)
+#### 3b. Engine (`engine/scriptorium.js`) ✓ BUILT
 
-Pure, seeded-deterministic state machine reusing recitation loop's grammar. Specification is in SCRIPTORIUM.md §2–4; build order is §5.
+Pure, seeded-deterministic, reusing the recitation loop's grammar (shared `distractionChance`, same hold-fast/attend economy and grade thresholds). Tests shipped first, per house rule.
 
 | What | Design | Engine | Tests | Notes |
 |-------|--------|--------|-------|-------|
-| **Quire model** | ✓ §2, §3.2 | — | — | N units per quire; quire signatures |
-| **Copy loop** | ✓ §2, §3.2 | — | — | Reuse `recitation.js` structure: units → distractions → quality grade |
-| **Hand choices** | ✓ §3.2 | — | — | Textualis (slow, careful); Cursive (fast, error-prone); Trusting exemplar (fastest, no error-correction) |
-| **Error classes** | ✓ §3.2 | — | — | eyeskip (silent), dittography (visible, correctable), verba ignota garble (never self-correctable) |
-| **Fatigue model** | ✓ §3.2 | — | — | Textualis costs finger fatigue; error rates by hand + fatigue |
-| **Correction pass** | ✓ §3.3 | — | — | Expunctuation; can't correct eyeskip or verba ignota without collation |
-| **Figure check** | ✓ §3.4 | — | — | Geometry/proportion/inscribed words; fail → `procedure.corrupt` (silent invalidity) |
-| **Daylight constraint** | ✓ §3.2 | — | — | Public units plentiful; night units need candle, fire risk, worst suspicion |
-| **Pigment hazards** | ✓ §3.5 | — | — | Orpiment sickens scribe, reacts with lead/copper; verdigris eats through leaf over time |
-| **Palimpsest** | ✓ INTERFACE.md | — | — | Scraping old leaf; under-text faintly visible (Old Compilation showing through New) |
-
-**Test-first, per house rule.** Coverage needed: all error classes × all hands, all correction scenarios, figure success/fail, daylight public/night, all pigment hazard outcomes.
+| **Quire model** | ✓ §2, §3.2 | ✓ | ✓ | seeded layout: verba units by share, inherited faults placed |
+| **Copy loop** | ✓ §2, §3.2 | ✓ | ✓ | units → distractions → quality grade; attend unsteadies the hand (error ×2) |
+| **Hand choices** | ✓ §3.2 | ✓ | ✓ | textualis / cursive / trusting; trusting cannot catch inherited errors |
+| **Error classes** | ✓ §3.2 | ✓ | ✓ | eyeskip (silent), dittography (visible), verba ignota (×2, never self-correctable) |
+| **Fatigue model** | ✓ §3.2 | ✓ | ✓ | fingerFatigue by hand; error rate scales with finger + body fatigue |
+| **Correction pass** | ✓ §3.3 | ✓ | ✓ | expunctuation; eyeskip needs collation (first copy unverifiable); verba never |
+| **Figure check** | ✓ §3.4 | ✓ | ✓ | silent fail → `copy.corrupt` + `procedure.corrupt`; result does not confess |
+| **Daylight constraint** | ✓ §3.2 | ✓ | ✓ | day notice on hot/unassigned leaf; candle fire + worst suspicion (+3) |
+| **Pigment hazards** | ✓ §3.5 | ✓ | ✓ | orpiment sickens/blackens; verdigris slow clock; ultramarine conspicuous; gold gated on licentia |
+| **Concealment** | ✓ §3.6 | ✓ | ✓ | loose/bound/shelved/given → inventory odds; given is the only real survival |
+| **Palimpsest** | ✓ INTERFACE.md | 🟡 data only | — | `materials.palimpsest` carries `undertext: true`; under-text rendering is stage work (3c) |
 
 #### 3c. Stage (scriptorium UI)
 
@@ -228,20 +227,11 @@ The critical path for a playable v1+v2+v3 campaign:
    - Wire city navigation into world.js
    - Test: player can walk to all 3 cities, talk to all NPCs
 
-2. **v3 Scriptorium Data** (1 window)
-   - `data/exemplars.js`: 5 exemplar records (sources: armarium, loan, Isabel, pecia, Old Compilation)
-   - `data/materials.js`: parchment, ink, pigments with `sim` hazard fields
-   - Extend `data/npcs.js`: armarius, sacrist, Isabel notes about materials
-   - Extend witness record in `chronicle.js`: add `copies[]` array
+2. **v3 Scriptorium Data** ✓ DONE 2026-07-29 (`data/exemplars.js`, `data/materials.js`)
+   - Remaining from this window: extend `data/npcs.js` (armarius, sacrist, Isabel material notes) — moved to stage work (4); extend witness with `copies[]` — moved to (5)
 
-3. **v3 Scriptorium Engine** (1–2 windows)
-   - Write tests for `engine/scriptorium.js` first (test-first house rule)
-   - Build quire/copy loop grammar reusing recitation.js structure
-   - Implement error classes (eyeskip, dittography, verba ignota)
-   - Implement correction pass logic
-   - Implement figure check → `procedure.corrupt`
-   - Implement pigment hazard model
-   - Verify: same seed replays identical copy sequence
+3. **v3 Scriptorium Engine** ✓ DONE 2026-07-29 (`engine/scriptorium.js`, 30 tests, test-first)
+   - Same seed replays the identical copy — verified in suite
 
 4. **v3 Scriptorium UI & Writing** (1–2 windows)
    - Wire scriptorium stage into main.js day flow (daylight hours)
@@ -306,8 +296,6 @@ The critical path for a playable v1+v2+v3 campaign:
 
 ## NEXT IMMEDIATE STEP
 
-**Recommended:** Begin v3 Scriptorium Data build. It is the lowest-complexity, highest-ROI work: five exemplar records in JSON, two materials files, no code yet. This unblocks the engine work and surfaces any data-design issues before touching the copy loop.
-
-Then immediately move to **v3 Scriptorium Engine** — the test-first suite for the copy loop, error classes, correction, figures. This is the mechanical spine and benefits from rapid tight iteration.
+**Data and engine shipped 2026-07-29.** Recommended next: **v3 Scriptorium Stage** (3c) — wire the scriptorium scene into the daylight slot of the day flow, reusing the recitation UI grammar (units, interruption, grade) with the daylight-units display; author the copy-loop writing (~40 passages: acquisition, distractions, grades, correction, figure, pigment hazards). Then **3d**: witness `copies[]`, transmission choice, stemma integration, framing ending.
 
 **Alternative:** Begin v2 completion (city NPC design + wording) in parallel. No dependencies; can ship independently.

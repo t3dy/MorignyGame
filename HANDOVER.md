@@ -119,10 +119,10 @@ Tests: `tests/morigny_engine.test.js`, `morigny_content.test.js`
 **Pick one of two tracks:**
 
 1. **v3 Scriptorium** (the victory condition made mechanical)
-   - Start: `data/exemplars.js`, `data/materials.js` (5 exemplar sources, parchment/ink/pigments with sim fields)
-   - Then: `engine/scriptorium.js` with tests (quire model, copy loop reusing recitation grammar, error classes, correction, figure check → `procedure.corrupt`)
-   - Then: scriptorium stage with daylight constraint on screen
-   - Then: transmission choices and stemma integration
+   - ✓ DONE 2026-07-29: `data/exemplars.js`, `data/materials.js` (5 exemplar sources, materials with sim hazards)
+   - ✓ DONE 2026-07-29: `engine/scriptorium.js` with 30 tests (`tests/scriptorium.test.js`), test-first — quire layout, copy loop on the recitation grammar, error classes incl. verba ignota, emendatio, silent figure fail → `procedure.corrupt`, pigment hazards, concealment. Numbers in `SLICE_SPEC.md` §Scriptorium.
+   - **Next: scriptorium stage** — wire into the daylight slot of `main.js`, reuse recitation UI (units/interruption/grade), daylight-units display, author ~40 passages (acquisition, copy distractions, correction, figure, pigment events); extend `data/npcs.js` with armarius/sacrist
+   - Then: transmission choices and stemma integration (witness `copies[]`, framing ending)
    - Build order and spec: `SCRIPTORIUM.md` §5
 
 2. **v2 Completion** (three cities, NPC encounters, sourced imagery)

@@ -81,6 +81,44 @@ pattern-matching.
 | **Accept** | **Licentia** (gold): procedure advances | **Silent corruption**: seems to advance; revealed at reckoning — work void, pressure +2 |
 | **Reject** | Licentia delayed; despair +1 (his recorded fear) | **Mastery**: resolve +1, pressure −2 |
 
+## Scriptorium loop (v3 engine — built; stage pending)
+
+A quire is N units (per exemplar, `data/exemplars.js`); copying reuses
+the recitation grammar: the same distraction spawn `p`, hold fast (1
+resolve, 2 if scrupulous), attend (lapse lands its effects **and the
+unit's error chance doubles** — a distracted hand errs). Quality and
+grades identical to recitation.
+
+**Hands** (per unit): textualis `err 0.05, finger +1, catch 0.8` ·
+cursive `err 0.12, finger +0.5, catch 0.4` · trusting `err 0.08, finger
++0.25, catch 0` — trusting does not construe and *cannot* catch
+inherited faults. Error chance `= errBase · (1 + 0.05·fingerFatigue +
+0.03·fatigue)`, cap 0.9. Fresh text errors split eyeskip 0.4 (silent) /
+dittography 0.6 (visible); **verba ignota** units double the rate and
+garble in their own class, never self-correctable.
+
+**Light:** day + hot/unassigned leaf → notice 0.1/unit (+1 suspicion);
+candle → fire 0.02/unit, seen 0.05/unit (**+3 suspicion**, the worst in
+the game). Pecia deadline: 3 days held, then exceeded.
+
+**Emendatio:** dittography → expunctuation; eyeskip → marginal insertion
+*only after collation against another witness* (the first copy of
+anything is unverifiable); verba ignota → never. Damage (blackened,
+corrosion) is not an error and stands.
+
+**Figures:** success `0.7 − 0.04·fatigue − 0.04·despair` (floor 0.2);
+failure silently sets `copy.corrupt` **and** `procedure.corrupt` — the
+result does not confess.
+
+**Pigments:** orpiment sickens on grind 0.35 (fatigue +2) and blackens
+against lead-white/minium/verdigris in either order; verdigris corrodes
+the leaf 8 game-days after laying (compressed from years); ultramarine
+marks the copy conspicuous; gold refused without licentia, else the copy
+is gilded.
+
+**Concealment → inventory:** shelved found always · loose 0.5 · bound
+0.15 · given never — giving a copy away is the only real survival.
+
 ## Slice presentation
 
 Typographic codex only — per `CLAUDE.md` rule 6, no imagery ships
