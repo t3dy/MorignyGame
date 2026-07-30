@@ -48,7 +48,14 @@ the soul.
 | `WORLD_DESIGN.md` | tile world, towns, reagent→preparation translation, Radical Axis |
 | `SLICE_SPEC.md` | the numbers: recitation, Struggle, discernment |
 | `PACING.md` | the 70/20/10 ratio and the four kinds of choice |
-| `SCRIPTORIUM.md` | **planned, not built** — manuscript production system |
+| `SCRIPTORIUM.md` | manuscript production system — data+engine built, stage in progress |
+| `docs/SCRIPTORIUM_STAGE_SPEC.md` | the stage build's concrete spec (keys, flow, writing manifest) |
+| `docs/NARRATIVE_DESIGN_REPORT.md` | narrative-design working brief: registers, tedium risk, silent-failure fairness |
+| `docs/HISTORY_CONSULT.md` | historian's brief: solid/thin/ours grading + Research Queue additions R-9…R-13 |
+| `docs/WRITING_ASSETS_AUDIT.md` | **the big list** — every writing asset to full campaign, by system and path (~247 remaining) |
+| `docs/WRITING_TEMPLATES.md` | fill-in record shapes + register checklists per content type |
+| `docs/DECISIONS_AND_FORKS.md` | decision log D-1…D-13 and open forks F-1…F-10 |
+| `docs/ART_AUDIO_ASSET_PLAN.md` | non-writing assets: tiles, city leaves, figures policy, audio |
 | `ART_SOURCES.md` | image sourcing pipeline + provenance schema |
 | `BIBLIOGRAPHY.md` | reading program + **Research Queue** |
 
