@@ -92,6 +92,42 @@ for the attention verbs mid-session.
 *shape* of the unknown words, never invented strings presented as
 genuine (SCRIPTORIUM.md §6, HISTORY_CONSULT §2.4).
 
+## Decisions taken (clarity pass, 2026-08-29)
+
+**D-14 · Citations moved from inline paragraph tags to a collapsible
+apparatus drawer; John's hand gets a "ground before you turn" craft
+rule.** Playtester feedback: the opening scenes read as opaque —
+every paragraph ended in a small citation tag regardless of whether it
+carried real sources, and the prose leapt from bare rubric straight to
+confessional metaphor without ever describing the room, the object, or
+the physical task, so a new player couldn't tell what was concretely
+happening or what a choice concretely risked. Fix, two parts:
+1. *Presentation*: `passage()` now pushes a citation to `#apparatus`
+   (a slide-out drawer, closed by default, opened by a small edge tab
+   or by clicking a passage's tiny superscript marker) only when the
+   record carries non-empty `sources[]`. Plain `invented`-with-no-
+   sources narration — most of the game's prose — gets no marker at
+   all now, which removed the majority of the visual clutter without
+   losing a single citation; `ui.footnote()` routes the same way.
+   The margin's diegetic pencil-kind distractions keep their inline
+   provenance tag (that citation is content — part of what the player
+   is choosing whether to read — not apparatus).
+2. *Craft*: STYLE_GUIDE.md's John's-hand section gained a bullet
+   ("ground before you turn") requiring concrete physical/procedural
+   description before the interior/confessional turn. Rewritten under
+   it: all 8 `HOUR_TEXT` records, `DAYLIGHT`, `SCRIPTORIUM_TEXT.scene-
+   Assigned/sceneIllicit`, two `acquire` records, and `CONFESSION`'s
+   two offer-texts. The S/I scriptorium choice labels were also
+   tightened to state the fork's stakes in the label itself
+   ("Obedience is a wall, and walls also shelter" / "The light is
+   where you are watched") rather than leaving risk-vs-safety implicit.
+*Reconsider if:* the drawer's marker-suppression on sourceless records
+ever hides something a reader actually wanted cited — the fix there is
+a per-record opt-in flag, not reverting to always-inline. *Applies
+going forward*: every new passage written under `WRITING_TEMPLATES.md`
+should be checked against the "ground before you turn" rule, and
+should not expect readers to open the apparatus to understand a scene.
+
 ## Forks not taken (open, with triggers)
 
 **F-1 · Per-unit hand micro-choice.** Spec says the scribe chooses per

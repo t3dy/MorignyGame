@@ -33,59 +33,94 @@ export const HOUR_TEXT = {
   matins: {
     rubric: '¶ Of rising to the night office.',
     body:
-      'The bell had not yet rung when I woke, which I confess was not vigilance but fear; ' +
-      'the dark of the dormitory lay on me like a hand. A single lamp burned, as the Rule ' +
-      'provides. I rose, and my intention rose with me, and not all of it was for the choir.',
+      'The bell that rings the dead of night has not yet rung, and I am awake before it, ' +
+      'in the dark dormitory where twenty men sleep in a row of narrow beds, clothed, as ' +
+      'the Rule commands, with one lamp burning at the far end so that no man wakes ' +
+      'entirely blind. I dress by feel — the same wool, the same knots, my hands know the ' +
+      'order without my eyes. This waking-before-the-bell I confess was not vigilance but ' +
+      'fear; and my intention rose with my body, and not all of it was for the choir. Two ' +
+      'roads leave this bed: the plain one, down to the church and the office only, and ' +
+      'the other, which I have worn smooth this last year, toward the private prayer that ' +
+      'is the Work — a second, unlicensed office, said inside the first, that asks of me ' +
+      'not obedience only but risk.',
     sources: [{ work: 'RB 1980', locus: 'chs. 8, 22 (register model)' }],
     status: 'invented',
   },
   lauds: {
     rubric: '¶ Of Lauds, at first light.',
     body:
-      'At daybreak we praised, and the windows went from black to grey, and I was glad of it ' +
-      'as a man is glad who has come through water.',
+      'We filed into the choir stalls two by two, the youngest oblates first, and stood for ' +
+      'the psalms of praise while the windows over the altar went from black to the grey ' +
+      'of unpolished pewter. My breath showed in the cold. Singing them for the ten ' +
+      'thousandth time and meaning it is its own small discipline, and this morning I was ' +
+      'glad of the plainness of it, glad as a man is glad who has come through water and ' +
+      'only wants dry ground for a while.',
     sources: [],
     status: 'invented',
   },
   prime: {
     rubric: '¶ Of Prime, and of chapter.',
     body:
-      'After Prime we went into chapter, where faults are spoken and corrected. I sat among ' +
-      'my brothers with my book in my mind, and hoped my face was a closed door.',
+      'After Prime we did not disperse but crossed to the chapter house, where the community ' +
+      'sits on stone benches around the walls and the abbot in the center chair, and the ' +
+      'business of the house — a lease, a burial, a fault named and answered — is read from ' +
+      'the day\'s chapter of the Rule outward into our own small failures. I sat among my ' +
+      'brothers with my book in my mind the whole time, turning its pages instead of ' +
+      'listening, and hoped my face gave nothing away. A face that gives nothing away is ' +
+      'itself a kind of confession, to anyone practiced at reading faces — and this house ' +
+      'is full of men who have read little else for thirty years.',
     sources: [{ work: 'RB 1980', locus: 'chs. 46 (register model)' }],
     status: 'invented',
   },
   terce: {
     rubric: '¶ Of Terce.',
-    body: 'At the third hour, a short office; the day’s work waiting at the door of it.',
+    body:
+      'At the third hour, a short office sung standing, the psalms brief, and then the day\'s ' +
+      'work waiting at the door of it — the scriptorium desk, the leaf half-finished, the ' +
+      'ink that will have skinned over in the cold and need working again with the point of ' +
+      'the knife before it flows.',
     sources: [],
     status: 'invented',
   },
   sext: {
     rubric: '¶ Of Sext.',
-    body: 'At midday we sang, and the sun stood over the garth, and the flies were at the ink.',
+    body:
+      'At midday we sang in the full light, the sun square over the cloister garth, and came ' +
+      'back to the desks to find the flies at the ink pot again, drowned in ones and twos, ' +
+      'which the sacrist says means the ink is good and true, made properly bitter with the ' +
+      'gall.',
     sources: [],
     status: 'invented',
   },
   none: {
     rubric: '¶ Of None.',
-    body: 'At the ninth hour the office, brief; my hand ached from the pen, which I offered up.',
+    body:
+      'At the ninth hour, the office brief and welcome, for by now my hand aches from the ' +
+      'pen the way a man\'s back aches from the scythe — the same three fingers, the same ' +
+      'grip, hour on hour — and I offered the ache up along with the psalm, which the ' +
+      'colophon-writers before me always did, and always complained about doing.',
     sources: [],
     status: 'invented',
   },
   vespers: {
     rubric: '¶ Of Vespers.',
     body:
-      'At evening we sang Vespers, and the light in the choir went the color of old vellum, ' +
-      'and I thought: tonight I will ask her. And then I thought: who am I, to ask.',
+      'At evening we sang Vespers in the choir with the last light coming low and sidelong ' +
+      'through the west windows, turning the plain stone the color of old vellum, and ' +
+      'wax and incense thick in the air after a day of work and silence. Standing in that ' +
+      'light I thought: tonight I will ask her leave to go on. And then I thought: who am ' +
+      'I, to ask.',
     sources: [],
     status: 'invented',
   },
   compline: {
     rubric: '¶ Of Compline, and the Great Silence after.',
     body:
-      'We said Compline and the silence began, which is the Rule’s mercy and the enemy’s ' +
-      'opportunity, for in silence a man hears everything that is in him.',
+      'We said Compline in the dark church, the last office of the spoken day, and filed out ' +
+      'in procession under the one remaining lamp, and the Great Silence began — no word ' +
+      'from any man until the morning office, a silence the Rule sets as mercy, so the day\'s ' +
+      'business cannot follow a man to his bed. But silence is also the enemy\'s opportunity, ' +
+      'for in it a man hears everything that is in him, with nothing else left to listen to.',
     sources: [{ work: 'RB 1980', locus: 'ch. 42 (register model)' }],
     status: 'invented',
   },
@@ -314,12 +349,17 @@ export const NIGHT_ENVELOPE = { sources: [], status: 'invented' };
 // ── Confession beats (at chapter) ───────────────────────────────────────
 export const CONFESSION = {
   offerPolluted:
-    'I am unclean, and the Work is shut to me until I say so aloud to another man. The saying ' +
-    'aloud is the whole medicine and the whole price.',
+    'The community sits along the chapter-house walls on their stone benches, the abbot ' +
+    'in the center chair, and each man in turn may name a fault before the rest — this is ' +
+    'the ordinary business of the house, dull as accounts most mornings. This morning it ' +
+    'is not dull to me. I am unclean, and the Work is shut to me until I say so aloud to ' +
+    'another man, here, in this room, in front of these benches. The saying aloud is the ' +
+    'whole medicine and the whole price.',
   offerClean:
-    'I have nothing grave to confess, and the scrupulous voice says: are you sure? say ' +
-    'something anyway, say everything, be safe. That voice wears a cassock but I do not ' +
-    'think it is a monk.',
+    'Nothing grave sits on me this morning as the chapter turns to the naming of faults, ' +
+    'and I have nothing grave to confess — and the scrupulous voice says anyway: are you ' +
+    'sure? say something anyway, say everything, be safe. That voice wears a cassock but ' +
+    'I do not think it is a monk.',
   confess:
     'I said it plainly and did not decorate it. The confessor was brief and kind, which was ' +
     'worse than severity, and then it was done, and the Work stood open again.',
@@ -453,23 +493,16 @@ export const PENCIL_NOTES = [
 export const DAYLIGHT = {
   rubric: '¶ Of the day’s work, between Terce and None.',
   body:
-    'The hours of the day passed in their order — Terce, Sext, None — brief offices set in ' +
-    'work like stones in mortar. The work assigned to me was in the scriptorium; the work ' +
-    'not assigned to me was also in the scriptorium, which is the difficulty.',
-  choices: {
-    labor:
-      'Keep to the assigned copying. Obedience is a wall, and walls also shelter.',
-    lectio:
-      'Steal an hour for the Work — a leaf of the figures, copied quick, quarto hidden under psalter.',
-  },
-  results: {
-    labor:
-      'I copied what I was given, and the giving-over of my own will was, for one afternoon, ' +
-      'almost restful. Almost.',
-    lectio:
-      'The leaf is copied and hidden. My hand knew the figures better than my conscience ' +
-      'liked. Brother Herbert looked at me once, longer than a look needs to be.',
-  },
+    'The hours of the day passed in their order — Terce, Sext, None, brief offices sung ' +
+    'standing and then the desks again — and between them lay the scriptorium: a long, ' +
+    'north-lit room off the cloister walk, a row of slanted desks each with its own ' +
+    'window-bay, the brothers silent at their leaves, the only sounds a quill\'s scratch ' +
+    'and the occasional scrape of a knife correcting a slip. My own desk holds the leaf ' +
+    'the armarius assigned me — that is the work the house knows I do. Under it, or ' +
+    'beside it, or in the scrip at my hip, is the other work: the Liber florum, in one ' +
+    'redaction or another, waiting on the same hours, the same light, the same watched ' +
+    'silence, for a very different kind of finishing. Two leaves, one desk, one window\'s ' +
+    'worth of daylight to give to either.',
   sources: [],
   status: 'invented',
 };
@@ -737,18 +770,34 @@ export const SCRIPTORIUM_TEXT = {
   sceneAssigned: {
     rubric: '¶ Of the work of the hands, between Terce and None.',
     body:
-      'I took my place with the house’s book before me, and the light lay on the desk ' +
-      'like a permission. Around me the pens of my brothers went on inside the great ' +
-      'silence, each man his leaf; and I confess the peace of it held me a while entire.',
+      'I took my place at the sloped desk with the house\'s book set square before me, ' +
+      'held open by a strap of leather at each side, the page weighted flat against the ' +
+      'ruled lines a brother pricked and scored last week with an awl and a leaded rule — ' +
+      'faint grey guides for the eye to run on, so the writing keeps its rows without a ' +
+      'net beneath it. Horn of ink at the desk\'s right hand, penknife at the left, the ' +
+      'quill trimmed to the nib I like: not too fine, or the strokes starve; not too ' +
+      'broad, or the letters blur into each other like men crowded at a door. The light ' +
+      'lay on the desk from the window-bay like a permission freely given. Around me the ' +
+      'pens of my brothers went on inside the great silence, each man his leaf, and I ' +
+      'confess the peace of it held me a while entire — obedience made physical, made a ' +
+      'room I could sit inside.',
     ...SCRIPT_ENV,
   },
   sceneIllicit: {
     rubric: '¶ Of the other work, done in the same light.',
     body:
-      'I set the assigned leaf where a leaf should be, and under it, the other. My hands ' +
-      'knew the order of the work; my ears learned a new office — the door, the stair, ' +
-      'the pause in a brother’s pen. The light is where a man may write, and the light ' +
-      'is where he is watched.',
+      'I set the assigned leaf where a leaf should be seen to sit, squared to the desk\'s ' +
+      'edge, ink horn open, knife to hand, exactly as obedience requires. Underneath it, ' +
+      'or folded into the same gathering, lay the other quire — the Work, in whichever ' +
+      'redaction I have carried to the desk today. The trick of it is not hiding the ' +
+      'second book; it is that the first hour of copying, on the leaf that is truly mine ' +
+      'to copy, must look exactly like every other hour I have ever spent at this desk, ' +
+      'so that when my hand turns to the second leaf nothing in the room has changed ' +
+      'shape to announce it. My hands knew the order of the work; my ears learned a new ' +
+      'office instead — the door, the stair, the particular pause in a brother\'s pen when ' +
+      'he is thinking rather than writing, which sounds nothing at all like the pause of ' +
+      'a man who has stopped to look at you. The light is where a man may write. The ' +
+      'light is also where he is watched, and today those are the same window.',
     ...SCRIPT_ENV,
   },
 
@@ -756,15 +805,21 @@ export const SCRIPTORIUM_TEXT = {
     'armarium-lectionary': {
       text:
         'The armarius set the lectionary in my hands without looking up, which is what ' +
-        'trust looks like in that office; and a slip of vellum marked the place where the ' +
-        'last hand’s strength gave out.',
+        'trust looks like in that office: a stout quarto, boards a little sprung, the ' +
+        'quires sewn on four cords and the leather gone dark at the corners where forty ' +
+        'years of hands have carried it to the lectern and back. A slip of vellum marked ' +
+        'the place where the last hand\'s strength gave out, mid-word, in a script gone ' +
+        'shaky toward the end of the gathering — an old man\'s hand, or a tired one.',
       ...SCRIPT_ENV,
     },
     'loan-glossed-psalter': {
       text:
-        'Brother Anseau lent it the way the poor lend — freely, and forever after. ' +
-        '"Mind the gloss," he said, "it is smaller than charity." I owe him now a debt no ' +
-        'inventory will ever find.',
+        'Brother Anseau lent it the way the poor lend — freely, and forever after. It is a ' +
+        'small book, easily carried, the psalms in a tight formal hand down the center of ' +
+        'each page and his own gloss crowded into the margins on three sides in ink gone ' +
+        'brown, smaller and smaller as the years of commentary outgrew the space he\'d ' +
+        'left for them. "Mind the gloss," he said, "it is smaller than charity." I owe him ' +
+        'now a debt no inventory will ever find.',
       ...SCRIPT_ENV,
     },
     'isabel-sewn-quires': {

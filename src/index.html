@@ -11,7 +11,6 @@
     <div id="codex">
       <header id="volvelle">
         <span id="hour-name">—</span>
-        <button id="pencil-toggle" title="Show or hide the modern hand" aria-pressed="true">pencil layer: on</button>
       </header>
       <main id="opening">
         <section id="verso" aria-label="verso">
@@ -26,7 +25,6 @@
         </section>
         <aside id="margin" aria-label="margin"></aside>
       </main>
-      <footer id="footnotes"></footer>
     </div>
     <aside id="sidebar">
       <div id="status" aria-label="the state of the soul"></div>
@@ -34,6 +32,18 @@
     </aside>
     <div id="log" aria-label="message scroll" aria-live="polite"></div>
   </div>
+  <button id="apparatus-tab" aria-expanded="false" aria-controls="apparatus" title="The pencil hand: sources, citations, and scholarly notes">
+    <span id="apparatus-tab-label">✎ the pencil hand</span>
+    <span id="apparatus-tab-count" class="badge" hidden>0</span>
+  </button>
+  <aside id="apparatus" aria-label="the pencil hand's apparatus" hidden>
+    <div id="apparatus-header">
+      <h3>the pencil hand</h3>
+      <p class="apparatus-sub">sources, citations, and the designer-scholar's own notes — collapse this any time; nothing here is required reading.</p>
+      <button id="apparatus-close" aria-label="close the apparatus">close ✕</button>
+    </div>
+    <div id="apparatus-body"></div>
+  </aside>
   <script type="module" src="./main.js"></script>
 </body>
 </html>

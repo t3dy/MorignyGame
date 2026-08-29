@@ -62,9 +62,75 @@ function provenance(record) {
   return `[${record.status}${bits ? ` — ${bits}` : ''}]`;
 }
 
+// ── the apparatus (collapsible pencil-hand drawer) ─────────────
+// Citations and scholarly notes live here, not inline in the reading
+// column — a passage with real sources gets a small superscript marker;
+// plain invented narration (no sources) gets none. Cleared per witness,
+// same as the old footnote footer was.
+let apparatus = [];
+
+function apparatusLabel() {
+  return $('hour-name')?.textContent || '';
+}
+
+function renderApparatus() {
+  const body = $('apparatus-body');
+  const count = $('apparatus-tab-count');
+  body.replaceChildren();
+  if (!apparatus.length) {
+    body.appendChild(el('p', 'empty', 'Nothing cited yet this witness. As sourced passages and scholarly notes appear, they will collect here.'));
+  } else {
+    for (const entry of apparatus) {
+      const d = el('div', 'apparatus-entry');
+      if (entry.context) d.appendChild(el('span', 'context', entry.context));
+      d.appendChild(el('span', 'note-text', entry.text));
+      if (entry.citeLines) {
+        for (const line of entry.citeLines) d.appendChild(el('cite', null, line));
+      } else {
+        for (const s of entry.record.sources ?? []) {
+          d.appendChild(el('cite', null, `${s.work}${s.locus ? `, ${s.locus}` : ''}`));
+        }
+      }
+      d.appendChild(el('span', 'status-tag', entry.record.status));
+      body.appendChild(d);
+    }
+  }
+  count.textContent = String(apparatus.length);
+  count.hidden = apparatus.length === 0;
+}
+
+function resetApparatus() {
+  apparatus = [];
+  renderApparatus();
+}
+
+/** Push a citation entry; returns its 1-based marker number, or null if
+ *  the record carries no real sources (nothing worth surfacing). */
+function pushCitation(record, text) {
+  if (!record.sources?.length) return null;
+  apparatus.push({ context: apparatusLabel(), record, text });
+  renderApparatus();
+  return apparatus.length;
+}
+
+function openApparatus() {
+  $('apparatus').hidden = false;
+  $('apparatus-tab').setAttribute('aria-expanded', 'true');
+}
+function closeApparatus() {
+  $('apparatus').hidden = true;
+  $('apparatus-tab').setAttribute('aria-expanded', 'false');
+}
+
 function passage(record, text = record.body) {
   const p = el('p', null, text);
-  p.appendChild(el('span', 'provenance', provenance(record)));
+  const n = pushCitation(record, text);
+  if (n) {
+    const marker = el('sup', 'cite-marker', String(n));
+    marker.title = provenance(record);
+    marker.onclick = openApparatus;
+    p.appendChild(marker);
+  }
   return p;
 }
 
@@ -227,7 +293,7 @@ function start(seed, opts = {}) {
     prayed: false, night: null, dream: null, confession: null,
     officesKept: null, talked: [], copies: [],
   };
-  $('footnotes').replaceChildren();
+  resetApparatus();
 
   if (summonsDue(chronicle)) {
     // 1323. The day the letter comes is not an ordinary day.
@@ -287,9 +353,13 @@ const ui = {
   body(node) { $('body').appendChild(node); },
   margin(node) { $('margin').appendChild(node); },
   footnote(note) {
-    const d = el('div', 'pencil-note', note.text);
-    for (const c of note.cites ?? []) d.appendChild(el('cite', null, BIBLIO[c]));
-    $('footnotes').appendChild(d);
+    apparatus.push({
+      context: apparatusLabel(),
+      record: note,
+      text: note.text,
+      citeLines: (note.cites ?? []).map(c => BIBLIO[c]),
+    });
+    renderApparatus();
   },
 };
 
@@ -1074,12 +1144,10 @@ function stemmaStage() {
 
 // ── incipit ──────────────────────────────────────────────────
 
-$('pencil-toggle').onclick = () => {
-  const off = document.body.classList.toggle('no-pencil');
-  const b = $('pencil-toggle');
-  b.textContent = `pencil layer: ${off ? 'off' : 'on'}`;
-  b.setAttribute('aria-pressed', String(!off));
-};
+$('apparatus-tab').onclick = () =>
+  ($('apparatus').hidden ? openApparatus() : closeApparatus());
+$('apparatus-close').onclick = closeApparatus;
+renderApparatus();
 
 function incipit() {
   john = null; day = null; journal = null;

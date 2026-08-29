@@ -24,6 +24,16 @@ about procedure, unsparing about himself, and *never ironic*.
 - He narrates temptation as *combat* and *weather* — the enemy, the flesh,
   heat, siege — the idiom of confession literature, not of clinical or
   modern erotic description.
+- **Ground before you turn.** Every scene opens on the concrete and
+  procedural — the room, the object in hand, the actual physical task —
+  before the sentence is allowed to climb into metaphor or confession.
+  A reader who has never touched a quire should still know, after the
+  first two sentences of a scriptorium passage, what a quire *is* and
+  what John is doing to it. The interior turn earns its metaphor by
+  first paying out in plain description; skipping straight to "my mind
+  was a cloister with the gate standing open" without ever describing
+  the desk, the leaf, the light, is a failure of the hand, not a
+  virtue of compression. (Decision D-14, `docs/DECISIONS_AND_FORKS.md`.)
 
 ### 2. The rubricator — vermilion
 The medieval systemic voice: imperative, liturgical, brief. All UI text.
