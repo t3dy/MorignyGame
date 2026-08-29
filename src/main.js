@@ -17,7 +17,7 @@ import { confess } from './engine/struggle.js';
 import { HOURS } from './data/hours.js';
 import {
   HOUR_TEXT, VERSICLE, PROCEDURE_PRAYER, COMPLINE_PRAYER, DISTRACTIONS,
-  TIER_TEXT, NIGHT_CHOICES, NIGHT_OUTCOMES, CONFESSION, VISION_SCENE,
+  TIER_TEXT, NIGHT_SCENE, NIGHT_CHOICES, NIGHT_OUTCOMES, CONFESSION, VISION_SCENE,
   DREAM_SHUT, DISCERNMENT_OUTCOMES, PENCIL_NOTES, BIBLIO, DAYLIGHT, CONTENT_NOTE,
   JOURNEY, DRUGGED_DREAM, RADICAL_NOTE,
   SUMMONS, ROAD_TO_PARIS, EXAMINATION, EXAMINATION_ENVELOPE, VERDICTS,
@@ -892,6 +892,7 @@ function night(stage) {
   ui.setHour('The Dormitory');
   const tier = pressureTier(john.pressure);
   ui.scene({ rubric: '¶ Of the night.', verso: TIER_TEXT[tier] });
+  ui.body(passage(NIGHT_SCENE));
   ui.body(passage({ sources: [], status: 'invented' }, TIER_TEXT[tier]));
 
   const sleep = () => { addFatigue(john, -3); next(); };

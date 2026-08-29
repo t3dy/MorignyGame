@@ -8,7 +8,7 @@ import { strict as assert } from 'assert';
 import { HOURS, HOUR_ORDER } from '../src/data/hours.js';
 import {
   BIBLIO, HOUR_TEXT, VERSICLE, PROCEDURE_PRAYER, COMPLINE_PRAYER,
-  DISTRACTIONS, TIER_TEXT, NIGHT_CHOICES, NIGHT_OUTCOMES, CONFESSION,
+  DISTRACTIONS, TIER_TEXT, NIGHT_SCENE, NIGHT_CHOICES, NIGHT_OUTCOMES, CONFESSION,
   VISION_TELLS, VISION_SCENE, DREAM_SHUT, DISCERNMENT_OUTCOMES,
   PENCIL_NOTES, DAYLIGHT, CONTENT_NOTE,
 } from '../src/content/content.js';
@@ -43,6 +43,7 @@ describe('Provenance lint (no unsourced content)', () => {
     lint(VISION_SCENE, 'VISION_SCENE');
     lint(DREAM_SHUT, 'DREAM_SHUT');
     lint(DAYLIGHT, 'DAYLIGHT');
+    lint(NIGHT_SCENE, 'NIGHT_SCENE');
     for (const d of DISTRACTIONS) lint(d, `DISTRACTIONS.${d.id}`);
     for (const n of PENCIL_NOTES) lint(n, `PENCIL_NOTES.${n.id}`);
   });
@@ -76,6 +77,11 @@ describe('Writing coverage (every state has writing)', () => {
     for (const tier of ['QUIET', 'STIRRED', 'BESIEGED', 'CRISIS']) {
       assert.ok(TIER_TEXT[tier]?.length > 20, tier);
     }
+  });
+
+  test('the night scene grounds before the tier text turns interior', () => {
+    assert.ok(NIGHT_SCENE.text.length > 60, 'NIGHT_SCENE');
+    assert.ok(/bed|dormitory|dark/i.test(NIGHT_SCENE.text), 'NIGHT_SCENE stays physically placed');
   });
 
   test('every night verb has a choice line and all three outcomes', () => {

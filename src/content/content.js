@@ -287,6 +287,19 @@ export const DISTRACTIONS = [
 ];
 
 // ── The Struggle: tier interiority ──────────────────────────────────────
+/** Grounds the night scene physically before TIER_TEXT's interior read —
+ *  the same dormitory named at Matins, seen again from inside the dark. */
+export const NIGHT_SCENE = {
+  text:
+    'I lie back in the same narrow bed I rose from at Matins, clothed as the Rule commands, ' +
+    'the lamp at the far end burned down now to a bead of light not worth the name. Twenty ' +
+    'men breathe around me in the dark — most of them, by the evenness of it, already past ' +
+    'thinking; one or two, by a particular quality of stillness that is not the stillness of ' +
+    'sleep, awake and pretending otherwise, the way I am.',
+  sources: [{ work: 'RB 1980', locus: 'ch. 22 (dormitory staging, register model)' }],
+  status: 'invented',
+};
+
 export const TIER_TEXT = {
   QUIET: 'The house of the mind is swept, and nothing walks in it tonight.',
   STIRRED: 'Something paces at the edge of thought, not yet knocking, patient as rot.',
