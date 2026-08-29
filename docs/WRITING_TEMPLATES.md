@@ -164,3 +164,54 @@ the stemma map (WRITING_ASSETS_AUDIT §3).
 One sentence, R or J-adjacent, in-world, never "you can't do that here."
 The refusal should teach something about the world ("the 'Not here!' is
 worldbuilding" — the tests quote it).
+
+## T11 — Choice label (binding shape, `CLAUDE.md` rule 10)
+
+Every `act(key, label, why, fn)` call in `main.js` is a choice label.
+This is the highest-traffic template in the game — a player reads more
+of these than any other single content type — and the one the clarity
+pass exists because of. Full reasoning and worked before/after examples:
+`docs/CLARITY_STYLE_GUIDE.md`.
+
+```js
+act('<KEY>',
+  '<Verb: the concrete action, rubricator-terse>',
+  '<Stakes: what kind of choice this is, and its exact price, in one line>',
+  () => { /* … */ });
+```
+
+Fill the `why` line by asking, in order:
+1. **Does this choice lean Obedient/Radical, or Rule/Work?** If yes,
+   the line must say so in voice — not "this is the risky one" but a
+   phrase that *reads* as risk without breaking register. Models:
+   *"Obedience is a wall, and walls also shelter"* (safe) /
+   *"The light is where you are watched"* (risk).
+2. **Does this choice spend a bounded resource** (resolve, most
+   often; occasionally fatigue)? If yes, state the exact number and
+   the current pool: *"Costs 2 resolve (you have 3)"*. Do not round
+   this into vibes — a player allocating a limited pool needs the
+   real number, the same way `nightStakes()` in `main.js` computes a
+   live percentage from `engine/struggle.js`'s pure `successChance()`
+   rather than describing the odds in adjectives.
+3. **Does this choice have a probability, not a flat cost** (the
+   night verbs)? State the live percentage, computed from the engine's
+   own exported pure function — never a hand-authored guess, since the
+   real number changes with `john`'s current state and a guess will
+   drift out of sync with the mechanics it describes.
+4. **If none of the above apply** (a pure narrative branch, a Talk
+   `bye`), the `why` line may be empty or purely atmospheric — legible
+   stakes is a rule for choices that *have* stakes, not a mandate to
+   invent tension where the fiction has none.
+
+Checklist:
+- [ ] Could a first-time player tell, from the label + why line alone
+      and without opening the apparatus, what they are choosing and
+      what it costs or risks?
+- [ ] Is any numeric cost/chance computed live from engine state, not
+      hard-authored prose that can drift?
+- [ ] Does the label stay in its register (rubricator-terse for a Rule
+      choice; John's-hand-adjacent only where the choice is voiced in
+      his mouth, as in the night verbs and examination stances)?
+- [ ] Is the evocative phrasing doing real informational work, or only
+      decorating an otherwise-blank line? (A `why` of `''` is a bug
+      under rule 10 unless step 4 above applies.)

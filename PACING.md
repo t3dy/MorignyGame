@@ -81,6 +81,45 @@ for situations, letters are for the Rule, and attention is for the self.
 When a design impulse says "make this a dialogue tree," ask whether the
 other party has interests. If not, it is an encounter.
 
+### Legible stakes (binding, cuts across all four types)
+
+Playtesting on the v1 slice found the opening scenes opaque: a new
+player could not tell, from the choice text alone, that S/I at the
+scriptorium desk was a fork between safety and risk, or that H (hold
+fast) was spending a resource with a bottom. The fix is a standing
+rule, not a one-off rewrite (`CLAUDE.md` rule 10; full worked examples
+in `docs/CLARITY_STYLE_GUIDE.md`):
+
+1. **Disposition-bearing choices say which way they lean, in voice, in
+   the choice itself.** Not "this will feel obedient" discovered after
+   the fact — the label or its `why` line names the fork as the player
+   is choosing it. *"Obedience is a wall, and walls also shelter"*
+   beside *"The light is where you are watched"* is the model: both
+   evocative and unambiguous about which is safe and which is risked.
+2. **Resource-spending choices state their exact price and the current
+   pool, at the point of choice.** "Costs 2 resolve (you have 3)" is
+   not a UI compromise to be prettied away — it is the information a
+   player needs to make an informed spend, the same way a real account
+   ledger states a balance before a withdrawal. This applies specifically
+   to *choice-time* information; it does not require the ambient
+   sidebar to abandon its pip/manuscript idiom (§ below).
+3. **The type (a)/(b)/(c)/(d) grammar above already does half the work**
+   — a Rule choice (a) is a single legible letter *because* it is
+   simple; an attention choice (b) already shows its resolve cost. The
+   discipline this section adds is: never let a choice's *evocative*
+   phrasing substitute for its *legible* stakes. Beautiful and clear
+   are not in tension; a choice that is only beautiful has failed half
+   its job.
+
+**Reconciling with "State Without Numerals" (`INTERFACE.md`):** the
+numeral-free manuscript idiom governs *ambient, continuous* state —
+what the sidebar shows you between decisions, always available, never
+demanding attention. Legible stakes governs the *instant of decision* —
+what a choice tells you as you are about to make it. A candle burning
+down over an afternoon and a choice prompt that says "costs 2 resolve"
+are not the same kind of information and do not compete for the same
+register.
+
 ## 4. Where the ecclesiastical/political material belongs
 
 Political pressure should almost never be a scene you *go to*. It arrives:

@@ -10,7 +10,7 @@ import {
 } from './engine/state.js';
 import { buildDay, stageRng } from './engine/day.js';
 import { createRecitation } from './engine/recitation.js';
-import { nightThreatens, resolveNight } from './engine/struggle.js';
+import { nightThreatens, resolveNight, successChance } from './engine/struggle.js';
 import { dreamEligible, createVision, judge, reckonCorruption } from './engine/vision.js';
 import { COMMANDS, LETTERS, NIGHT_KEYS } from './engine/commands.js';
 import { confess } from './engine/struggle.js';
@@ -875,6 +875,19 @@ function applyTalkEffect(effect) {
   renderStatus();
 }
 
+/** Legible stakes for a night verb (CLAUDE.md rule 10): the exact chance
+ *  to hold, what it costs, and — for the two verbs that draw on it —
+ *  that resolve is part of the number, so the willpower economy reads
+ *  as a economy and not a mood. */
+function nightStakes(verb) {
+  const pct = Math.round(successChance(john, verb) * 100);
+  const cost = { vigil: ' · costs 2 fatigue', cold: ' · costs 1 fatigue' }[verb] ?? '';
+  const resolveNote = (verb === 'prayer' || verb === 'endure')
+    ? ` (your resolve, ${john.resolve}/5, is part of that number)`
+    : '';
+  return `${pct}% to hold the night${resolveNote}${cost}.`;
+}
+
 function night(stage) {
   ui.setHour('The Dormitory');
   const tier = pressureTier(john.pressure);
@@ -912,9 +925,10 @@ function night(stage) {
   };
 
   for (const [key, verb] of Object.entries(NIGHT_KEYS)) {
-    act(key, NIGHT_CHOICES[verb], '', () => settle(resolveNight(rng, john, verb)));
+    act(key, NIGHT_CHOICES[verb], nightStakes(verb), () => settle(resolveNight(rng, john, verb)));
   }
-  act('Y', 'Yield.', 'The game will not choose this for you. Exhaustion argues.', () => {
+  act('Y', 'Yield.',
+    'The game will not choose this for you. This always ends the same way — pollution, and a day\'s despair.', () => {
     john.purity.polluted = true;
     john.purity.confessed = false;
     john.pressure = 2;

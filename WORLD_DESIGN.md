@@ -108,6 +108,13 @@ Rules of the axis (extends `CLAUDE.md` rule 5):
    be radical in 1315's terms, not ours.
 4. The Obedient and Radical poles get the same writing care as the
    center. No strawmen at either end.
+5. **Axis-moving choices say so, in voice, at the point of choice**
+   (`CLAUDE.md` rule 10; `PACING.md` §Legible stakes). A choice that
+   leans Radical must be legible as the riskier road *before* the
+   player commits to it — not revealed only by the pencil hand's
+   after-the-fact commentary or by the disposition counter ticking up
+   in the sidebar. Evrart's `scorn` keyword and the scriptorium's `I`
+   choice are the models: the label's own phrasing carries the lean.
 
 ## 5. Build order
 

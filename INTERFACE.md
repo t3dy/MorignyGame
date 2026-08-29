@@ -23,9 +23,11 @@ except the pencil apparatus, which is *supposed* to look modern.
 │  (the Struggle's pressure  │   the interaction points   │
 │  made visible, obliquely)  │  Line-fillers = progress   │
 ├────────────────────────────┴────────────────────────────┤
-│  MARGINS (both pages): glosses, distractions, and the   │
-│  modern hand's penciled footnotes                       │
+│  MARGIN: glosses and distractions only (diegetic — part  │
+│  of what the player is choosing whether to read)         │
 └─────────────────────────────────────────────────────────┘
+        the pencil hand's apparatus lives in its own
+        collapsible drawer, off-page — see below
 ```
 
 - **Verso miniature**: the current scene, assembled from sourced Gothic
@@ -45,6 +47,17 @@ except the pencil apparatus, which is *supposed* to look modern.
   them — the monastery is heard before it is seen.
 
 ## State Without Numerals
+
+*Scope note (added with the legible-stakes rule, `CLAUDE.md` rule 10):*
+this table governs **ambient, continuous** state — what a player can
+glance at between decisions, always visible, never demanding action.
+It does not govern the **instant of a choice**: a prompt that spends a
+bounded resource (resolve, most often) states its exact price and the
+current pool as a number, in the choice's own `why` line — "Costs 2
+resolve (you have 3)" is not a numeral this table forbids, because it
+answers a different question ("what will this decision cost me right
+now") than the ambient display answers ("how am I doing"). Full
+reasoning: `PACING.md` §Legible stakes.
 
 | State | Manuscript convention |
 |---|---|
@@ -106,14 +119,36 @@ argument.
 
 ## The Pencil Apparatus (fourth wall, concretely)
 
-- Footnote cues are superscript graphite numerals in the text block; the
-  note unfolds in the margin. Notes cite real scholarship (from
-  `BIBLIOGRAPHY.md` data) and can disclose the record's `attested /
-  adapted / invented` tag — the provenance database surfacing *in the UI*.
-- Occasional longer pencil passages: the designer-scholar on reading Fanger,
-  on what could not be known, on the strangeness of building systems out of
-  a man's recorded suffering — the *Rewriting Magic* move, made playable.
-- Immersion toggle hides the pencil layer; default is visible.
+*Revised with the clarity pass, `docs/DECISIONS_AND_FORKS.md` D-14.*
+The apparatus is a **collapsible drawer**, not page furniture: closed by
+default, opened by a small edge tab (a running count of what it holds)
+or by clicking a passage's citation marker directly.
+
+- A passage carrying real `sources[]` gets a small superscript numeral
+  in the text block — nothing else changes on the page. A passage with
+  no sources (the overwhelming majority of invented narrative) gets no
+  marker at all: the reading column stays clean by construction, not by
+  a toggle the player has to remember to flip.
+- Clicking a marker, or the edge tab, slides the drawer out from the
+  right: full citations, organized by the hour or scene they belong to,
+  in the graphite hand. It can disclose the record's `attested / adapted
+  / invented` tag there — the provenance database surfacing *in the UI*,
+  just not *in the reading*.
+- Longer pencil passages (the designer-scholar on reading Fanger, on
+  what could not be known, on the strangeness of building systems out
+  of a man's recorded suffering) — the *Rewriting Magic* move, made
+  playable — are pushed to the same drawer via `ui.footnote()`, not
+  printed at the page foot.
+- **Diegetic pencil-hand content is not apparatus and stays in the
+  margin**, inline, where it has always been: the pencil-*kind*
+  distraction in the recitation/copying pool that the player may choose
+  to *attend* to (costing a verse or a unit) is game content — part of
+  the temptation the player is weighing — not a citation. Do not route
+  those into the drawer.
+- No global immersion toggle: the drawer's own open/closed state *is*
+  the toggle, and it defaults closed so the game reads clean for a
+  player who never opens it, while staying one click away for the one
+  who wants the sources every time.
 
 ## Content Note (shown once, first launch)
 

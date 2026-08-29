@@ -74,6 +74,13 @@ enforcement rules.)
    `STYLE_GUIDE.md` §Ethics.)
 6. **History cannot be beaten, only survived.** 1323 always comes. Victory is
    transmission: what survives, in whose hands, is the score.
+7. **Stakes are legible, always.** A player must be able to tell, from
+   the choice itself, whether it leans toward the Rule or the Work,
+   toward obedience or the Radical Axis (`WORLD_DESIGN.md` §4), and
+   exactly what a spendable resource like resolve will cost before they
+   spend it. Atmosphere is not a substitute for legibility — the two
+   are written together, not traded off. (`CLAUDE.md` rule 10,
+   `PACING.md` §Legible stakes, `docs/CLARITY_STYLE_GUIDE.md`.)
 
 ---
 
@@ -171,8 +178,11 @@ present:
    experience of *making this game* — the historical game designer written
    into the narrative exactly as *Rewriting Magic* writes in the scholar.
 
-The pencil hand can be toggled (immersion mode), but the default is ON: the
-apparatus is a product surface, not an extra.
+The pencil hand lives in a collapsible drawer, closed by default and one
+click away always (`docs/DECISIONS_AND_FORKS.md` D-14) — the apparatus
+is a product surface, not an extra, but it is not required reading
+either. A passage's citation marker only appears when there is a real
+citation behind it; the reading column stays clean by construction.
 
 ### The Whitening Arc (epilogue layer)
 After 1323, the pencil hand narrates the afterlife of the text: manuscripts

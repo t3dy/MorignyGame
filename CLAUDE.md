@@ -47,6 +47,18 @@ for everything in this repository.
 9. **When the scholarship and a fun mechanic conflict, the scholarship
    wins** — then find the fun *inside* what the sources actually say. The
    record so far is that the sources are stranger and better than invention.
+10. **Choices declare their stakes.** A choice's *type* (does it lean
+    Obedient or Radical; does it favor the Rule or the Work) and its
+    *price* (an exact number, where a spendable resource like resolve
+    is at stake) must be legible at the moment of choosing — stated in
+    the choice's own label or `why` line, in the register that choice
+    belongs to — never left for the player to discover only in the
+    outcome text. Ambient/continuous state (fatigue, suspicion,
+    pressure) keeps the numeral-free manuscript idiom (`INTERFACE.md`);
+    this rule governs the instant of decision, not the sidebar. Binding
+    for every new choice. See `PACING.md` §Legible stakes,
+    `STYLE_GUIDE.md` §Legible stakes, and `docs/CLARITY_STYLE_GUIDE.md`
+    for worked examples and the choice-label template.
 
 ## Data layout (all under `src/data/`, as ES modules so both the
 Vite app and the Node test runner import them directly)

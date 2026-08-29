@@ -40,6 +40,20 @@ The medieval systemic voice: imperative, liturgical, brief. All UI text.
 "¶ Of the night office." "Here begins the second prayer." "Let him keep
 silence until Prime." No jokes, no modernity, no adjectives it can't cite.
 
+The rubricator is also the voice of the **choice label** in a type-(a)
+Rule choice (`PACING.md` §Legible stakes) — which means it carries the
+stakes-legibility burden for the game's most frequent decisions. A
+rubric that names an action without naming its lean or its price has
+done half its job. Compare:
+
+> Weak: *"S — Scribe."*
+> Binding shape: *"S — Scribe: the assigned leaf. Obedience is a wall,
+> and walls also shelter."*
+
+The second line is still rubricator-terse — it does not become John's
+hand, does not turn confessional — but it tells the player what kind
+of choice this is before they take it.
+
 ### 3. The modern hand — graphite
 The designer-scholar, in the reflexive first person that *Rewriting Magic*
 models: transparent about sources, method, uncertainty, and feeling. It may

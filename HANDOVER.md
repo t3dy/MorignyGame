@@ -54,12 +54,13 @@ the soul.
 | `docs/HISTORY_CONSULT.md` | historian's brief: solid/thin/ours grading + Research Queue additions R-9…R-13 |
 | `docs/WRITING_ASSETS_AUDIT.md` | **the big list** — every writing asset to full campaign, by system and path (~247 remaining) |
 | `docs/WRITING_TEMPLATES.md` | fill-in record shapes + register checklists per content type |
-| `docs/DECISIONS_AND_FORKS.md` | decision log D-1…D-13 and open forks F-1…F-10 |
+| `docs/DECISIONS_AND_FORKS.md` | decision log D-1…D-15 and open forks F-1…F-10 |
 | `docs/ART_AUDIO_ASSET_PLAN.md` | non-writing assets: tiles, city leaves, figures policy, audio |
+| `docs/CLARITY_STYLE_GUIDE.md` | **read before writing anything new** — grounding + legible-stakes rules with worked before/after examples, pre-flight checklist, audit status |
 | `ART_SOURCES.md` | image sourcing pipeline + provenance schema |
 | `BIBLIOGRAPHY.md` | reading program + **Research Queue** |
 
-## The five rules that shape everything
+## The six rules that shape everything
 
 1. **No unsourced content.** Every record carries `sources[]` +
    `status: attested|adapted|invented`. Tests fail otherwise.
@@ -72,6 +73,12 @@ the soul.
    designer-scholar voice; it never bears her name or invents her words.
 5. **Fixed history stays fixed.** 1323 always arrives. Counterfactuals only
    through the *marked* departure annotation.
+6. **Choices declare their stakes** (added 2026-08-29, `CLAUDE.md` rule
+   10). A choice's lean (Obedient/Radical, Rule/Work) and its exact
+   price (where a spendable resource is at stake) must be legible in
+   the choice itself — never left for outcome text to reveal after the
+   fact. Read `docs/CLARITY_STYLE_GUIDE.md` before writing any new
+   scene or choice; it has the worked examples and the checklist.
 
 ## Code map (`src/`)
 

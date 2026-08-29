@@ -128,6 +128,63 @@ going forward*: every new passage written under `WRITING_TEMPLATES.md`
 should be checked against the "ground before you turn" rule, and
 should not expect readers to open the apparatus to understand a scene.
 
+## Decisions taken (baking the clarity direction into system files, 2026-08-29)
+
+**D-15 · Legible stakes formalized as a standing rule across the whole
+system-file suite, not left as an implementation detail of one pass.**
+D-14 shipped the fix (grounded narration + collapsible apparatus) but
+left the underlying principle — that a choice must state its own
+stakes — undocumented anywhere binding, and left one genuine gap
+unfixed: the night verbs (V/P/C/W), the scene most directly tied to
+the original playtesting note ("I want a system where it is clear that
+you are investing willpower that has a limit"), shipped with blank
+`why` lines. Fixed both problems together:
+
+1. **Documented as binding, not just demonstrated.** `CLAUDE.md` gained
+   rule 10; `PACING.md` gained a "Legible stakes" section under the
+   choice-grammar chapter (the natural home, since it's a cross-cutting
+   rule over all four choice types); `STYLE_GUIDE.md`'s rubricator
+   section gained the choice-label register note; `DESIGN.md` gained
+   Pillar 7; `WORLD_DESIGN.md` §4 gained axis-rule 5. `INTERFACE.md`'s
+   "State Without Numerals" table gained an explicit scope carve-out
+   (ambient display stays numeral-free; choice-time stakes state exact
+   numbers) so the new rule doesn't silently contradict the old art
+   pillar — the two were reconciled in writing, not left to quietly
+   conflict. `INTERFACE.md`'s Pencil Apparatus section and `DESIGN.md`'s
+   Fourth Wall paragraph were also corrected — both still described the
+   pre-D-14 "toggle, default visible" apparatus; they now describe the
+   shipped collapsible drawer. Doc drift from an unstated implementation
+   decision is exactly the failure mode CLAUDE.md's binding-rules model
+   exists to prevent; fixing it here, not leaving it for the next
+   session to discover a mismatch.
+2. **Fixed the one glaring gap.** The night verb choices' `why` lines
+   were literally `''`. `main.js` gained `nightStakes(verb)`, which
+   calls `engine/struggle.js`'s already-exported pure `successChance()`
+   to compute a live percentage — never a hand-authored number that
+   could drift out of sync with tuning — plus the fatigue cost where
+   one exists, plus a parenthetical naming resolve as an input for
+   Prayer and Withstand specifically, since those are the two verbs
+   where the player's banked willpower measurably changes the odds.
+   Yield's `why` line was also tightened to state its guaranteed
+   outcome ("This always ends the same way") rather than only gesturing
+   at inevitability.
+3. **New reference doc, not just terse rule statements.** The system
+   files above carry the binding one-liners; `docs/CLARITY_STYLE_GUIDE.md`
+   carries the full worked before/after text (the actual Matins
+   rewrite, the actual S/I labels, the actual Hold-Fast and new night-
+   verb lines) plus a pre-flight checklist and an honest "not yet
+   audited" list (`NIGHT_OUTCOMES` grounding, `EXAMINATION` stance
+   stakes, the unwritten v2 city dialogue, the distraction pool's
+   register question) so the next window knows what this pass covered
+   and what it didn't, rather than assuming silently that everything
+   old now conforms.
+
+*Reconsider if:* a future system genuinely has no legible number to
+show (a pure narrative fork with no mechanical weight) — T11 in
+`docs/WRITING_TEMPLATES.md` already carves this out (step 4: an empty
+`why` line is fine when the choice truly has no stakes; the bug was
+leaving it empty when it *did*).
+
 ## Forks not taken (open, with triggers)
 
 **F-1 · Per-unit hand micro-choice.** Spec says the scribe chooses per
