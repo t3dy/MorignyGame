@@ -10,6 +10,8 @@ build's numbers. Code lives in
 `src/` (engine is pure and tested; UI is DOM). These rules are binding
 for everything in this repository.
 
+> Also inherits `C:\Dev\CLAUDE.md`'s **Working Discipline** (verify-before-done, no secrets in chat, log decisions to a file, checkpoint long jobs) even where this file doesn't restate it.
+
 ## Standing Rules
 
 1. **No unsourced content.** Every content record (data, narration, vision,

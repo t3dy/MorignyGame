@@ -159,6 +159,16 @@ body {
   color: var(--vermilion);
 }
 
+/* ── narrator / John's-hand monologue split ───────────────── */
+/* Two modes of one pen (STYLE_GUIDE.md §The Four Hands) — no new hue. */
+.narrator { /* default #body p styling already fits: plain roman, iron-gall */ }
+.monologue {
+  font-style: italic;
+  padding-left: 0.9rem;
+  border-left: 2px solid var(--gutter);
+  margin-top: -0.3rem;
+}
+
 /* ── verses & recitation ──────────────────────────────────── */
 .verse {
   margin: 1.1rem 0;

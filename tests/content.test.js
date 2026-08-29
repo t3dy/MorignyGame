@@ -8,7 +8,7 @@ import { strict as assert } from 'assert';
 import { HOURS, HOUR_ORDER } from '../src/data/hours.js';
 import {
   BIBLIO, HOUR_TEXT, VERSICLE, PROCEDURE_PRAYER, COMPLINE_PRAYER,
-  DISTRACTIONS, TIER_TEXT, NIGHT_SCENE, NIGHT_CHOICES, NIGHT_OUTCOMES, CONFESSION,
+  DISTRACTIONS, TIER_TEXT, NIGHT_DELIBERATION, NIGHT_CHOICES, NIGHT_OUTCOMES, CONFESSION,
   VISION_TELLS, VISION_SCENE, DREAM_SHUT, DISCERNMENT_OUTCOMES,
   PENCIL_NOTES, DAYLIGHT, CONTENT_NOTE,
 } from '../src/content/content.js';
@@ -30,20 +30,40 @@ function lint(record, label) {
   }
 }
 
+/** A scene record is either legacy single-voice ({body,...}) or the
+ *  narrator+monologue split (STYLE_GUIDE.md §The Four Hands); lint
+ *  whichever sub-records actually carry an envelope. */
+function lintScene(record, label) {
+  if (record.narrator || record.monologue) {
+    if (record.narrator) lint(record.narrator, `${label}.narrator`);
+    if (record.monologue) lint(record.monologue, `${label}.monologue`);
+  } else {
+    lint(record, label);
+  }
+}
+
+function sceneText(record) {
+  if (record.narrator || record.monologue) {
+    return [record.narrator?.text, record.monologue?.text].filter(Boolean).join(' ');
+  }
+  return record.body ?? '';
+}
+
 describe('Provenance lint (no unsourced content)', () => {
   test('hours data carries the envelope', () => {
     for (const h of HOURS) lint(h, `hours.${h.id}`);
   });
 
   test('hour texts, prayers, scenes, distractions, notes all pass', () => {
-    for (const [id, t] of Object.entries(HOUR_TEXT)) lint(t, `HOUR_TEXT.${id}`);
+    for (const [id, t] of Object.entries(HOUR_TEXT)) lintScene(t, `HOUR_TEXT.${id}`);
     lint(VERSICLE, 'VERSICLE');
     lint(PROCEDURE_PRAYER, 'PROCEDURE_PRAYER');
     lint(COMPLINE_PRAYER, 'COMPLINE_PRAYER');
     lint(VISION_SCENE, 'VISION_SCENE');
     lint(DREAM_SHUT, 'DREAM_SHUT');
-    lint(DAYLIGHT, 'DAYLIGHT');
-    lint(NIGHT_SCENE, 'NIGHT_SCENE');
+    lintScene(DAYLIGHT, 'DAYLIGHT');
+    for (const [tier, t] of Object.entries(NIGHT_DELIBERATION)) lintScene(t, `NIGHT_DELIBERATION.${tier}`);
+    for (const k of ['offerPolluted', 'offerClean']) lintScene(CONFESSION[k], `CONFESSION.${k}`);
     for (const d of DISTRACTIONS) lint(d, `DISTRACTIONS.${d.id}`);
     for (const n of PENCIL_NOTES) lint(n, `PENCIL_NOTES.${n.id}`);
   });
@@ -69,7 +89,7 @@ describe('Writing coverage (every state has writing)', () => {
   test('every canonical hour has rubric and body', () => {
     for (const id of HOUR_ORDER) {
       assert.ok(HOUR_TEXT[id]?.rubric?.length > 0, `${id} rubric`);
-      assert.ok(HOUR_TEXT[id]?.body?.length > 20, `${id} body`);
+      assert.ok(sceneText(HOUR_TEXT[id]).length > 20, `${id} body`);
     }
   });
 
@@ -79,9 +99,26 @@ describe('Writing coverage (every state has writing)', () => {
     }
   });
 
-  test('the night scene grounds before the tier text turns interior', () => {
-    assert.ok(NIGHT_SCENE.text.length > 60, 'NIGHT_SCENE');
-    assert.ok(/bed|dormitory|dark/i.test(NIGHT_SCENE.text), 'NIGHT_SCENE stays physically placed');
+  test('the night deliberation narrates and thinks, per tier, in the right register', () => {
+    for (const tier of ['QUIET', 'STIRRED', 'BESIEGED', 'CRISIS']) {
+      const scene = NIGHT_DELIBERATION[tier];
+      assert.ok(scene.narrator?.text?.length > 20, `${tier} narrator`);
+      assert.ok(scene.monologue?.text?.length > 20, `${tier} monologue`);
+    }
+    // STYLE_GUIDE.md's binding split: the narrator may be direct, John's
+    // own words never go clinical, no matter what the narrator just said.
+    const besieged = NIGHT_DELIBERATION.BESIEGED;
+    assert.ok(!/masturbat|arous|sex/i.test(besieged.monologue.text),
+      "John's own monologue must stay in period idiom, even at BESIEGED");
+    assert.ok(/flesh|enemy|siege|temptation/i.test(besieged.monologue.text),
+      'and it should actually use that idiom, not just avoid modern words');
+  });
+
+  test('the daylight fork (obedience vs. the Work) states both roads and their feel', () => {
+    assert.ok(DAYLIGHT.narrator.text.length > 20);
+    assert.ok(DAYLIGHT.monologue.text.length > 20);
+    assert.ok(/commentary|Matthew|assigned/i.test(DAYLIGHT.narrator.text), 'names the safe task');
+    assert.ok(/Work/i.test(DAYLIGHT.monologue.text), 'and the monologue names the risk');
   });
 
   test('every night verb has a choice line and all three outcomes', () => {
@@ -94,7 +131,10 @@ describe('Writing coverage (every state has writing)', () => {
   });
 
   test('confession has all five beats', () => {
-    for (const k of ['offerPolluted', 'offerClean', 'confess', 'delay', 'scruple']) {
+    for (const k of ['offerPolluted', 'offerClean']) {
+      assert.ok(sceneText(CONFESSION[k]).length > 20, k);
+    }
+    for (const k of ['confess', 'delay', 'scruple']) {
       assert.ok(CONFESSION[k]?.length > 20, k);
     }
   });

@@ -17,7 +17,7 @@ import { confess } from './engine/struggle.js';
 import { HOURS } from './data/hours.js';
 import {
   HOUR_TEXT, VERSICLE, PROCEDURE_PRAYER, COMPLINE_PRAYER, DISTRACTIONS,
-  TIER_TEXT, NIGHT_SCENE, NIGHT_CHOICES, NIGHT_OUTCOMES, CONFESSION, VISION_SCENE,
+  TIER_TEXT, NIGHT_DELIBERATION, NIGHT_CHOICES, NIGHT_OUTCOMES, CONFESSION, VISION_SCENE,
   DREAM_SHUT, DISCERNMENT_OUTCOMES, PENCIL_NOTES, BIBLIO, DAYLIGHT, CONTENT_NOTE,
   JOURNEY, DRUGGED_DREAM, RADICAL_NOTE,
   SUMMONS, ROAD_TO_PARIS, EXAMINATION, EXAMINATION_ENVELOPE, VERDICTS,
@@ -122,8 +122,8 @@ function closeApparatus() {
   $('apparatus-tab').setAttribute('aria-expanded', 'false');
 }
 
-function passage(record, text = record.body) {
-  const p = el('p', null, text);
+function passage(record, text = record.body, cls = null) {
+  const p = el('p', cls, text);
   const n = pushCitation(record, text);
   if (n) {
     const marker = el('sup', 'cite-marker', String(n));
@@ -132,6 +132,24 @@ function passage(record, text = record.body) {
     p.appendChild(marker);
   }
   return p;
+}
+
+/**
+ * The narrator + John's-hand monologue pair (STYLE_GUIDE.md §The Four
+ * Hands). A scene record with `{ narrator, monologue }` renders both in
+ * order; a legacy single-voice `{ body }` record still renders through
+ * `passage()` directly for scenes that were never given the split.
+ */
+function deliberation(scene) {
+  const nodes = [];
+  if (scene.narrator) nodes.push(passage(scene.narrator, scene.narrator.text, 'narrator'));
+  if (scene.monologue) nodes.push(passage(scene.monologue, scene.monologue.text, 'monologue'));
+  return nodes;
+}
+
+/** Renders either shape through one call site. */
+function sceneBody(record) {
+  return record.narrator || record.monologue ? deliberation(record) : [passage(record)];
 }
 
 // ── message scroll ────────────────────────────────────────────
@@ -350,7 +368,10 @@ const ui = {
     clearActs();
     currentLook = verso || rubric;
   },
-  body(node) { $('body').appendChild(node); },
+  body(node) {
+    if (Array.isArray(node)) { for (const n of node) $('body').appendChild(n); return; }
+    $('body').appendChild(node);
+  },
   margin(node) { $('margin').appendChild(node); },
   footnote(note) {
     apparatus.push({
@@ -370,7 +391,7 @@ function officeBrief(stage) {
   const text = HOUR_TEXT[stage.hourId];
   ui.setHour(hour.names[0]);
   ui.scene({ rubric: text.rubric, verso: TIER_TEXT[pressureTier(john.pressure)] });
-  ui.body(passage(text));
+  ui.body(sceneBody(text));
   addFatigue(john, hour.sim.fatigueCost);
   renderStatus();
   act('B', 'Let the bell carry the day onward.', '', next);
@@ -381,7 +402,7 @@ function officeFull(stage) {
   const text = HOUR_TEXT[stage.hourId];
   ui.setHour(hour.names[0]);
   ui.scene({ rubric: text.rubric, verso: TIER_TEXT[pressureTier(john.pressure)] });
-  ui.body(passage(text));
+  ui.body(sceneBody(text));
   addFatigue(john, hour.sim.fatigueCost);
   renderStatus();
 
@@ -464,7 +485,7 @@ function chapter(stage) {
   const text = HOUR_TEXT[stage.hourId];
   ui.setHour('Prime · Chapter');
   ui.scene({ rubric: text.rubric, verso: TIER_TEXT[pressureTier(john.pressure)] });
-  ui.body(passage(text));
+  ui.body(sceneBody(text));
   const env = { sources: CONFESSION_SOURCES, status: 'adapted' };
 
   const say = (textStr, after) => {
@@ -474,7 +495,7 @@ function chapter(stage) {
   };
 
   if (john.purity.polluted) {
-    ui.body(passage({ ...env }, CONFESSION.offerPolluted));
+    ui.body(deliberation(CONFESSION.offerPolluted));
     act('C', 'Confess it, plainly.', 'The saying aloud is the whole medicine and the whole price.', () => {
       confess(john, 'confess'); journal.confession = 'confess'; renderStatus();
       say(CONFESSION.confess, 'Go out to the day.');
@@ -484,7 +505,7 @@ function chapter(stage) {
       say(CONFESSION.delay, 'Go out to the day.');
     });
   } else {
-    ui.body(passage({ ...env }, CONFESSION.offerClean));
+    ui.body(deliberation(CONFESSION.offerClean));
     act('B', 'You have nothing grave to say. Keep silence.', '', next);
     act('C', 'Confess anyway. Everything. Be safe.', 'The scrupulous wheel turns.', () => {
       confess(john, 'scruple'); journal.confession = 'scruple'; renderStatus();
@@ -504,7 +525,7 @@ const CONFESSION_SOURCES = [
 function daylight(stage) {
   ui.setHour('Terce · Sext · None');
   ui.scene({ rubric: DAYLIGHT.rubric, verso: TIER_TEXT[pressureTier(john.pressure)] });
-  ui.body(passage(DAYLIGHT, DAYLIGHT.body));
+  ui.body(deliberation(DAYLIGHT));
   act('S', 'Scribe: the assigned leaf.', 'Obedience is a wall, and walls also shelter.',
     () => beginCopy(stage, exemplarById('armarium-lectionary'), true));
   act('I', 'Illuminate: steal the hour for the Work.', 'The light is where you are watched.',
@@ -892,8 +913,7 @@ function night(stage) {
   ui.setHour('The Dormitory');
   const tier = pressureTier(john.pressure);
   ui.scene({ rubric: '¶ Of the night.', verso: TIER_TEXT[tier] });
-  ui.body(passage(NIGHT_SCENE));
-  ui.body(passage({ sources: [], status: 'invented' }, TIER_TEXT[tier]));
+  ui.body(deliberation(NIGHT_DELIBERATION[tier]));
 
   const sleep = () => { addFatigue(john, -3); next(); };
 

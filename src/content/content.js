@@ -32,19 +32,23 @@ export const BIBLIO = {
 export const HOUR_TEXT = {
   matins: {
     rubric: '¶ Of rising to the night office.',
-    body:
-      'The bell that rings the dead of night has not yet rung, and I am awake before it, ' +
-      'in the dark dormitory where twenty men sleep in a row of narrow beds, clothed, as ' +
-      'the Rule commands, with one lamp burning at the far end so that no man wakes ' +
-      'entirely blind. I dress by feel — the same wool, the same knots, my hands know the ' +
-      'order without my eyes. This waking-before-the-bell I confess was not vigilance but ' +
-      'fear; and my intention rose with my body, and not all of it was for the choir. Two ' +
-      'roads leave this bed: the plain one, down to the church and the office only, and ' +
-      'the other, which I have worn smooth this last year, toward the private prayer that ' +
-      'is the Work — a second, unlicensed office, said inside the first, that asks of me ' +
-      'not obedience only but risk.',
-    sources: [{ work: 'RB 1980', locus: 'chs. 8, 22 (register model)' }],
-    status: 'invented',
+    narrator: {
+      text:
+        'It\'s the dead of night, before the bell. John is awake in the dark dormitory, ' +
+        'dressing by feel among twenty sleeping brothers, and he already knows which of the ' +
+        'two roads out of this bed he\'s more afraid of wanting.',
+      sources: [{ work: 'RB 1980', locus: 'chs. 8, 22 (dormitory staging, register model)' }],
+      status: 'invented',
+    },
+    monologue: {
+      text:
+        'I woke before the bell again, and it was not vigilance, it was fear. Two roads ' +
+        'leave this bed: the plain one, to the office and nothing else, or the other, worn ' +
+        'smooth this last year, toward the Work. Obedience costs me nothing tonight. The ' +
+        'other thing might cost me everything.',
+      sources: [],
+      status: 'invented',
+    },
   },
   lauds: {
     rubric: '¶ Of Lauds, at first light.',
@@ -289,15 +293,68 @@ export const DISTRACTIONS = [
 // ── The Struggle: tier interiority ──────────────────────────────────────
 /** Grounds the night scene physically before TIER_TEXT's interior read —
  *  the same dormitory named at Matins, seen again from inside the dark. */
-export const NIGHT_SCENE = {
-  text:
-    'I lie back in the same narrow bed I rose from at Matins, clothed as the Rule commands, ' +
-    'the lamp at the far end burned down now to a bead of light not worth the name. Twenty ' +
-    'men breathe around me in the dark — most of them, by the evenness of it, already past ' +
-    'thinking; one or two, by a particular quality of stillness that is not the stillness of ' +
-    'sleep, awake and pretending otherwise, the way I am.',
-  sources: [{ work: 'RB 1980', locus: 'ch. 22 (dormitory staging, register model)' }],
-  status: 'invented',
+/**
+ * The night, per pressure tier: narrator (may be plain/modern, per
+ * STYLE_GUIDE §The Struggle rule 2) + John's own monologue (period-
+ * direct, never clinical, always — the split IS the register rule).
+ * QUIET/STIRRED never reach a choice (nightThreatens gates it) but get
+ * the same shape for consistency; BESIEGED/CRISIS are where it matters.
+ */
+export const NIGHT_DELIBERATION = {
+  QUIET: {
+    narrator: {
+      text: 'He\'s lying in the dark. Nothing is pulling at him tonight.',
+      sources: [], status: 'invented',
+    },
+    monologue: {
+      text: 'The house of the mind is swept, and nothing walks in it.',
+      sources: [], status: 'invented',
+    },
+  },
+  STIRRED: {
+    narrator: {
+      text:
+        'He\'s lying in the dark, and something in him is stirring — not urgent yet, just ' +
+        'present, the way weather is present before it decides what it is.',
+      sources: [], status: 'invented',
+    },
+    monologue: {
+      text: 'Something paces at the edge of thought, patient as rot. Not yet knocking.',
+      sources: [], status: 'invented',
+    },
+  },
+  BESIEGED: {
+    narrator: {
+      text:
+        'He\'s lying in the dark, wide awake, and his body wants something his vows don\'t ' +
+        'allow. This is the part of the record Fanger reads most carefully — not the ' +
+        'transgression itself, but what he does to himself for wanting it.',
+      sources: [{ work: 'Fanger, Rewriting Magic', locus: 'sexual-temptation material, frame; loci on Research Queue' }],
+      status: 'adapted',
+    },
+    monologue: {
+      text:
+        'The flesh will not be quiet tonight. I could rise and pray it down, or stand on the ' +
+        'cold stone till it forgets what it wants — that costs me sleep I do not have to ' +
+        'spare. Or I could let it win, the way I have before, and be someone smaller for it ' +
+        'by morning.',
+      sources: [], status: 'invented',
+    },
+  },
+  CRISIS: {
+    narrator: {
+      text:
+        'He\'s lying in the dark, losing the argument with his own body — and it doesn\'t feel ' +
+        'like an outside enemy anymore. It feels like him.',
+      sources: [], status: 'invented',
+    },
+    monologue: {
+      text:
+        'It is not outside me. That is the horror of it: the voice arguing for surrender is ' +
+        'using my own memory, in my own words, and I am running out of ground to give it.',
+      sources: [], status: 'invented',
+    },
+  },
 };
 
 export const TIER_TEXT = {
@@ -361,18 +418,36 @@ export const NIGHT_ENVELOPE = { sources: [], status: 'invented' };
 
 // ── Confession beats (at chapter) ───────────────────────────────────────
 export const CONFESSION = {
-  offerPolluted:
-    'The community sits along the chapter-house walls on their stone benches, the abbot ' +
-    'in the center chair, and each man in turn may name a fault before the rest — this is ' +
-    'the ordinary business of the house, dull as accounts most mornings. This morning it ' +
-    'is not dull to me. I am unclean, and the Work is shut to me until I say so aloud to ' +
-    'another man, here, in this room, in front of these benches. The saying aloud is the ' +
-    'whole medicine and the whole price.',
-  offerClean:
-    'Nothing grave sits on me this morning as the chapter turns to the naming of faults, ' +
-    'and I have nothing grave to confess — and the scrupulous voice says anyway: are you ' +
-    'sure? say something anyway, say everything, be safe. That voice wears a cassock but ' +
-    'I do not think it is a monk.',
+  offerPolluted: {
+    narrator: {
+      text:
+        'Chapter has turned to the naming of faults, the way it does every morning — but ' +
+        'this morning John is unclean, and nothing moves for him again until he says so, ' +
+        'out loud, in this room, in front of the benches.',
+      sources: [], status: 'invented',
+    },
+    monologue: {
+      text:
+        'I have to say it plainly, now, in front of them all. The saying aloud is the whole ' +
+        'medicine and the whole price — and I can pay it, or I can carry the fault out of ' +
+        'this room with me instead.',
+      sources: [], status: 'invented',
+    },
+  },
+  offerClean: {
+    narrator: {
+      text:
+        'Nothing grave sits on John this morning as chapter turns to the naming of faults — ' +
+        'but the scrupulous voice in him doesn\'t care what\'s true.',
+      sources: [], status: 'invented',
+    },
+    monologue: {
+      text:
+        'I have nothing grave to confess. Say something anyway, the voice says. Say ' +
+        'everything. Be safe. That voice wears a cassock, but I do not think it is a monk.',
+      sources: [], status: 'invented',
+    },
+  },
   confess:
     'I said it plainly and did not decorate it. The confessor was brief and kind, which was ' +
     'worse than severity, and then it was done, and the Work stood open again.',
@@ -505,19 +580,20 @@ export const PENCIL_NOTES = [
 // ── Daylight choice (compressed hours) ──────────────────────────────────
 export const DAYLIGHT = {
   rubric: '¶ Of the day’s work, between Terce and None.',
-  body:
-    'The hours of the day passed in their order — Terce, Sext, None, brief offices sung ' +
-    'standing and then the desks again — and between them lay the scriptorium: a long, ' +
-    'north-lit room off the cloister walk, a row of slanted desks each with its own ' +
-    'window-bay, the brothers silent at their leaves, the only sounds a quill\'s scratch ' +
-    'and the occasional scrape of a knife correcting a slip. My own desk holds the leaf ' +
-    'the armarius assigned me — that is the work the house knows I do. Under it, or ' +
-    'beside it, or in the scrip at my hip, is the other work: the Liber florum, in one ' +
-    'redaction or another, waiting on the same hours, the same light, the same watched ' +
-    'silence, for a very different kind of finishing. Two leaves, one desk, one window\'s ' +
-    'worth of daylight to give to either.',
-  sources: [],
-  status: 'invented',
+  narrator: {
+    text:
+      'It\'s the hour between Terce and None. John is at his desk with a commentary on ' +
+      'Matthew half-copied in front of him — dull, assigned, safe work — and his attention ' +
+      'keeps sliding toward the other book, the one only he knows about.',
+    sources: [], status: 'invented',
+  },
+  monologue: {
+    text:
+      'My will is going soft again. I could hold to what I was given and finish the ' +
+      'commentary — it costs me nothing but the boredom of it. Or I could set this aside ' +
+      'and give the hour to the Work instead. God knows what that costs me if I\'m seen.',
+    sources: [], status: 'invented',
+  },
 };
 
 // ── The journey (world stage) ───────────────────────────────────────────
@@ -780,37 +856,16 @@ const SCRIPT_ENV = {
 };
 
 export const SCRIPTORIUM_TEXT = {
+  // Brief transitions only — DAYLIGHT already carried the deliberation
+  // and the choice; these just confirm which desk John is actually at.
   sceneAssigned: {
-    rubric: '¶ Of the work of the hands, between Terce and None.',
-    body:
-      'I took my place at the sloped desk with the house\'s book set square before me, ' +
-      'held open by a strap of leather at each side, the page weighted flat against the ' +
-      'ruled lines a brother pricked and scored last week with an awl and a leaded rule — ' +
-      'faint grey guides for the eye to run on, so the writing keeps its rows without a ' +
-      'net beneath it. Horn of ink at the desk\'s right hand, penknife at the left, the ' +
-      'quill trimmed to the nib I like: not too fine, or the strokes starve; not too ' +
-      'broad, or the letters blur into each other like men crowded at a door. The light ' +
-      'lay on the desk from the window-bay like a permission freely given. Around me the ' +
-      'pens of my brothers went on inside the great silence, each man his leaf, and I ' +
-      'confess the peace of it held me a while entire — obedience made physical, made a ' +
-      'room I could sit inside.',
+    rubric: '¶ Of the work of the hands.',
+    body: 'I put the other book out of my mind, or try to, and give the hour to what I was given.',
     ...SCRIPT_ENV,
   },
   sceneIllicit: {
     rubric: '¶ Of the other work, done in the same light.',
-    body:
-      'I set the assigned leaf where a leaf should be seen to sit, squared to the desk\'s ' +
-      'edge, ink horn open, knife to hand, exactly as obedience requires. Underneath it, ' +
-      'or folded into the same gathering, lay the other quire — the Work, in whichever ' +
-      'redaction I have carried to the desk today. The trick of it is not hiding the ' +
-      'second book; it is that the first hour of copying, on the leaf that is truly mine ' +
-      'to copy, must look exactly like every other hour I have ever spent at this desk, ' +
-      'so that when my hand turns to the second leaf nothing in the room has changed ' +
-      'shape to announce it. My hands knew the order of the work; my ears learned a new ' +
-      'office instead — the door, the stair, the particular pause in a brother\'s pen when ' +
-      'he is thinking rather than writing, which sounds nothing at all like the pause of ' +
-      'a man who has stopped to look at you. The light is where a man may write. The ' +
-      'light is also where he is watched, and today those are the same window.',
+    body: 'I set the assigned leaf where it should sit, and beneath it, the one that matters more.',
     ...SCRIPT_ENV,
   },
 

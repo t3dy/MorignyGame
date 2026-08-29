@@ -185,6 +185,57 @@ show (a pure narrative fork with no mechanical weight) — T11 in
 `why` line is fine when the choice truly has no stakes; the bug was
 leaving it empty when it *did*).
 
+## Decisions taken (simplification pass, 2026-08-29)
+
+**D-16 · A fourth voice, the narrator, replaces "ground before you turn"
+as the game's scene-setting mechanism; John's hand becomes a short,
+plain, first-person deliberation nested inside it.** Two rounds of
+clarity fixes still read as opaque and overwritten — grounding a scene
+entirely in John's own first-person voice produced accurate but long
+passages that buried the actual choice. Feedback also asked for the
+sexual-temptation material to be more direct. Resolved together, per
+explicit user choice between a period-direct-only option and a
+modern-explicit option (the user chose a third path — see below):
+
+- **The narrator** (new, `STYLE_GUIDE.md` §The Four Hands #1): brief,
+  third-person, modern in its clarity — closer to how Fanger writes
+  *about* John than to how John writes about himself. One or two
+  sentences, then stops. It is the one hand allowed to be direct about
+  the Struggle (naming arousal, the urge, plainly) because it is
+  documentary framing, not John's own confession.
+- **John's hand** (#2) now nests inside the narrator as a short
+  interior monologue — the actual deliberation, in his own period
+  idiom, *always*, even the instant after the narrator named the plain
+  fact above him. That gap between the two hands, stated as a binding
+  rule, is what let the sexual-temptation content get more direct
+  (narrator) while keeping John's own words exactly as careful as the
+  project's founding "dignity owed to the dead" commitment requires.
+- Rewritten to the new shape: `HOUR_TEXT.matins`, `DAYLIGHT` (the
+  scriptorium fork — now near-verbatim the user's own worked example:
+  "commentary on Matthew" vs. "the Work"), `CONFESSION.offerPolluted`/
+  `offerClean`, and `NIGHT_DELIBERATION` (new, replaces the one-shot
+  `NIGHT_SCENE` with a narrator+monologue pair per pressure tier).
+  `SCRIPTORIUM_TEXT.sceneAssigned`/`sceneIllicit` shrank to one-line
+  transitions since `DAYLIGHT` now carries the deliberation.
+- `main.js` gained `deliberation()`/`sceneBody()`, rendering either
+  shape through one call site; `ui.body()` now accepts arrays. CSS:
+  `.narrator` (default roman) / `.monologue` (italic, inset) — no new
+  hue, per `INTERFACE.md`'s palette discipline; two typographic modes
+  of one ink, not two pigments.
+- New test (`content.test.js`): asserts John's BESIEGED monologue never
+  uses clinical language and does use his own idiom — the register
+  split is now mechanically enforced, not just a style-guide promise.
+
+*Reconsider if:* the narrator's "one or two sentences" limit starts
+feeling clipped once the v2 city content is written — the limit is a
+discipline against recreating the previous overcorrection, not a hard
+ceiling; loosen it deliberately if a scene genuinely needs three.
+*Not touched this pass:* the other six hours (Lauds, Prime's own body
+text, Terce/Sext/None, Vespers, Compline) keep their single-voice
+shape — they carry no choice, so the deliberation split wasn't the
+fix they needed; `sceneBody()` renders them unchanged via the legacy
+path, so nothing broke, but a future pass could still tighten them.
+
 ## Forks not taken (open, with triggers)
 
 **F-1 · Per-unit hand micro-choice.** Spec says the scribe chooses per
