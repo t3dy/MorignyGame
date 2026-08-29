@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MORIGNY — Liber Florum</title>
+<style>
+  :root {
+    --paper: #e9e2d0;
+    --paper-shade: #ded5bf;
+    --ink: #3b3226;
+    --ink-faded: #6b5f4d;
+    --vermilion: #a63a22;
+    --graphite: #55565a;
+    --gutter: rgba(59, 50, 38, 0.25);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #22201b;
+    color: var(--ink);
+    font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 3rem 1.2rem;
+  }
+  main {
+    width: min(680px, 100%);
+    background: var(--paper);
+    border-radius: 3px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    padding: 2.6rem 2.4rem 2.2rem;
+  }
+  h1 {
+    font-variant: small-caps;
+    letter-spacing: 0.08em;
+    color: var(--vermilion);
+    font-size: 1.7rem;
+    font-weight: normal;
+    margin-bottom: 0.3rem;
+  }
+  .subtitle {
+    font-style: italic;
+    color: var(--ink-faded);
+    margin-bottom: 1.6rem;
+  }
+  p.lede {
+    margin-bottom: 1.8rem;
+    max-width: 56ch;
+  }
+  .builds {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  a.build {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid var(--gutter);
+    border-radius: 3px;
+    padding: 1.1rem 1.3rem;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  a.build:hover {
+    background: rgba(166, 58, 34, 0.06);
+    border-color: var(--vermilion);
+  }
+  a.build .tag {
+    display: inline-block;
+    font-variant: small-caps;
+    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    color: var(--paper);
+    background: var(--vermilion);
+    border-radius: 2px;
+    padding: 0.12rem 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  a.build.secondary .tag {
+    background: var(--graphite);
+  }
+  a.build h2 {
+    font-size: 1.15rem;
+    font-weight: normal;
+    margin-bottom: 0.35rem;
+  }
+  a.build p {
+    font-size: 0.9rem;
+    color: var(--ink-faded);
+  }
+  footer {
+    border-top: 1px dotted var(--gutter);
+    padding-top: 1rem;
+    font-size: 0.78rem;
+    color: var(--ink-faded);
+    font-family: 'Segoe Print', 'Comic Sans MS', cursive;
+  }
+  footer a { color: var(--graphite); }
+</style>
+</head>
+<body>
+<main>
+  <h1>MORIGNY</h1>
+  <p class="subtitle">Liber Florum Celestis Doctrine — a monastic life &amp; practice simulator</p>
+  <p class="lede">
+    A simulation of the lived experience of John of Morigny (fl. c. 1300–1323),
+    grounded in Claire Fanger's scholarship: the Rule and the Work sharing one
+    body, one clock, and one attention — kept hour by hour toward a
+    condemnation history has already scheduled.
+  </p>
+
+  <div class="builds">
+    <a class="build" href="./v2/">
+      <span class="tag">current</span>
+      <h2>v2 — the full campaign</h2>
+      <p>
+        The monastic day, the Struggle, discernment of spirits, the world
+        beyond the walls, the scriptorium's copy loop, and the 1323
+        examination through to the stemma of witnesses. Start here.
+      </p>
+    </a>
+    <a class="build secondary" href="./v1/">
+      <span class="tag">archived</span>
+      <h2>v1 — the original prototype</h2>
+      <p>
+        The first playable slice, kept exactly as it shipped, for the
+        record — one day, one night, one sought vision.
+      </p>
+    </a>
+  </div>
+
+  <footer>
+    Every content record in this project carries a source and a status —
+    <em>attested</em>, <em>adapted</em>, or <em>invented</em> — and nothing
+    ships without one. Source: <a href="https://github.com/t3dy/MorignyGame">github.com/t3dy/MorignyGame</a>.
+  </footer>
+</main>
+</body>
+</html>

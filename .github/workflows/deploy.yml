@@ -37,15 +37,47 @@ jobs:
       - run: npm run build
         env:
           GITHUB_PAGES: 'true'
-      - name: Publish dist to gh-pages
+      - name: Assemble Pages (v2 build + preserved v1 + landing page)
         run: |
+          set -e
           touch dist/.nojekyll
-          cd dist
-          git init -b gh-pages
+
+          rm -rf pages-out
+          if git clone --branch gh-pages --single-branch --depth 1 \
+              "https://github.com/${GITHUB_REPOSITORY}.git" pages-out 2>/dev/null; then
+            :
+          else
+            mkdir pages-out
+            git -C pages-out init -b gh-pages
+          fi
+
+          # One-time migration, safe to leave permanently: the very first
+          # gh-pages deploy put the game straight at the root. If a legacy
+          # root build is still there and nothing has claimed v1/ yet,
+          # freeze it at v1/ before anything else touches the tree. Once
+          # v1/ exists this block is a permanent no-op.
+          if [ ! -d pages-out/v1 ] && [ -f pages-out/index.html ] && [ -d pages-out/assets ]; then
+            mkdir -p pages-out/v1
+            cp pages-out/index.html pages-out/v1/index.html
+          fi
+
+          # v2 is the only thing this job ever rebuilds. v1/ and the
+          # legacy root assets/ it depends on (absolute /MorignyGame/assets/
+          # paths baked into v1/index.html) are never touched here.
+          rm -rf pages-out/v2
+          mkdir -p pages-out/v2
+          cp -r dist/* pages-out/v2/
+
+          # The landing page is regenerated fresh every deploy from its
+          # tracked source, not hand-maintained on the gh-pages branch.
+          cp deploy/landing.html pages-out/index.html
+          touch pages-out/.nojekyll
+
+          cd pages-out
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Deploy ${GITHUB_SHA}"
-          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+          git commit -m "Deploy ${GITHUB_SHA}" --allow-empty
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
