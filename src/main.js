@@ -722,8 +722,13 @@ function afterWork(stage, exemplar, assigned, copy, flags) {
       drawFigure(rng, john, copy);
       log((copy.gilded ? SCRIPTORIUM_TEXT.figure.gilded : SCRIPTORIUM_TEXT.figure.drawn).text,
         copy.gilded ? 'pencil-log' : undefined);
-      if (!flags.figureNoted) {
+      if (copy.gilded && !flags.gildedLeafShown) {
+        ui.leaf(LEAVES.figureGilded);
+        flags.gildedLeafShown = true;
+      } else if (!copy.gilded && !flags.figureNoted) {
         ui.leaf(LEAVES.figure);
+      }
+      if (!flags.figureNoted) {
         ui.footnote(SCRIPTORIUM_NOTES.find(n => n.id === 'note-verba-ignota'));
         flags.figureNoted = true;
       }
@@ -1198,6 +1203,7 @@ function examination() {
 function askQuestion() {
   const q = EXAMINATION[exam.index];
   ui.scene({ rubric: q.rubric, verso: `Question ${exam.index + 1} of ${EXAMINATION.length}.` });
+  if (exam.index === 0) ui.leaf(LEAVES.examination);
   ui.body(passage(EXAMINATION_ENVELOPE, q.question));
 
   const answer = stance => {

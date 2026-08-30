@@ -261,9 +261,18 @@ describe('Integration seams', () => {
     }
   });
 
-  test('color is earned: only the vision leaf keeps its historical color', () => {
+  test('color is earned: only the vision and the gilded figure keep their historical color', () => {
     const colored = Object.entries(LEAVES).filter(([, l]) => l.color);
-    assert.deepEqual(colored.map(([k]) => k), ['vision']);
+    assert.deepEqual(colored.map(([k]) => k).sort(), ['figureGilded', 'vision'],
+      'gold/licentia is the palette\'s other earned exception (STYLE_GUIDE.md)');
+  });
+
+  test('the adapted leaf discloses its own modern hand', () => {
+    const asset = ASSETS_MANIFEST.find(a => a.id === 'leaf-nota-logic-bodley');
+    assert.equal(asset.status, 'adapted');
+    assert.ok(asset.processing.length > 0, 'adapted requires a non-empty processing list');
+    assert.ok(/21st century|reconstruction|redraw/i.test(LEAVES.examination.caption),
+      'the caption itself must say so, not just the manifest');
   });
 
   test('due bells never skip ahead of the schedule data', () => {

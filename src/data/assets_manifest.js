@@ -100,6 +100,49 @@ export const ASSETS_MANIFEST = [
       'its house" actually looks like on parchment, a century-and-a-quarter after John.',
   },
   {
+    id: 'leaf-sigillum-dei-anselmi',
+    role: 'leaf (the figure check, gilded): the Sigillum Dei of Giorgio Anselmi',
+    institution: 'Wikimedia Commons (repository of the underlying manuscript not confirmed in the source record)',
+    shelfmark: 'n/a (digitization credit only — see notes)',
+    folio: 'n/a',
+    source_url: 'https://commons.wikimedia.org/wiki/File:Giorgio_Anselmi,_Sigillum_Dei.png',
+    license: 'Public domain (via Wikimedia Commons)',
+    date: '15th c.',
+    region: 'Italy (Parma)',
+    status: 'attested',
+    processing: ['none — shown in original color: gold/licentia is the palette\'s earned exception, per leaf-solomon-receives'],
+    notes:
+      'The heptagram-in-circles seal one attribution names for Giorgio Anselmi ' +
+      '(Georgius Parmensis), parent tradition to John Dee\'s later Sigillum Dei ' +
+      'Aemeth. Shown only when the player\'s own figure is gilded — licentia ' +
+      'received. The specific manuscript this was photographed from is not named ' +
+      'in the Commons record; the creator attribution and century are as given ' +
+      'there. Flagged for tightening if a firmer shelfmark surfaces.',
+  },
+  {
+    id: 'leaf-nota-logic-bodley',
+    role: 'leaf (the examination, first question): the figure of logic, an ars notoria nota',
+    institution: 'Bodleian Library, Oxford (original); Wikimedia Commons (this reconstruction)',
+    shelfmark: 'MS Bodley 951, f. 10v (original)',
+    folio: 'f. 10v',
+    source_url: 'https://commons.wikimedia.org/wiki/File:First-logic-version-b-bodley951-f.10v.jpg',
+    license: 'CC BY-SA 4.0 (reconstruction by Wikimedia contributor Haplo1990)',
+    date: 'original tradition 12th–13th c.; this rendering made in the 21st century',
+    region: 'England (original MS); digital (this reconstruction)',
+    status: 'adapted',
+    processing: [
+      'this is not a photograph of the medieval folio — it is a 21st-century ' +
+      'redrawing after Bodley 951, credited to its Wikimedia creator; displayed ' +
+      'desaturated toward grisaille via CSS on top of that',
+    ],
+    notes:
+      'Angels, wheels of unknown words, and geometric figures — what the ' +
+      'examiners at Paris mean by "words that are not Latin, nor Greek, nor ' +
+      'Hebrew." Demoted to adapted, and said so in the caption: a modern hand ' +
+      'redrew this from the original before it ever reached this game, and the ' +
+      'apparatus does not get to pretend otherwise.',
+  },
+  {
     id: 'leaf-aurora-consurgens',
     role: 'leaf (the reading room): a miniature from the Aurora consurgens',
     institution: 'Zentralbibliothek Zürich (via e-codices)',

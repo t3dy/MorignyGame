@@ -62,6 +62,19 @@ export const LEAVES = {
       'wager that the geometry survived the journey. — n.',
     color: false,
   },
+  figureGilded: {
+    assetId: 'leaf-sigillum-dei-anselmi',
+    src: 'leaves/sigillum-dei-anselmi.jpg',
+    alt: 'A heptagram-and-circles seal in red and black ink, unknown words ringing its border, pentagrams at its points.',
+    dateline: 'attributed to Giorgio Anselmi — Parma, 15th century',
+    caption:
+      'A Sigillum Dei, parent tradition to the seal John Dee would draw a ' +
+      'century and a half later: unknown words ringing a heptagram, each point ' +
+      'its own small star. Shown in its own color, like the vision — gold is ' +
+      'not a hue here, it is a verdict, and this run\'s figure just received ' +
+      'one. — n.',
+    color: true,
+  },
   readingRoom: {
     assetId: 'leaf-aurora-consurgens',
     src: 'leaves/aurora-consurgens.jpg',
@@ -72,6 +85,20 @@ export const LEAVES = {
       'literal battle — sun against moon, lion against griffin. What he fought ' +
       'lying still in a dark dormitory, the tradition that outlived him sent to ' +
       'the tournament ground. Transmission changes what it carries. — n.',
+    color: false,
+  },
+  examination: {
+    assetId: 'leaf-nota-logic-bodley',
+    src: 'leaves/nota-logic-bodley.jpg',
+    alt: 'A manuscript page: two angels flanking a great wheel of dense unfamiliar script, with smaller diagram roundels and a triangle of grammar terms below.',
+    dateline: 'after Bodleian MS Bodley 951, f. 10v — original 12th–13th c.; this redrawing made in the 21st century',
+    caption:
+      'The figure of logic, in the same family as what John copied: angels ' +
+      'standing guard over a wheel of words no one now living can construe. ' +
+      'A disclosure the pencil hand insists on: this image is not the medieval ' +
+      'folio itself but a careful modern redrawing of it, credited to its ' +
+      'Wikimedia maker — the original photograph was not the one that reached ' +
+      'this desk, and the difference matters enough to say so twice. — n.',
     color: false,
   },
 };
