@@ -823,6 +823,48 @@ export const DEPARTURE_NOTE = {
   status: 'attested',
 };
 
+/**
+ * The framing ending's three branches, driven by what the scriptorium
+ * actually produced and what survived custody (docs/DECISIONS_AND_FORKS.md
+ * F-8; SCRIPTORIUM.md §3.7). Pencil-hand register, matching READING_ROOM.
+ */
+export const RECIPIENT_NAMES = {
+  bridget: 'his sister\'s hand, not his own, on the flyleaf',
+  anseau: 'a brother\'s hand — the record does not say whose',
+  correspondent: 'no hand at all that anyone troubled to name',
+};
+
+export const TRANSMISSION_ENDINGS = {
+  obedient: {
+    text:
+      'No second book comes up on this trolley — there wasn\'t one. This witness kept the ' +
+      'Rule and gave the Work nothing, and the lectionary he actually finished isn\'t the ' +
+      'kind of object a reading room requests by call slip. That isn\'t a failure. It\'s a ' +
+      'life, fully spent on the plain road, and the record has no less respect for it.',
+    sources: [], status: 'invented',
+  },
+  nothingEscaped: {
+    text:
+      'Nothing came up from the stacks. Every copy this witness made stayed in the room ' +
+      '1323 emptied. Most books end this way. That is why the ones that do not are worth ' +
+      'six hundred years.',
+    sources: [], status: 'invented',
+  },
+};
+
+/** Composed with the actual `receivedCopy()` result — faults and
+ *  recipient are real facts about this run, not authored per-branch. */
+export function transmissionEndingText(copy, faultPhrases) {
+  const hand = RECIPIENT_NAMES[copy.recipient] ?? 'a hand the record never caught';
+  const state = copy.gilded
+    ? 'gold still on it, licence and all'
+    : faultPhrases.length
+      ? `carrying ${faultPhrases.length} fault${faultPhrases.length === 1 ? '' : 's'} uncorrected: ${faultPhrases.join('; ')}`
+      : 'clean, which almost never happens';
+  return `The trolley holds a slim quire — ${hand}, ${state}. It is not the copy he would ` +
+    'have chosen to be remembered by. It is the one that got out.';
+}
+
 /** The framing ending: the reading room, seven centuries on. */
 export const READING_ROOM = {
   rubric: '¶ Explicit. — And then, a long time afterward:',
@@ -1097,6 +1139,66 @@ export const SCRIPTORIUM_TEXT = {
       'watch where the eye alone would have carried it, faithful and wrong.',
     ...CRAFT_ENV('"The craft" — errors of copying'),
   },
+
+  /** Where the leaf rests, once the day's work is done (SCRIPTORIUM.md
+   *  §3.6). Narrator + monologue, per STYLE_GUIDE §The Four Hands. */
+  concealment: {
+    loose: {
+      narrator: {
+        text: 'John leaves the quires loose in his scrip, easiest to reach and easiest to lose.',
+        sources: [], status: 'invented',
+      },
+      monologue: {
+        text: 'Loose is fast. Loose is also the first place anyone would think to look, if anyone thought to look at all.',
+        sources: [], status: 'invented',
+      },
+    },
+    bound: {
+      narrator: {
+        text: 'John binds the finished quires into the spine of a licit psalter, the stitching invisible under the boards.',
+        sources: [{ work: 'Sophie Page, Magic in the Cloister (camouflage by binding)', locus: 'SCRIPTORIUM.md §3.6' }],
+        status: 'adapted',
+      },
+      monologue: {
+        text: 'Let it lie under something no one will ever ask to open. A lie told with thread instead of words is still a lie — but it\'s the kind confession can reach, if I\'m ever brave enough to say so.',
+        sources: [], status: 'invented',
+      },
+    },
+    shelved: {
+      narrator: {
+        text: 'John returns the quires to the open shelf of the armarium, where every book in the house can be counted.',
+        sources: [], status: 'invented',
+      },
+      monologue: {
+        text: 'Hiding nothing is its own kind of hiding — until someone finally reads what\'s in front of them.',
+        sources: [], status: 'invented',
+      },
+    },
+  },
+
+  /** The transmission's mechanical resolution (SCRIPTORIUM.md §3.7). The
+   *  recipient's own dialogue carries the scene; this is what the game
+   *  itself has to say about what just left the room. */
+  transmission: {
+    clean: {
+      text: 'It goes out of your hands clean, so far as you know. Whether it stays that way is no longer yours to answer for.',
+      sources: [], status: 'invented',
+    },
+    corrupt: {
+      text: 'It goes out of your hands with its faults still in it, and you say nothing about them. Some gifts are also debts.',
+      sources: [], status: 'invented',
+    },
+  },
+};
+
+/** Composed in main.js from a `scrapeLeaf()` result + `faultPhrase()`
+ *  (engine/stemma.js) — kept as templates, not hardcoded engine prose. */
+export const UNDERTEXT_TEXT = {
+  eyeskip: phrase => `Under the fresh line, if he holds the leaf to the light: ${phrase}, from a hand that was his own, once, and never knew it had erred.`,
+  dittography: phrase => `Under the fresh line, if he holds the leaf to the light: ${phrase} — the old doubling, faint, patient, unmended.`,
+  verba_ignota: phrase => `Under the fresh line, if he holds the leaf to the light: ${phrase}, in a hand that could not have known better either.`,
+  blackened: phrase => `Under the fresh line, if he holds the leaf to the light: ${phrase}, an old ruin the new ink writes carefully around.`,
+  corrosion: phrase => `Under the fresh line, if he holds the leaf to the light: ${phrase}, the green still working, slower than he is.`,
 };
 
 /** The copy loop’s own margin (joins the pencil notes from DISTRACTIONS). */

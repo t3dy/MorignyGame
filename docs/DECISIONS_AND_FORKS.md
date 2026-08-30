@@ -236,6 +236,25 @@ shape — they carry no choice, so the deliberation split wasn't the
 fix they needed; `sceneBody()` renders them unchanged via the legacy
 path, so nothing broke, but a future pass could still tighten them.
 
+## Decisions taken (v3d slice: transmission, palimpsest, Bridget, 2026-08-30)
+
+**D-17 · `chronicle.custody[]` gives copies a life beyond the day they
+were made.** A journal resets daily, so before this, a finished copy was
+sealed into its witness the same evening — no carrying a quire forward,
+no giving away last week's copy, nothing for 1323 to threaten later.
+Custody entries persist in the chronicle blob (additive, old saves
+default to empty), carry full fault detail, and are resolved once at the
+verdict via the already-tested `inventoryFinds()`. Transmission is Talk
+(Bridget in new `KIN_NPCS`, Brother Anseau reused from the exemplar
+loan, a tile-placed courier in Étampes), FIFO on the first not-given
+copy; the palimpsest is the reserved `U` verb, pulling a real fault
+from the player's own save history as an under-text distraction — never
+mendable, per the verba-ignota precedent. The framing ending branches
+three ways (obedient / nothing escaped / the received copy, gilded
+preferred) from `receivedCopy()` + `transmissionEndingText()`.
+*Deferred, unchanged:* the full mid-campaign Evrart inventory encounter
+(F-5) — verdict-time resolution already makes concealment matter.
+
 ## Forks not taken (open, with triggers)
 
 **F-1 · Per-unit hand micro-choice.** Spec says the scribe chooses per

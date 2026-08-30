@@ -21,7 +21,7 @@ import {
   DREAM_SHUT, DISCERNMENT_OUTCOMES, PENCIL_NOTES, BIBLIO, DAYLIGHT, CONTENT_NOTE,
   JOURNEY, DRUGGED_DREAM, RADICAL_NOTE,
   SUMMONS, ROAD_TO_PARIS, EXAMINATION, EXAMINATION_ENVELOPE, VERDICTS,
-  VERDICT_ENVELOPE, DEPARTURE_NOTE, READING_ROOM,
+  VERDICT_ENVELOPE, DEPARTURE_NOTE, READING_ROOM, TRANSMISSION_ENDINGS, transmissionEndingText,
 } from './content/content.js';
 import {
   loadChronicle, saveChronicle, recordDay, summonsDue,
@@ -29,20 +29,22 @@ import {
 } from './engine/chronicle.js';
 import {
   loadWitnesses, saveWitness as pushWitness, buildStemma, survivingWitness, corruptionsOf,
+  receivedCopy, faultPhrase,
 } from './engine/stemma.js';
 import {
   MAPS, createWorld, move, keepOffice, missedOffices, adjacentNpc, npcAt, tileAt,
 } from './engine/world.js';
 import { startTalk, ask, knownKeywords } from './engine/talk.js';
-import { NPCS, CLOISTER_NPCS } from './data/npcs.js';
+import { NPCS, CLOISTER_NPCS, KIN_NPCS } from './data/npcs.js';
 import {
   createCopySession, drawFigure, grindAndApply,
   correctableMethods, correctFault, activeFaults, HANDS,
+  CONCEALMENT_FOUND_CHANCE, conceal, inventoryFinds, scrapeLeaf, undertextDistraction,
 } from './engine/scriptorium.js';
 import { exemplarById } from './data/exemplars.js';
 import { materialById } from './data/materials.js';
 import {
-  SCRIPTORIUM_TEXT, COPY_DISTRACTIONS, SCRIPTORIUM_NOTES,
+  SCRIPTORIUM_TEXT, COPY_DISTRACTIONS, SCRIPTORIUM_NOTES, UNDERTEXT_TEXT,
 } from './content/content.js';
 import { SIGNPOST_TEXT } from './data/worldmap.js';
 import { TILE, PAINTERS, paintFigure, paintNpc } from './ui/tiles.js';
@@ -530,12 +532,28 @@ function daylight(stage) {
     () => beginCopy(stage, exemplarById('armarium-lectionary'), true));
   act('I', 'Illuminate: steal the hour for the Work.', 'The light is where you are watched.',
     () => chooseWorkExemplar(stage));
-  act('T', 'Talk: the armarius, or the sacrist.', 'Requisitions, and warnings.', () => {
-    subPrompt('Speak with: the armarius (A), or the sacrist (S)?', {
-      A: () => openTalk(CLOISTER_NPCS.find(n => n.id === 'denis')),
-      S: () => openTalk(CLOISTER_NPCS.find(n => n.id === 'maur')),
+  const undertext = scrapeLeaf(stageRng(day, `${stage.id}-scrape`), loadWitnesses(storage()));
+  if (undertext) {
+    const ghostExemplar = exemplarById(undertext.exemplarId) ?? exemplarById('armarium-lectionary');
+    act('U', 'Use the knife: scrape an old leaf.',
+      'The ghost of an old fault will ride along, and cost a little pressure to face.',
+      () => beginCopy(stage, ghostExemplar, ghostExemplar.id === 'armarium-lectionary', undertext));
+  }
+  const canGiveAway = chronicle.custody.some(c => !c.given);
+  act('T', 'Talk: the armarius, the sacrist' + (canGiveAway ? ', Bridget, or Brother Anseau' : '') + '.',
+    canGiveAway ? 'Requisitions, warnings — or a copy, if you trust someone with it.' : 'Requisitions, and warnings.', () => {
+      const keys = {
+        A: () => openTalk(CLOISTER_NPCS.find(n => n.id === 'denis')),
+        S: () => openTalk(CLOISTER_NPCS.find(n => n.id === 'maur')),
+      };
+      let prompt = 'Speak with: the armarius (A), or the sacrist (S)';
+      if (canGiveAway) {
+        keys.K = () => openTalk(KIN_NPCS.find(n => n.id === 'bridget'));
+        keys.N = () => openTalk(CLOISTER_NPCS.find(n => n.id === 'anseau'));
+        prompt += ', Bridget (K), or Brother Anseau (N)';
+      }
+      subPrompt(prompt + '?', keys);
     });
-  });
   act('B', 'Let the hour pass in choir and garden.', 'Nothing gained, nothing risked.', next);
 }
 
@@ -548,7 +566,7 @@ function chooseWorkExemplar(stage) {
       () => beginCopy(stage, ex, false)));
 }
 
-function beginCopy(stage, exemplar, assigned) {
+function beginCopy(stage, exemplar, assigned, undertext = null) {
   clearActs();
   const intro = assigned ? SCRIPTORIUM_TEXT.sceneAssigned : SCRIPTORIUM_TEXT.sceneIllicit;
   $('rubric').textContent = intro.rubric;
@@ -560,7 +578,13 @@ function beginCopy(stage, exemplar, assigned) {
 
   const rng = stageRng(day, `${stage.id}-copy-${exemplar.id}`);
   const pool = [...COPY_DISTRACTIONS, ...DISTRACTIONS.filter(d => d.kind === 'flesh')];
+  if (undertext) {
+    const phrase = faultPhrase(undertext.faultClass);
+    const text = (UNDERTEXT_TEXT[undertext.faultClass] ?? UNDERTEXT_TEXT.eyeskip)(phrase);
+    pool.push(undertextDistraction(undertext, text));
+  }
   const session = createCopySession(rng, john, { exemplar, light: 'day', pool });
+  if (undertext) session.copy.support = 'palimpsest';
   let hand = 'textualis';
   let seenEvents = 0;
   const verseBox = $('verse');
@@ -684,22 +708,42 @@ function afterWork(stage, exemplar, assigned, copy, flags) {
     });
   });
 
-  act('B', 'Bind up the day’s leaves.', 'To Vespers.', () => {
-    journal.copies.push({
-      exemplarId: exemplar.id,
-      assigned,
-      grade: copy.grade,
-      quality: copy.quality,
-      faultsVisible: copy.faults.filter(f => !f.corrected && f.visible).length,
-      faultsTotal: activeFaults(copy).length,
-      corrupt: copy.corrupt,
-      gilded: copy.gilded,
-      conspicuous: copy.conspicuous,
-      pigments: [...copy.pigments],
-    });
-    ui.footnote(SCRIPTORIUM_NOTES.find(n => n.id === 'note-scribere'));
-    next();
+  act('B', 'Where does the leaf rest, tonight?', 'A copy is found or not by where it lives.', () => {
+    clearActs();
+    const stakes = state => `${Math.round(CONCEALMENT_FOUND_CHANCE[state] * 100)}% found, if the house is ever searched.`;
+    act('L', 'Leave the quires loose.', stakes('loose'), () => settleConcealment(exemplar, assigned, copy, 'loose'));
+    act('D', 'Bind them into a licit codex.', stakes('bound'), () => settleConcealment(exemplar, assigned, copy, 'bound'));
+    act('S', 'Shelve them openly in the armarium.', stakes('shelved'), () => settleConcealment(exemplar, assigned, copy, 'shelved'));
   });
+}
+
+function settleConcealment(exemplar, assigned, copy, state) {
+  conceal(copy, state);
+  const record = {
+    id: `${day.seed}-${exemplar.id}-${journal.copies.length}`,
+    exemplarId: exemplar.id,
+    assigned,
+    grade: copy.grade,
+    quality: copy.quality,
+    faults: activeFaults(copy).map(f => ({ class: f.class, visible: f.visible, inherited: f.inherited })),
+    faultsVisible: copy.faults.filter(f => !f.corrected && f.visible).length,
+    faultsTotal: activeFaults(copy).length,
+    corrupt: copy.corrupt,
+    gilded: copy.gilded,
+    conspicuous: copy.conspicuous,
+    pigments: [...copy.pigments],
+    support: copy.support ?? 'parchment',
+    concealment: copy.concealment,
+    given: false,
+  };
+  journal.copies.push(record);
+  chronicle.everCopied = true;
+  chronicle.custody.push(record);
+  saveChronicle(storage(), chronicle);
+  ui.body(deliberation(SCRIPTORIUM_TEXT.concealment[state]));
+  ui.footnote(SCRIPTORIUM_NOTES.find(n => n.id === 'note-scribere'));
+  clearActs();
+  act('B', 'To Vespers.', '', next);
 }
 
 const PIGMENT_LINES = {
@@ -851,6 +895,9 @@ function openTalk(npc) {
 }
 
 function applyTalkEffect(effect) {
+  if (effect && typeof effect === 'object' && effect.key === 'transmit-copy') {
+    return transmitCopy(effect.recipient);
+  }
   switch (effect) {
     case 'give-draught':
       john.items.draught++;
@@ -893,6 +940,26 @@ function applyTalkEffect(effect) {
       break;
     }
   }
+  renderStatus();
+}
+
+/** The transmission itself (SCRIPTORIUM.md §3.7) — the offer's own words
+ *  already fired via the NPC's keyword text (openTalk logs res.text
+ *  first); this only resolves the mechanical fact of what changed hands,
+ *  or didn't. FIFO: the first not-yet-given custody copy (D-style
+ *  decision, docs/DECISIONS_AND_FORKS.md — a choose-which-copy menu
+ *  would blur dialogue into inventory management). */
+function transmitCopy(recipient) {
+  const c = chronicle.custody.find(x => !x.given);
+  if (!c) {
+    log('(There is nothing yet in your keeping to give. The words were only words.)', 'pencil-log');
+    return;
+  }
+  conceal(c, 'given');
+  c.recipient = recipient;
+  saveChronicle(storage(), chronicle);
+  const hasFault = c.corrupt || (c.faults?.length ?? 0) > 0;
+  log((hasFault ? SCRIPTORIUM_TEXT.transmission.corrupt : SCRIPTORIUM_TEXT.transmission.clean).text, 'pencil-log');
   renderStatus();
 }
 
@@ -1125,6 +1192,11 @@ function verdictStage() {
   ui.scene({ rubric: v.rubric, verso: 'They burn it. Every road burns it.' });
   ui.body(passage(VERDICT_ENVELOPE[key], v.body));
 
+  // 1323 destroys what is in the room — resolved once, mechanically real,
+  // against the engine's own tested odds (SCRIPTORIUM.md §3.6-3.7).
+  const inventoryRng = stageRng(day, 'verdict-inventory');
+  for (const c of chronicle.custody) c.found = inventoryFinds(inventoryRng, c);
+
   chronicle.examined = true;
   saveChronicle(storage(), chronicle);
   journal.verdict = key;
@@ -1158,16 +1230,25 @@ function stemmaStage() {
   }
   ui.body(tree);
 
-  if (received) {
-    ui.body(el('p', 'gold',
-      `The manuscript on the trolley is ${received.siglum} — ` +
-      `${received.total === 0 ? 'clean, which almost never happens' : `carrying ${received.total} fault${received.total === 1 ? '' : 's'}`}. ` +
-      'It is not the copy he kept. It is one of the ones that got out.'));
+  // The physical object, not the day's narrative: what the scriptorium
+  // actually produced and whether custody or 1323 got to it first
+  // (docs/DECISIONS_AND_FORKS.md F-8; SCRIPTORIUM.md §3.7).
+  const copy = receivedCopy(chronicle.custody);
+  if (!chronicle.everCopied) {
+    ui.body(passage(TRANSMISSION_ENDINGS.obedient, TRANSMISSION_ENDINGS.obedient.text));
+  } else if (!copy) {
+    ui.body(passage(TRANSMISSION_ENDINGS.nothingEscaped, TRANSMISSION_ENDINGS.nothingEscaped.text));
   } else {
+    const faultPhrases = (copy.faults ?? []).map(f => faultPhrase(f.class));
+    ui.body(el('p', 'gold', transmissionEndingText(copy, faultPhrases)));
+  }
+
+  // The per-day descent (a different, complementary question — which
+  // day's narrative is the stemma's best node) still gets its own line.
+  if (received) {
     ui.body(el('p', null,
-      'Nothing came up from the stacks. Every witness of this text was contaminated or ' +
-      'burned, and the scholar reads about it only in the chronicle that killed it. ' +
-      'Most books end this way. That is why the ones that do not are worth six hundred years.'));
+      `Among the days themselves, witness ${received.siglum} is the one the record would ` +
+      `keep, if records kept days instead of leaves.`));
   }
 
   for (const n of PENCIL_NOTES.filter(p => p.id === 'note-witness')) ui.footnote(n);

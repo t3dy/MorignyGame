@@ -36,8 +36,10 @@ const FIRE_CHANCE = 0.02;       // per candle unit — the risk was existential
 const SEEN_CHANCE = 0.05;       // per candle unit; the worst suspicion in the game
 const SEEN_SUSPICION = 3;
 const FIGURE_BASE = 0.7;        // steadiness erodes with fatigue and despair
-const BOUND_FOUND = 0.15;       // the spine lies for you, usually
-const LOOSE_FOUND = 0.5;
+/** Exported so the UI can quote a live percentage (CLAUDE.md rule 10)
+ *  instead of hand-authoring one — same pattern as struggle.js's
+ *  successChance(), which nightStakes() in main.js already reads live. */
+export const CONCEALMENT_FOUND_CHANCE = { loose: 0.5, bound: 0.15, shelved: 1, given: 0 };
 
 function errorChance(hand, fingerFatigue, john) {
   return Math.min(0.9, hand.errBase * (1 + 0.05 * fingerFatigue + 0.03 * john.fatigue));
@@ -335,16 +337,50 @@ export function conceal(copy, state) {
 }
 
 export function inventoryFinds(rng, copy) {
-  switch (copy.concealment) {
-    case 'given': return false;   // 1323 cannot reach what was already elsewhere
-    case 'shelved': return true;  // the open shelf hides nothing
-    case 'bound': return rng.next() < BOUND_FOUND;
-    default: return rng.next() < LOOSE_FOUND;
-  }
+  const chance = CONCEALMENT_FOUND_CHANCE[copy.concealment] ?? CONCEALMENT_FOUND_CHANCE.loose;
+  if (chance === 0) return false;   // given: 1323 cannot reach what was already elsewhere
+  if (chance === 1) return true;    // shelved: the open shelf hides nothing
+  return rng.next() < chance;
 }
 
 /** The rented piece has a clock (§3.1); his own book waits forever. */
 export function deadlineExceeded(exemplar, daysHeld) {
   const dl = exemplar.sim.deadlineDays;
   return dl != null && daysHeld > dl;
+}
+
+// ── palimpsest (§3.5; INTERFACE.md §Motion — "never deleted, only
+// overwritten and still legible") ───────────────────────────────
+
+/**
+ * Scrape a leaf for reuse: pull one real fault from the player's own
+ * save history (not invented flavor — the ghost is literally a past
+ * mistake, this browser's `loadWitnesses(storage())`). Pure: the caller
+ * supplies the witness list. Never mends what it finds — see
+ * docs/DECISIONS_AND_FORKS.md (palimpsest never mends, only haunts,
+ * same logic as verba ignota: sense cannot rescue what it touches).
+ */
+export function scrapeLeaf(rng, witnesses) {
+  const candidates = (witnesses ?? [])
+    .flatMap(w => (w.copies ?? []).map(c => ({ exemplarId: c.exemplarId, faults: c.faults ?? [] })))
+    .filter(c => c.faults.length);
+  if (!candidates.length) return null;
+  const pick = candidates[Math.floor(rng.next() * candidates.length) % candidates.length];
+  const fault = pick.faults[Math.floor(rng.next() * pick.faults.length) % pick.faults.length];
+  return { exemplarId: pick.exemplarId, faultClass: fault.class };
+}
+
+/** Assembles the distraction record's shape; `text` is composed by the
+ *  caller (content.js supplies the words per fault class) — the engine
+ *  never embeds prose. */
+export function undertextDistraction(undertext, text) {
+  if (!undertext) return null;
+  return {
+    id: `undertext-${undertext.faultClass}`,
+    kind: 'undertext',
+    text,
+    effects: { pressure: 1, despair: 0 },
+    sources: [{ work: 'INTERFACE.md §Motion (the palimpsest verb)', locus: 'under-text, always legible' }],
+    status: 'invented',
+  };
 }

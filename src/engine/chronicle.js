@@ -15,12 +15,23 @@ const KEY = 'morigny-chronicle';
 /** Renown ≥ this and the next day opens with the summons. */
 export const SUMMONS_AT = 12;
 
+/**
+ * `custody`: copies finished but not yet given away — the physical
+ * things 1323 can still reach. `everCopied`: set the moment any copy is
+ * ever finished, independent of what's still in custody, so the ending
+ * can tell "never tried" from "tried, and lost it all" (docs/DECISIONS_
+ * AND_FORKS.md F-8). Both additive and backward-compatible: an old save
+ * with neither field still loads, just with an empty custody.
+ */
 export function loadChronicle(storage) {
   try {
     const raw = storage.getItem(KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const c = JSON.parse(raw);
+      return { custody: [], everCopied: false, ...c };
+    }
   } catch { /* an unreadable chronicle is an empty one */ }
-  return { days: 0, renown: 0, disposition: 0, examined: false };
+  return { days: 0, renown: 0, disposition: 0, examined: false, custody: [], everCopied: false };
 }
 
 export function saveChronicle(storage, chronicle) {
@@ -28,7 +39,7 @@ export function saveChronicle(storage, chronicle) {
 }
 
 export function resetChronicle(storage) {
-  const fresh = { days: 0, renown: 0, disposition: 0, examined: false };
+  const fresh = { days: 0, renown: 0, disposition: 0, examined: false, custody: [], everCopied: false };
   saveChronicle(storage, fresh);
   return fresh;
 }

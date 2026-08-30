@@ -10,6 +10,24 @@
 
 const KEY = 'morigny-witnesses';
 
+/**
+ * How an uncorrected copy fault reads as editorial prose. Shared across
+ * the stemma (here), the palimpsest's under-text ghost, and the framing
+ * ending — one vocabulary, so the apparatus never describes the same
+ * fault two different ways depending on where it surfaces.
+ */
+export const FAULT_PHRASE = {
+  eyeskip: 'a silent lacuna, undetected',
+  dittography: 'a doubled line, visibly marked and left uncorrected',
+  verba_ignota: 'the unknown words, garbled beyond any mending',
+  blackened: 'a leaf blackened where two colors fought',
+  corrosion: 'the green eating slowly through, a hole where a word was',
+};
+
+export function faultPhrase(faultClass) {
+  return FAULT_PHRASE[faultClass] ?? `an uncatalogued fault (${faultClass})`;
+}
+
 /** Editorial sigla: A, B, … Z, then AA, AB, … */
 export function siglumFor(index) {
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -48,6 +66,9 @@ export function corruptionsOf(witness) {
   if (witness.confession === 'delay') faults.push('an unabsolved reading, left standing');
   if (witness.confession === 'scruple') faults.push('the same passage corrected four times over');
   if (!witness.prayed) faults.push('the prayer wanting entirely');
+  for (const copy of witness.copies ?? []) {
+    for (const f of copy.faults ?? []) faults.push(faultPhrase(f.class));
+  }
   return faults;
 }
 
@@ -88,4 +109,24 @@ export function survivingWitness(stemma) {
   const blessed = candidates.filter(n => n.licentia);
   const pool = blessed.length ? blessed : candidates;
   return pool.reduce((best, n) => (n.total < best.total ? n : best), pool[0]);
+}
+
+/**
+ * The physical object the modern scholar actually holds — a different
+ * question from `survivingWitness` (which day's narrative is the
+ * descent's best node). Answers "which copy got out of the room 1323
+ * burned": preference is gilded (licentia-marked) over least-corrupt,
+ * exactly mirroring `survivingWitness`'s logic at copy granularity.
+ * `custody` is `chronicle.custody[]` — copies not yet given away are
+ * resolved against `inventoryFinds()` at 1323's arrival; `found: true`
+ * means 1323 reached it, `found: false` means it escaped (given away,
+ * or simply missed).
+ */
+export function receivedCopy(custody) {
+  const escaped = (custody ?? []).filter(c => !c.found);
+  if (!escaped.length) return null;
+  const gilded = escaped.filter(c => c.gilded);
+  const pool = gilded.length ? gilded : escaped;
+  return pool.reduce((best, c) =>
+    ((c.faults?.length ?? 0) < (best.faults?.length ?? 0) ? c : best), pool[0]);
 }

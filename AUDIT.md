@@ -127,18 +127,22 @@ Reuses the recitation UI grammar (units, distractions, grade) with the light con
 
 Deferred by design (docs/DECISIONS_AND_FORKS.md): candle F-2, pecia deadline UI F-3, collation F-4, inventory encounter F-5 (→3d), palimpsest F-6.
 
-#### 3d. Meta: Witness Copies & Stemma Integration
+#### 3d. Meta: Witness Copies, Transmission & Stemma Integration ✓ BUILT 2026-08-30
 
-Witnesses now carry copies; each copy has its own corruption genealogy. The stemma screen reads back the most-surviving copy.
+Copies persist across days in `chronicle.custody[]`; concealment is a real choice with live odds; transmission (Bridget / Brother Anseau / the correspondent) happens through Talk; 1323 resolves custody via `inventoryFinds()`; the framing ending reads the actual received copy. The palimpsest (F-6) also shipped: `U` scrapes an old leaf and a real prior fault from the player's own save history ghosts through as an under-text distraction.
 
 | What | Design | Code | Tests |
 |------|--------|------|-------|
-| **Witness.copies[]** | ✓ stemma.js extend | — | — |
-| **Copy.corruptions[]** | ✓ error classes map | — | — |
-| **Concealment state** | ✓ SCRIPTORIUM.md §3.6 | — | — |
-| **Transmission choice** (give copy away) | ✓ §3.7 | — | — |
-| **Stemma reads survival** | ✓ (existing) | ⚠️ extend | — |
-| **Framing ending** | ✓ content design | — | — | Modern scholar receives the best surviving copy; reading it back in pencil hand |
+| **Witness.copies[]** (full fault detail, concealment carried) | ✓ | ✓ main.js `settleConcealment` | ✓ |
+| **Copy faults → stemma prose** (`FAULT_PHRASE`, one shared vocabulary) | ✓ | ✓ stemma.js `corruptionsOf` | ✓ |
+| **`chronicle.custody[]`** (cross-day copy persistence, back-compatible) | ✓ | ✓ chronicle.js | ✓ old-save default |
+| **Concealment choice** (loose/bound/shelved, live % from `CONCEALMENT_FOUND_CHANCE`) | ✓ §3.6 | ✓ | ✓ D-8 values pinned |
+| **Transmission choice** (Talk `entrust`/`letter` → `transmit-copy` effect) | ✓ §3.7 | ✓ KIN_NPCS (Bridget), Anseau, correspondent | ✓ contract + recipients |
+| **Palimpsest** (`U` scrape; under-text from real save history) | ✓ INTERFACE.md | ✓ `scrapeLeaf`/`undertextDistraction` | ✓ deterministic, null-safe |
+| **1323 resolves custody** | ✓ | ✓ verdictStage inventory pass | smoke (3 branches live) |
+| **Framing ending ×3** (obedient / nothing escaped / received copy) | ✓ F-8 | ✓ `receivedCopy` + `transmissionEndingText` | ✓ + browser-verified |
+
+Bridget's biography stays `verify: true` pending Research Queue R-11; the entrusting scene ships as invented, per the pecia precedent.
 
 ---
 

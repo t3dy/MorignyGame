@@ -127,6 +127,33 @@ export const NPCS = [
     default: '"Ask the bowl, brother. It knows what I know."',
     ...TYPE_ENVELOPE,
   },
+  {
+    id: 'correspondent',
+    label: 'a courier with a satchel of other men\'s letters',
+    mapId: 'etampes', x: 18, y: 6,
+    greeting:
+      'He counts letters the way Isabel counts quires — by weight, not by what\'s in them. ' +
+      '"Post for anywhere the roads still go, brother. For a price, and no questions asked ' +
+      'on either end."',
+    keywords: {
+      name: { text: '"No name worth the road knowing. A courier who\'s remembered is a courier who\'s been caught."' },
+      job: {
+        text: '"I carry what\'s paid for, sealed, unread — to Sens, to Paris, to wherever a man has ' +
+          'someone worth writing to. Fastest road there is. Also the road most likely to be stopped."',
+        unlocks: ['letter'],
+      },
+      letter: {
+        text: '"A parcel, then, not a letter." He weighs the quires in his hand, unimpressed and ' +
+          'entirely willing. "Sealed, and I carry it sealed, and what happens to a letter on a bad ' +
+          'stretch of road is between you and whoever reads it if it\'s opened. Your coin, your risk."',
+        effect: { key: 'transmit-copy', recipient: 'correspondent' },
+      },
+      bye: { text: '"Safe roof tonight, brother. I won\'t have one till Sens."' },
+    },
+    default: '"Not my trade, brother. I only carry what\'s already written."',
+    status: 'invented',
+    sources: [],
+  },
 ];
 
 /**
@@ -198,5 +225,77 @@ export const CLOISTER_NPCS = [
     },
     default: '"If it does not burn, stain, or cost money, brother, it is not my office."',
     ...OFFICE_ENVELOPE,
+  },
+  {
+    id: 'anseau',
+    label: 'Brother Anseau, gloss-stained fingers folded',
+    mapId: null, x: null, y: null,
+    greeting:
+      'Brother Anseau finds you the way an old debt finds a debtor — patiently, and without ' +
+      'malice. "Brother John. I trust the psalter earns its keep."',
+    keywords: {
+      name: { text: '"Anseau. I have glossed that psalter twenty years and finished admiring none of it."' },
+      job: {
+        text: '"Chant, mostly, and the margins of other men\'s books. A quiet trade. I recommend it."',
+        unlocks: ['psalter'],
+      },
+      psalter: {
+        text: '"Mind the gloss, I told you, and you have — mostly." He does not ask what else you\'ve ' +
+          'carried against your ribs since. Not asking is its own kind of trust.',
+        unlocks: ['entrust'],
+      },
+      entrust: {
+        text: 'He takes what you offer without opening it past the first leaf. "I lent you a book once and asked nothing back. I\'ll keep this the same way — closed, and mine to answer for, if anyone asks."',
+        effect: { key: 'transmit-copy', recipient: 'anseau' },
+      },
+      bye: { text: '"Go on, then. The gloss will still be crowded tomorrow."' },
+    },
+    default: '"Not a question the margins have answered yet, brother."',
+    ...OFFICE_ENVELOPE,
+  },
+];
+
+/**
+ * Bridget — named in the founding design (DESIGN.md's original v2 scope;
+ * SCRIPTORIUM.md §3.7 lists her among the transmission recipients) but
+ * never built until this pass. Scene-summoned like the cloister list (no
+ * tile: she isn't of Étampes or the abbey). Her own biography (name form,
+ * literacy, what she actually did with what she received) is hedged
+ * in-voice pending Research Queue R-11; the scene of entrusting her a
+ * copy is invented and ships without a hedge, same distinction the
+ * project already draws for the Orléans pecia adaptation.
+ */
+const KIN_ENVELOPE = {
+  status: 'adapted',
+  verify: true,
+  sources: [
+    { work: 'Fanger & Watson (eds.), Liber florum celestis doctrine', locus: 'Bridget among those John taught (frame); name form, literacy, practice on Research Queue R-11' },
+  ],
+};
+
+export const KIN_NPCS = [
+  {
+    id: 'bridget',
+    label: 'his sister',
+    mapId: null, x: null, y: null,
+    greeting:
+      'Your sister looks up from her sewing, glad to see you, and a little wary of what ' +
+      'you\'ve brought this time. "Well. What is it now?"',
+    keywords: {
+      name: { text: '"Bridget. Your sister before I was anyone else\'s anything." (Her own name form, and what she made of what you taught her, isn\'t settled scholarship yet — the record has less to say about her than about you.)' },
+      job: {
+        text: '"I keep this house, and I keep what devotions are mine to keep. Whatever you\'re doing over there, brother, I have my own."',
+        unlocks: ['entrust'],
+      },
+      entrust: {
+        text: '"You want me to keep this." She turns the quires over once, weighing them like ' +
+          'bread. "I won\'t pretend I can read every line the way you do. I can keep it, and keep ' +
+          'it quiet, which may be the better gift."',
+        effect: { key: 'transmit-copy', recipient: 'bridget' },
+      },
+      bye: { text: '"Go on, before someone asks why you came."' },
+    },
+    default: '"That\'s your question to answer, not mine, brother."',
+    ...KIN_ENVELOPE,
   },
 ];

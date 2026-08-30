@@ -210,6 +210,7 @@ body {
 /* ── margins & the pencil hand (in-scene, diegetic) ───────── */
 .gloss { margin-bottom: 0.9rem; }
 .gloss.flesh { color: var(--ink); }
+.gloss.undertext { color: var(--ink-faded); font-style: italic; }
 .gloss.pencil {
   font-family: 'Segoe Print', 'Comic Sans MS', cursive;
   color: var(--graphite);

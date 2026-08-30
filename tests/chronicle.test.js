@@ -18,7 +18,17 @@ function fakeStorage() {
 describe('The chronicle accumulates', () => {
   test('an empty chronicle starts at the center of the record', () => {
     const c = loadChronicle(fakeStorage());
-    assert.deepEqual(c, { days: 0, renown: 0, disposition: 0, examined: false });
+    assert.deepEqual(c, {
+      days: 0, renown: 0, disposition: 0, examined: false, custody: [], everCopied: false,
+    });
+  });
+
+  test('an old save with neither field still loads, custody defaulted empty', () => {
+    const old = { getItem: () => JSON.stringify({ days: 3, renown: 5, disposition: 1, examined: false }), setItem: () => {} };
+    const c = loadChronicle(old);
+    assert.deepEqual(c.custody, []);
+    assert.equal(c.everCopied, false);
+    assert.equal(c.days, 3, 'existing fields still read through');
   });
 
   test('unreadable storage yields an empty chronicle, not a crash', () => {

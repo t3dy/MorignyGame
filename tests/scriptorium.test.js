@@ -13,12 +13,16 @@ import { EXEMPLARS, EXEMPLAR_SOURCES, exemplarById } from '../src/data/exemplars
 import { MATERIALS, PIGMENTS, materialById } from '../src/data/materials.js';
 import {
   HANDS, ERROR_CLASSES, DAMAGE_CLASSES, VERBA_ERROR_MULT, CONCEALMENTS,
+  CONCEALMENT_FOUND_CHANCE,
   createCopySession, collate, correctableMethods, correctFault, activeFaults,
   drawFigure, grindAndApply, ageCopy, conceal, inventoryFinds, deadlineExceeded,
+  scrapeLeaf, undertextDistraction,
 } from '../src/engine/scriptorium.js';
 import {
   SCRIPTORIUM_TEXT, COPY_DISTRACTIONS, SCRIPTORIUM_NOTES, BIBLIO,
+  UNDERTEXT_TEXT, TRANSMISSION_ENDINGS, transmissionEndingText, RECIPIENT_NAMES,
 } from '../src/content/content.js';
+import { faultPhrase, FAULT_PHRASE } from '../src/engine/stemma.js';
 
 const STATUSES = ['attested', 'adapted', 'invented'];
 
@@ -454,6 +458,45 @@ describe('Concealment decides how a copy dies', () => {
     assert.equal(inventoryFinds(fakeRng(0.4), loose), true, 'loose quires are a coin toss');
     assert.equal(inventoryFinds(fakeRng(0.6), loose), false);
   });
+
+  test('the odds table is exported so the UI can quote it live (D-8 values unchanged)', () => {
+    assert.deepEqual(CONCEALMENT_FOUND_CHANCE, { loose: 0.5, bound: 0.15, shelved: 1, given: 0 });
+  });
+});
+
+// ── palimpsest ───────────────────────────────────────────────
+
+describe('The palimpsest (a real prior fault, never mended)', () => {
+  test('empty history yields nothing to scrape', () => {
+    assert.equal(scrapeLeaf(fakeRng(), []), null);
+    assert.equal(scrapeLeaf(fakeRng(), undefined), null);
+  });
+
+  test('a witness with copies but no faults yields nothing', () => {
+    const clean = { copies: [{ exemplarId: 'armarium-lectionary', faults: [] }] };
+    assert.equal(scrapeLeaf(fakeRng(), [clean]), null);
+  });
+
+  test('pulls a real fault, deterministically, under a seeded rng', () => {
+    const witnesses = [{
+      copies: [{ exemplarId: 'old-compilation', faults: [{ class: 'eyeskip' }, { class: 'dittography' }] }],
+    }];
+    const a = scrapeLeaf(new SeededRandom('scrape-1'), witnesses);
+    const b = scrapeLeaf(new SeededRandom('scrape-1'), witnesses);
+    assert.deepEqual(a, b, 'same seed, same ghost');
+    assert.equal(a.exemplarId, 'old-compilation');
+    assert.ok(['eyeskip', 'dittography'].includes(a.faultClass));
+  });
+
+  test('undertextDistraction assembles the shape but never the prose', () => {
+    const undertext = { exemplarId: 'old-compilation', faultClass: 'eyeskip' };
+    assert.equal(undertextDistraction(null, 'text'), null);
+    const rec = undertextDistraction(undertext, 'a ghost of an old fault');
+    assert.equal(rec.kind, 'undertext');
+    assert.equal(rec.text, 'a ghost of an old fault');
+    assert.equal(rec.status, 'invented');
+    assert.ok(rec.sources.length > 0);
+  });
 });
 
 // ── writing coverage (v3c stage) ─────────────────────────────
@@ -542,6 +585,48 @@ describe('Scriptorium writing coverage (every state has writing)', () => {
       assert.ok(n.text.length > 60, `${n.id} text`);
       assert.ok(n.cites?.length > 0, `${n.id} must cite`);
       for (const c of n.cites) assert.ok(BIBLIO[c], `${n.id} cites unknown key ${c}`);
+    }
+  });
+
+  test('every concealment choice narrates and thinks (narrator + monologue)', () => {
+    for (const state of ['loose', 'bound', 'shelved']) {
+      const scene = SCRIPTORIUM_TEXT.concealment[state];
+      lint(scene.narrator, `concealment.${state}.narrator`);
+      lint(scene.monologue, `concealment.${state}.monologue`);
+      assert.ok(scene.narrator.text.length > 20, `${state} narrator`);
+      assert.ok(scene.monologue.text.length > 20, `${state} monologue`);
+    }
+  });
+
+  test('transmission has both outcomes, and the recipient table covers all three channels', () => {
+    for (const key of ['clean', 'corrupt']) {
+      lint(SCRIPTORIUM_TEXT.transmission[key], `transmission.${key}`);
+      assert.ok(SCRIPTORIUM_TEXT.transmission[key].text.length > 20, key);
+    }
+    for (const recipient of ['bridget', 'anseau', 'correspondent']) {
+      assert.ok(RECIPIENT_NAMES[recipient]?.length > 5, `RECIPIENT_NAMES.${recipient}`);
+    }
+  });
+
+  test('the framing ending: obedient/nothing-escaped are enveloped; the escaped variant composes from real facts', () => {
+    lint(TRANSMISSION_ENDINGS.obedient, 'TRANSMISSION_ENDINGS.obedient');
+    lint(TRANSMISSION_ENDINGS.nothingEscaped, 'TRANSMISSION_ENDINGS.nothingEscaped');
+    const gilded = transmissionEndingText({ recipient: 'bridget', gilded: true, faults: [] }, []);
+    assert.ok(/gold/.test(gilded), 'gilded takes precedence in the phrasing');
+    const faulty = transmissionEndingText({ recipient: 'anseau', gilded: false, faults: [{ class: 'eyeskip' }] },
+      [faultPhrase('eyeskip')]);
+    assert.ok(/1 fault/.test(faulty) && /silent lacuna/.test(faulty));
+    const clean = transmissionEndingText({ recipient: 'correspondent', gilded: false, faults: [] }, []);
+    assert.ok(/clean, which almost never happens/.test(clean));
+  });
+
+  test('every under-text template produces real prose from the shared fault vocabulary', () => {
+    for (const cls of Object.keys(FAULT_PHRASE)) {
+      assert.ok(UNDERTEXT_TEXT[cls], `UNDERTEXT_TEXT.${cls}`);
+      const text = UNDERTEXT_TEXT[cls](faultPhrase(cls));
+      assert.ok(text.length > 30, `${cls} template`);
+      const rec = undertextDistraction({ exemplarId: 'old-compilation', faultClass: cls }, text);
+      lint(rec, `undertext.${cls}`);
     }
   });
 });

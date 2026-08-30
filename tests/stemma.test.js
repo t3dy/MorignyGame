@@ -7,6 +7,7 @@
 import { strict as assert } from 'assert';
 import {
   siglumFor, loadWitnesses, saveWitness, corruptionsOf, buildStemma, survivingWitness,
+  receivedCopy, faultPhrase,
 } from '../src/engine/stemma.js';
 import { EXAMINATION, VERDICTS, VERDICT_ENVELOPE, DEPARTURE_NOTE, READING_ROOM, SUMMONS, BIBLIO } from '../src/content/content.js';
 import { STANCES } from '../src/engine/chronicle.js';
@@ -62,6 +63,24 @@ describe('Corruptions are the day, read as a manuscript', () => {
     assert.ok(corruptionsOf({ prayed: true, dream: 'drugged' })
       .some(f => /blank under poppy/.test(f)));
   });
+
+  test('a scriptorium copy\'s faults join the day\'s own', () => {
+    const withCopy = {
+      prayed: true,
+      copies: [{ faults: [{ class: 'verba_ignota' }, { class: 'eyeskip' }] }],
+    };
+    const faults = corruptionsOf(withCopy);
+    assert.ok(faults.some(f => /garbled/.test(f)));
+    assert.ok(faults.some(f => /silent lacuna/.test(f)));
+  });
+
+  test('a witness with no copies at all is unaffected (old fixtures keep passing)', () => {
+    assert.deepEqual(corruptionsOf(clean), []);
+  });
+
+  test('an unknown fault class still names itself, honestly', () => {
+    assert.match(faultPhrase('mystery'), /uncatalogued fault \(mystery\)/);
+  });
 });
 
 describe('The stemma', () => {
@@ -102,6 +121,34 @@ describe('The stemma', () => {
 
   test('an empty chronicle yields no manuscript', () => {
     assert.equal(survivingWitness(buildStemma([])), null);
+  });
+});
+
+describe('The received copy (what the scholar actually holds)', () => {
+  test('empty custody yields nothing', () => {
+    assert.equal(receivedCopy([]), null);
+    assert.equal(receivedCopy(undefined), null);
+  });
+
+  test('everything found by the inventory means nothing escaped', () => {
+    assert.equal(receivedCopy([{ found: true, faults: [] }, { found: true, faults: [] }]), null);
+  });
+
+  test('a gilded copy is preferred over an unmarked one, even if faultier', () => {
+    const plain = { found: false, faults: [], gilded: false };
+    const gilded = { found: false, faults: [{ class: 'eyeskip' }], gilded: true };
+    assert.equal(receivedCopy([plain, gilded]), gilded);
+  });
+
+  test('with no gilded copy, the least corrupt of what escaped wins', () => {
+    const messy = { found: false, faults: [{ class: 'eyeskip' }, { class: 'dittography' }] };
+    const cleaner = { found: false, faults: [{ class: 'eyeskip' }] };
+    assert.equal(receivedCopy([messy, cleaner]), cleaner);
+  });
+
+  test('given-away copies (found: false by construction) are eligible like any escape', () => {
+    const given = { found: false, faults: [], concealment: 'given' };
+    assert.equal(receivedCopy([given]), given);
   });
 });
 

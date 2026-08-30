@@ -10,7 +10,7 @@ import {
   keepOffice, missedOffices, adjacentNpc, reachable,
 } from '../src/engine/world.js';
 import { startTalk, ask, knownKeywords } from '../src/engine/talk.js';
-import { NPCS, CLOISTER_NPCS } from '../src/data/npcs.js';
+import { NPCS, CLOISTER_NPCS, KIN_NPCS } from '../src/data/npcs.js';
 import {
   WORLD_MAP, ETAMPES_MAP, SPAWNS, ROAD_BELLS,
 } from '../src/data/worldmap.js';
@@ -165,7 +165,7 @@ describe('NPC content coverage (envelope + contract)', () => {
   const STATUSES = ['attested', 'adapted', 'invented'];
 
   test('every NPC honors the keyword contract and the envelope', () => {
-    for (const npc of [...NPCS, ...CLOISTER_NPCS]) {
+    for (const npc of [...NPCS, ...CLOISTER_NPCS, ...KIN_NPCS]) {
       assert.ok(STATUSES.includes(npc.status), `${npc.id} status`);
       assert.ok(Array.isArray(npc.sources), `${npc.id} sources`);
       assert.ok(npc.greeting.length > 20, `${npc.id} greeting`);
@@ -195,10 +195,20 @@ describe('NPC content coverage (envelope + contract)', () => {
     assert.ok(!isabel.keywords.orleans.unlocks.includes('sewn'), 'and earned in two steps, not one');
     assert.ok(isabel.keywords.student.unlocks.includes('sewn'));
     assert.equal(isabel.keywords.sewn.effect, 'give-exemplar-sewn');
-    assert.equal(CLOISTER_NPCS.length, 2, 'the armarius and the sacrist');
-    for (const npc of CLOISTER_NPCS) {
+    assert.equal(CLOISTER_NPCS.length, 3, 'the armarius, the sacrist, and Brother Anseau');
+    for (const npc of [...CLOISTER_NPCS, ...KIN_NPCS]) {
       assert.equal(npc.mapId, null, `${npc.id} is scene-summoned, not tile-placed`);
     }
+  });
+
+  test('transmission effects carry a recipient, and fire through the same keyword contract', () => {
+    const bridget = KIN_NPCS.find(n => n.id === 'bridget');
+    const anseau = CLOISTER_NPCS.find(n => n.id === 'anseau');
+    const correspondent = NPCS.find(n => n.id === 'correspondent');
+    assert.deepEqual(bridget.keywords.entrust.effect, { key: 'transmit-copy', recipient: 'bridget' });
+    assert.deepEqual(anseau.keywords.entrust.effect, { key: 'transmit-copy', recipient: 'anseau' });
+    assert.deepEqual(correspondent.keywords.letter.effect, { key: 'transmit-copy', recipient: 'correspondent' });
+    assert.equal(correspondent.mapId, 'etampes', 'the correspondent, unlike kin and cloister, is tile-placed');
   });
 });
 
