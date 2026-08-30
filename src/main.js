@@ -47,6 +47,8 @@ import {
   SCRIPTORIUM_TEXT, COPY_DISTRACTIONS, SCRIPTORIUM_NOTES, UNDERTEXT_TEXT,
 } from './content/content.js';
 import { SIGNPOST_TEXT } from './data/worldmap.js';
+import { LEAVES } from './data/leaves.js';
+import { ASSETS_MANIFEST } from './data/assets_manifest.js';
 import { TILE, PAINTERS, paintFigure, paintNpc } from './ui/tiles.js';
 
 const $ = id => document.getElementById(id);
@@ -375,6 +377,36 @@ const ui = {
     $('body').appendChild(node);
   },
   margin(node) { $('margin').appendChild(node); },
+  /** A sourced historical image (ART_SOURCES.md pipeline; CLAUDE.md
+   *  rule 7: date visible on screen, always — never just in the
+   *  apparatus). Grisaille by default; `leaf.color` is the vision's
+   *  earned exception. Full provenance still reaches the apparatus
+   *  drawer, for the reader who wants the institution and shelfmark. */
+  leaf(leaf) {
+    const asset = ASSETS_MANIFEST.find(a => a.id === leaf.assetId);
+    const fig = el('figure', `leaf${leaf.color ? '' : ' grisaille'}`);
+    const img = document.createElement('img');
+    img.src = `${import.meta.env.BASE_URL}${leaf.src}`;
+    img.alt = leaf.alt;
+    img.loading = 'lazy';
+    fig.appendChild(img);
+    fig.appendChild(el('div', 'leaf-dateline', leaf.dateline));
+    $('body').appendChild(fig);
+    if (asset) {
+      const n = pushCitation(
+        { sources: [{ work: asset.institution, locus: [asset.shelfmark, asset.folio].filter(Boolean).join(', ') }], status: asset.status },
+        leaf.caption,
+      );
+      const cap = el('p', 'pencil-note leaf-caption', leaf.caption);
+      if (n) {
+        const marker = el('sup', 'cite-marker', String(n));
+        marker.title = `[${asset.status} — ${asset.institution}, ${asset.shelfmark}]`;
+        marker.onclick = openApparatus;
+        cap.appendChild(marker);
+      }
+      $('body').appendChild(cap);
+    }
+  },
   footnote(note) {
     apparatus.push({
       context: apparatusLabel(),
@@ -527,6 +559,7 @@ const CONFESSION_SOURCES = [
 function daylight(stage) {
   ui.setHour('Terce · Sext · None');
   ui.scene({ rubric: DAYLIGHT.rubric, verso: TIER_TEXT[pressureTier(john.pressure)] });
+  if (chronicle.days === 0) ui.leaf(LEAVES.scriptorium); // once: the room is new the first day, not every day
   ui.body(deliberation(DAYLIGHT));
   act('S', 'Scribe: the assigned leaf.', 'Obedience is a wall, and walls also shelter.',
     () => beginCopy(stage, exemplarById('armarium-lectionary'), true));
@@ -690,6 +723,7 @@ function afterWork(stage, exemplar, assigned, copy, flags) {
       log((copy.gilded ? SCRIPTORIUM_TEXT.figure.gilded : SCRIPTORIUM_TEXT.figure.drawn).text,
         copy.gilded ? 'pencil-log' : undefined);
       if (!flags.figureNoted) {
+        ui.leaf(LEAVES.figure);
         ui.footnote(SCRIPTORIUM_NOTES.find(n => n.id === 'note-verba-ignota'));
         flags.figureNoted = true;
       }
@@ -1045,6 +1079,7 @@ function dream(stage) {
   const vision = createVision(rng);
   ui.scene({ rubric: VISION_SCENE.rubric, verso: '' });
   ui.body(passage(VISION_SCENE));
+  ui.leaf(LEAVES.vision);
   for (const tell of vision.tells) {
     const p = el('p', 'ultramarine', tell.text);
     p.appendChild(el('span', 'provenance', `[tell: ${tell.category}${tell.ambiguous ? ' — ambiguous' : ''}]`));
@@ -1213,6 +1248,7 @@ function stemmaStage() {
   ui.setHour('The Stemma');
   ui.scene({ rubric: READING_ROOM.rubric, verso: '' });
   ui.body(passage(READING_ROOM));
+  ui.leaf(LEAVES.readingRoom);
 
   const nodes = buildStemma(loadWitnesses(storage()));
   const received = survivingWitness(nodes);
@@ -1269,6 +1305,7 @@ function incipit() {
   john = null; day = null; journal = null;
   ui.setHour('Incipit');
   ui.scene({ rubric: '¶ Here begins the book of the flowers of heavenly teaching.', verso: '' });
+  ui.leaf(LEAVES.incipit);
   ui.body(el('p', null,
     'MORIGNY — one day and one night in the life of Brother John, monk of Morigny, ' +
     'who practiced a forbidden art, repented of it, and rebuilt it in the Virgin’s name; ' +

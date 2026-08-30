@@ -17,6 +17,7 @@ import {
 import { createJohn } from '../src/engine/state.js';
 import { buildDay, dayIsLegal } from '../src/engine/day.js';
 import { ASSETS_MANIFEST } from '../src/data/assets_manifest.js';
+import { LEAVES } from '../src/data/leaves.js';
 
 describe('The maps validate', () => {
   test('both maps are rectangular', () => {
@@ -230,6 +231,39 @@ describe('Integration seams', () => {
     assert.ok(tiles);
     assert.equal(tiles.status, 'invented');
     assert.ok(tiles.notes.length > 20);
+  });
+
+  test('every manifest entry carries the full ART_SOURCES.md schema (CLAUDE.md rule 6)', () => {
+    const REQUIRED = ['id', 'role', 'institution', 'shelfmark', 'folio', 'source_url',
+      'license', 'date', 'region', 'status', 'processing', 'notes'];
+    const STATUSES = ['attested', 'adapted', 'invented'];
+    for (const a of ASSETS_MANIFEST) {
+      for (const field of REQUIRED) {
+        assert.ok(field in a, `${a.id}: missing ${field}`);
+      }
+      assert.ok(STATUSES.includes(a.status), `${a.id}: status`);
+      assert.ok(Array.isArray(a.processing), `${a.id}: processing must be an array`);
+      if (a.status === 'adapted') {
+        assert.ok(a.processing.length > 0, `${a.id}: adapted requires a non-empty processing list`);
+      }
+    }
+  });
+
+  test('every leaf resolves to a manifest entry, dated on screen (CLAUDE.md rule 7)', () => {
+    for (const [key, leaf] of Object.entries(LEAVES)) {
+      const asset = ASSETS_MANIFEST.find(a => a.id === leaf.assetId);
+      assert.ok(asset, `LEAVES.${key} has no manifest entry for ${leaf.assetId}`);
+      assert.ok(leaf.src?.length > 0, `LEAVES.${key} src`);
+      assert.ok(leaf.alt?.length > 20, `LEAVES.${key} alt text`);
+      assert.ok(leaf.dateline?.length > 0, `LEAVES.${key} dateline must show on screen`);
+      assert.ok(leaf.caption?.length > 40, `LEAVES.${key} caption`);
+      assert.equal(typeof leaf.color, 'boolean', `LEAVES.${key} color flag`);
+    }
+  });
+
+  test('color is earned: only the vision leaf keeps its historical color', () => {
+    const colored = Object.entries(LEAVES).filter(([, l]) => l.color);
+    assert.deepEqual(colored.map(([k]) => k), ['vision']);
   });
 
   test('due bells never skip ahead of the schedule data', () => {

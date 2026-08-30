@@ -169,6 +169,38 @@ body {
   margin-top: -0.3rem;
 }
 
+/* ── sourced leaves (ART_SOURCES.md pipeline) ─────────────── */
+figure.leaf {
+  margin: 0 0 1.1rem;
+  border: 1px solid var(--gutter);
+  background: var(--paper-shade);
+  padding: 0.5rem 0.5rem 0.6rem;
+}
+figure.leaf img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 340px;
+  object-fit: contain;
+  background: #cfc6b0;
+}
+/* Grisaille by default (display-only; files unmodified) — the vision
+   leaf keeps its color: the one earned exception (INTERFACE.md). */
+figure.leaf.grisaille img {
+  filter: grayscale(0.85) sepia(0.12) contrast(0.96) brightness(1.02);
+}
+.leaf-dateline {
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  font-size: 0.72rem;
+  color: var(--ink-faded);
+  text-align: right;
+  margin-top: 0.35rem;
+  border-top: 1px dotted var(--gutter);
+  padding-top: 0.25rem;
+}
+.leaf-caption { margin-top: -0.4rem; margin-bottom: 1.1rem; }
+
 /* ── verses & recitation ──────────────────────────────────── */
 .verse {
   margin: 1.1rem 0;

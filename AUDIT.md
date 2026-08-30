@@ -165,7 +165,9 @@ All research is optional for shipping v3; all `verify` flags stay in place and c
 
 ### Imagery Status
 
-**Currently:** Typographic only. No images ship without `assets_manifest.json` entry per CLAUDE.md rule 6.
+**✓ Five sourced leaves shipped 2026-08-30** (`src/data/leaves.js`, `src/public/leaves/`), sourced from the user's occult image database (`C:\Dev\OCCULTIMGDB`, itself drawn from BnF/Bodleian/e-codices open-access holdings): the incipit frontispiece (an actual *ars notoria* nota, BnF Latin 9336, John's own century and country), the scriptorium (a 12th-c. scribe portrait, Liber Floridus), the sought vision (Solomon receiving the *ars notoria*, shown in its own color — the palette's one earned exception), the figure check (Bodley 951's fifth figure of theology), and the reading room (Aurora consurgens). All `attested`, full manifest entries, dated on screen per rule 7, grisaille-toned via CSS (files unmodified) except the vision leaf. Browser-verified live, including the color exception and the apparatus citation.
+
+**Still typographic beyond those five.** No further images ship without a manifest entry.
 
 **For v3 completion, needed:**
 - **Tile world** (original 16×16 U5-era tiles): Morigny abbey, Étampes town, Orléans town, Sens town, Paris town, terrain, roads. **Status:** design spec exists (WORLD_DESIGN.md); original art needed.
