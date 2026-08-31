@@ -396,6 +396,57 @@ export const STANCE_OUTCOME = {
   },
 };
 
+// ── Lectio: the study hour (v4 §5) ──────────────────────────────────────
+
+export const STUDY_SCENE = {
+  rubric: '¶ Of the hour given to the book.',
+  narrator: {
+    text:
+      'The Rule reserves hours for lectio divina — reading as a discipline, not a leisure — ' +
+      'and the same hours are where every other kind of learning a monk possesses actually ' +
+      'came from: the Latin that will one day answer an examiner, the discernment ' +
+      'literature that trains an eye for spirits, the exemplars studied until the hand ' +
+      'knows letterforms the way feet know stairs. An hour spent here is an hour the desk ' +
+      'and the Work both wanted. That is the whole economics of a monastic education: ' +
+      'everything is bought out of the same daylight.',
+    sources: [{ work: 'RB 1980 (Rule of St Benedict)', locus: 'RB 48, lectio divina (frame)' }],
+    status: 'adapted',
+  },
+  monologue: {
+    sources: [], status: 'invented',
+    text:
+      'An hour with the book, and nothing to show for it tonight but what I carry away ' +
+      'inside. Slow money. But it is the only coin that no inventory can find and no fire ' +
+      'can burn.',
+  },
+};
+
+/** Per-faculty study beats: what an hour's reading felt like. */
+export const STUDY_TEXT = {
+  learning: {
+    sources: [], status: 'invented',
+    text: 'The commentary again, and the grammar under it. Each argument I can follow to its end is a step some future questioner will not be able to push me down.',
+  },
+  discretio: {
+    sources: [{ work: 'Newman, Speculum 80 (2005)', locus: 'discernment literature as training (frame)' }],
+    status: 'adapted',
+    text: 'The treatises on the discerning of spirits, read slowly: the tells, the counterfeits, the honest ambiguities. The eye is a student like any other.',
+  },
+  craft: {
+    sources: [], status: 'invented',
+    text: 'An hour over a master\'s leaf, the knife and the rule beside me — not copying, studying: how the minims keep their feet, where the eye rests, why his line never wanders. My hand is quieter already.',
+  },
+  worldliness: {
+    sources: [], status: 'invented',
+    text: 'The talk of the guest-house and the accounts of the cellarer: how the world prices things, and what it thinks a monk is for. Knowledge the cloister pretends not to need, until the day it needs it.',
+  },
+};
+
+export const STUDY_LEVELED = {
+  sources: [], status: 'invented',
+  text: 'Something settled today that will not unsettle: the thing I have been circling is mine now.',
+};
+
 // ── Composed siege clauses (the narrator totals the margin's day) ───────
 // Template functions composing from the outcome record's real facts —
 // same precedent as transmissionEndingText. Envelope on the group.

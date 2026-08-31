@@ -135,3 +135,27 @@ reserved for the vision, gold for licentia, graphite for the pencil hand.
 - Determinism: same seed → same day, same distraction sequence, same vision.
 - Machine correctness: quality math, tier boundaries, confession asymmetry,
   all four discernment outcomes reachable.
+
+## v4: stances and faculties (docs/V4_LOOP_REDESIGN.md)
+
+**Stances** (one choice per block; policy decides every hold/attend):
+
+| Stance | Policy | Copy hand |
+|---|---|---|
+| vigilant | hold fast against every distraction while resolve allows | textualis |
+| routine | hold fast against `flesh` only, while affordable | cursive |
+| hasty | attend everything; spend nothing | trusting |
+
+Same hold-fast cost math as before (1 resolve, 2 when scrupulous).
+`firstBreak` records where a resisting stance's guard broke. The
+Matins `P` option prays the Work vigilant by definition.
+
+**Faculties** (0–5; each level costs level+1 study hours; study = the
+daylight block, +1 fatigue): `learning`, `discretio`, `craft`,
+`worldliness`. Persisted in `chronicle.faculties`. Live effect now:
+craft multiplies the hand's base error rate by `max(0.5, 1 − 0.1·craft)`.
+The rest are read by the world-layer encounters (v4 §6).
+
+**Input budget**: ≤10 decisions per day, tested
+(`tests/stance.test.js`). Continue-presses are page turns, not
+decisions.

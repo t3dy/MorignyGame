@@ -11,8 +11,11 @@ import {
 import { buildDay, stageRng } from './engine/day.js';
 import { runRecitationBlock, runCopyBlock } from './engine/stance.js';
 import { snapshotJohn, composeStanceNarration } from './engine/narration.js';
-import { STANCE_CHOICE, STANCE_OPTIONS } from './content/stance_content.js';
+import {
+  STANCE_CHOICE, STANCE_OPTIONS, STUDY_SCENE, STUDY_TEXT, STUDY_LEVELED,
+} from './content/stance_content.js';
 import { createBeatLog } from './engine/beatlog.js';
+import { FACULTIES, loadFaculties, study } from './engine/faculties.js';
 import { nightThreatens, resolveNight, successChance } from './engine/struggle.js';
 import { dreamEligible, createVision, judge, reckonCorruption } from './engine/vision.js';
 import { COMMANDS, LETTERS, NIGHT_KEYS } from './engine/commands.js';
@@ -250,6 +253,14 @@ function renderStatus() {
     row.appendChild(el('span', 'pips', v));
     s.appendChild(row);
   }
+  const trained = Object.keys(FACULTIES).filter(id => john.faculties?.[id] > 0);
+  if (trained.length) {
+    const row = el('div', 'stat faculties');
+    row.appendChild(el('span', null, 'lectio'));
+    row.appendChild(el('span', 'pips',
+      trained.map(id => `${FACULTIES[id].label} ${'●'.repeat(john.faculties[id])}`).join(' · ')));
+    s.appendChild(row);
+  }
   if (john.purity.polluted) s.appendChild(el('div', 'flag bad', 'unclean — the Work is shut'));
   if (isScrupulous(john)) s.appendChild(el('div', 'flag bad', 'scrupulous — holding fast costs double'));
   if (john.procedure.licentia) s.appendChild(el('div', 'flag gold', 'LICENTIA'));
@@ -324,6 +335,8 @@ function start(seed, opts = {}) {
   // A licence earned in a prior night's dream outlives the day it was
   // granted (D-18): it carries forward until spent on a gilding.
   john.procedure.licentia = chronicle.licentia;
+  // Faculties are a life's accretion, not a day's mood (v4 §5).
+  john.faculties = loadFaculties(chronicle.faculties);
   journal = {
     seed, journey: !!opts.journey,
     prayed: false, night: null, dream: null, confession: null,
@@ -606,7 +619,37 @@ function daylight(stage) {
       }
       subPrompt(prompt + '?', keys);
     });
+  act('L', 'Lectio: give the hour to study.', 'Slow coin — a faculty advanced, and nothing the desk can show tonight.', () => {
+    const keys = {};
+    let promptText = 'Study what?';
+    const letters = { learning: 'G', discretio: 'D', craft: 'C', worldliness: 'W' };
+    for (const [id, meta] of Object.entries(FACULTIES)) {
+      promptText += ` ${letters[id]} ${meta.label} ·`;
+      keys[letters[id]] = () => studyHour(id);
+    }
+    subPrompt(promptText.replace(/·$/, '?'), keys);
+  });
   act('B', 'Let the hour pass in choir and garden.', 'Nothing gained, nothing risked.', next);
+}
+
+/** The study hour (v4 §5): one hour, one faculty, honest fatigue. */
+function studyHour(facultyId) {
+  clearActs();
+  ui.body(deliberation(STUDY_SCENE));
+  const result = study(john.faculties, facultyId);
+  addFatigue(john, 1);
+  ui.body(passage(STUDY_TEXT[facultyId], STUDY_TEXT[facultyId].text, 'monologue'));
+  if (result.leveled) ui.body(passage(STUDY_LEVELED, STUDY_LEVELED.text, 'monologue'));
+  const gs = el('div', 'gamestate');
+  const line = result.leveled
+    ? `${FACULTIES[facultyId].label} ${result.level - 1}→${result.level}.`
+    : `${FACULTIES[facultyId].label} ${result.level} (${result.toNext} more hour${result.toNext === 1 ? '' : 's'} to advance).`;
+  gs.appendChild(el('div', null, `Study: ${FACULTIES[facultyId].label}. ${line} Fatigue +1.`));
+  beatlog.line('gamestate', `Study: ${FACULTIES[facultyId].label}. ${line}`);
+  ui.body(gs);
+  journal.studied = facultyId;
+  renderStatus();
+  act('B', 'To Vespers.', '', next);
 }
 
 function chooseWorkExemplar(stage) {
@@ -1132,6 +1175,7 @@ function reckoning() {
     // held over from an earlier night (that already earned its renown).
     licentia: journal.dream === 'licentia',
   });
+  chronicle.faculties = john.faculties; // the life's accretion (v4 §5)
   saveChronicle(storage(), chronicle);
   if (summonsDue(chronicle)) {
     log('Word of the book has travelled further than the book has. Something will come of it.', 'refused');

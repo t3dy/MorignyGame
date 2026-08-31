@@ -41,8 +41,12 @@ const FIGURE_BASE = 0.7;        // steadiness erodes with fatigue and despair
  *  successChance(), which nightStakes() in main.js already reads live. */
 export const CONCEALMENT_FOUND_CHANCE = { loose: 0.5, bound: 0.15, shelved: 1, given: 0 };
 
-function errorChance(hand, fingerFatigue, john) {
-  return Math.min(0.9, hand.errBase * (1 + 0.05 * fingerFatigue + 0.03 * john.fatigue));
+/** Exported for the faculties tests: craft (v4 §5) steadies the hand —
+ *  each level shaves a tenth off the hand's base error rate. */
+export function errorChance(hand, fingerFatigue, john) {
+  const craft = john.faculties?.craft ?? 0;
+  const steadied = hand.errBase * Math.max(0.5, 1 - 0.1 * craft);
+  return Math.min(0.9, steadied * (1 + 0.05 * fingerFatigue + 0.03 * john.fatigue));
 }
 
 /** Lay out the quire: which units are verba ignota, where the exemplar's
