@@ -20,18 +20,23 @@ export const SUMMONS_AT = 12;
  * things 1323 can still reach. `everCopied`: set the moment any copy is
  * ever finished, independent of what's still in custody, so the ending
  * can tell "never tried" from "tried, and lost it all" (docs/DECISIONS_
- * AND_FORKS.md F-8). Both additive and backward-compatible: an old save
- * with neither field still loads, just with an empty custody.
+ * AND_FORKS.md F-8). `licentia`: a licence earned in one night's dream
+ * but not yet spent on a gilding — the Procedure runs on its own clock
+ * of weeks and months (DESIGN.md §3), so a licence earned after that
+ * day's scriptorium has already closed carries forward into the next
+ * witness's day, until `grindAndApply` spends it on gold (D-18). All
+ * three are additive and backward-compatible: an old save with none of
+ * them still loads, just with the empty/false defaults.
  */
 export function loadChronicle(storage) {
   try {
     const raw = storage.getItem(KEY);
     if (raw) {
       const c = JSON.parse(raw);
-      return { custody: [], everCopied: false, ...c };
+      return { custody: [], everCopied: false, licentia: false, ...c };
     }
   } catch { /* an unreadable chronicle is an empty one */ }
-  return { days: 0, renown: 0, disposition: 0, examined: false, custody: [], everCopied: false };
+  return { days: 0, renown: 0, disposition: 0, examined: false, custody: [], everCopied: false, licentia: false };
 }
 
 export function saveChronicle(storage, chronicle) {
@@ -39,7 +44,7 @@ export function saveChronicle(storage, chronicle) {
 }
 
 export function resetChronicle(storage) {
-  const fresh = { days: 0, renown: 0, disposition: 0, examined: false, custody: [], everCopied: false };
+  const fresh = { days: 0, renown: 0, disposition: 0, examined: false, custody: [], everCopied: false, licentia: false };
   saveChronicle(storage, fresh);
   return fresh;
 }

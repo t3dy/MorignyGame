@@ -9,6 +9,10 @@ import {
   loadChronicle, saveChronicle, resetChronicle, recordDay, summonsDue,
   createExamination, answerQuestion, verdict, STANCES, QUESTION_COUNT, SUMMONS_AT,
 } from '../src/engine/chronicle.js';
+import { createJohn } from '../src/engine/state.js';
+import { judge } from '../src/engine/vision.js';
+import { createCopySession, grindAndApply } from '../src/engine/scriptorium.js';
+import { materialById } from '../src/data/materials.js';
 
 function fakeStorage() {
   const m = new Map();
@@ -19,7 +23,7 @@ describe('The chronicle accumulates', () => {
   test('an empty chronicle starts at the center of the record', () => {
     const c = loadChronicle(fakeStorage());
     assert.deepEqual(c, {
-      days: 0, renown: 0, disposition: 0, examined: false, custody: [], everCopied: false,
+      days: 0, renown: 0, disposition: 0, examined: false, custody: [], everCopied: false, licentia: false,
     });
   });
 
@@ -52,6 +56,40 @@ describe('The chronicle accumulates', () => {
     assert.equal(loud.renown, 2 + 2 + 1 + 2);
     assert.equal(loud.disposition, 1, 'the lean is carried, not just counted');
     assert.ok(loud.renown > quiet.renown, 'audacity carries further than gossip');
+  });
+
+  test('a licence earned one night is spendable on a later gilding, then spent', () => {
+    // Night N: the dream grants a licence. The day's scriptorium has
+    // already closed by then, so it cannot be spent tonight — main.js's
+    // dream handler instead folds it straight into the chronicle.
+    const s = fakeStorage();
+    let chronicle = loadChronicle(s);
+    const johnNight = createJohn();
+    const key = judge(johnNight, { authentic: true, tells: [] }, true);
+    assert.equal(key, 'licentia');
+    chronicle.licentia = true;
+    saveChronicle(s, chronicle);
+
+    // Day N+1: a fresh John is built, as main.js's start() does, and
+    // seeded from the chronicle before anything else happens.
+    chronicle = loadChronicle(s);
+    const johnNext = createJohn();
+    johnNext.procedure.licentia = chronicle.licentia;
+    assert.equal(johnNext.procedure.licentia, true, 'the licence survived the day boundary');
+
+    // The scriptorium now accepts gold.
+    const session = createCopySession({ next: () => 0.99 }, johnNext, {
+      exemplar: { sim: { units: 1, verbaShare: 0, figures: 0, faults: [] } }, pool: [],
+    });
+    session.advance('trusting');
+    const laid = grindAndApply({ next: () => 0.99 }, johnNext, session.copy, materialById('gold-leaf'));
+    assert.equal(laid.applied, true, 'gold is no longer refused once the licence carried forward');
+    assert.equal(session.copy.gilded, true);
+
+    // settleConcealment's consumption: spent, not still available tomorrow.
+    chronicle.licentia = false;
+    saveChronicle(s, chronicle);
+    assert.equal(loadChronicle(s).licentia, false, 'a spent licence does not linger in the chronicle');
   });
 
   test('days always tick, even on a quiet witness', () => {

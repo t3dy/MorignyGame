@@ -308,8 +308,11 @@ let chronicle = null;  // what accumulates across witnesses, toward 1323
 let exam = null;       // the examination in progress
 
 function start(seed, opts = {}) {
-  john = createJohn();
   chronicle = loadChronicle(storage());
+  john = createJohn();
+  // A licence earned in a prior night's dream outlives the day it was
+  // granted (D-18): it carries forward until spent on a gilding.
+  john.procedure.licentia = chronicle.licentia;
   journal = {
     seed, journey: !!opts.journey,
     prayed: false, night: null, dream: null, confession: null,
@@ -778,6 +781,12 @@ function settleConcealment(exemplar, assigned, copy, state) {
   journal.copies.push(record);
   chronicle.everCopied = true;
   chronicle.custody.push(record);
+  if (copy.gilded) {
+    // The licence is spent the moment gold is actually laid on a copy
+    // that leaves the desk, not merely earned.
+    john.procedure.licentia = false;
+    chronicle.licentia = false;
+  }
   saveChronicle(storage(), chronicle);
   ui.body(deliberation(SCRIPTORIUM_TEXT.concealment[state]));
   ui.footnote(SCRIPTORIUM_NOTES.find(n => n.id === 'note-scribere'));
@@ -1092,6 +1101,11 @@ function dream(stage) {
   }
   const outcome = key => {
     journal.dream = key;
+    if (key === 'licentia') {
+      // Too late for today's scriptorium — it carries to the next witness.
+      chronicle.licentia = true;
+      saveChronicle(storage(), chronicle);
+    }
     ui.body(el('p', key === 'licentia' ? 'gold' : null, DISCERNMENT_OUTCOMES[key]));
     renderStatus();
     clearActs();
@@ -1150,7 +1164,9 @@ function reckoning() {
     suspicion: john.suspicion,
     disposition: john.disposition,
     prayed: journal.prayed,
-    licentia: john.procedure.licentia,
+    // Renown for the news of a fresh licence, not for one merely still
+    // held over from an earlier night (that already earned its renown).
+    licentia: journal.dream === 'licentia',
   });
   saveChronicle(storage(), chronicle);
   if (summonsDue(chronicle)) {
@@ -1171,7 +1187,9 @@ function reckoning() {
 function saveWitness(extra = {}) {
   pushWitness(storage(), {
     ...journal,
-    licentia: john.procedure.licentia,
+    // The witness's own claim to grace is what it earned tonight, not a
+    // licence merely carried over unspent from an earlier witness.
+    licentia: journal.dream === 'licentia',
     corrupt: john.procedure.corrupt,
     suspicion: john.suspicion,
     despair: john.despair,
