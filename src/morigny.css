@@ -183,6 +183,29 @@ body {
   opacity: 0.85;
 }
 
+/* ── the day review (v4 beat log read back) ────────────────── */
+.day-review { border-top: 1px solid var(--gutter); margin-top: 1rem; padding-top: 0.6rem; }
+.day-review .review-hour {
+  color: var(--vermilion, #a63a22);
+  font-variant: small-caps;
+  font-weight: normal;
+  margin: 0.9rem 0 0.3rem;
+}
+.day-review .review-scroll { font-size: 0.85em; opacity: 0.8; margin: 0.15rem 0; }
+.day-review .review-choice {
+  font-size: 0.8em;
+  color: var(--graphite, #55565a);
+  margin: 0.15rem 0 0.15rem 0.8rem;
+}
+.day-review .gamestate-line {
+  font-family: 'Consolas', 'Cascadia Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--graphite, #55565a);
+  opacity: 0.85;
+  margin: 0.1rem 0;
+}
+.day-review .pencil-note { color: var(--graphite, #55565a); font-size: 0.85em; }
+
 /* ── sourced leaves (ART_SOURCES.md pipeline) ─────────────── */
 figure.leaf {
   margin: 0 0 1.1rem;

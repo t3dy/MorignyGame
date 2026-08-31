@@ -12,6 +12,7 @@ import { buildDay, stageRng } from './engine/day.js';
 import { runRecitationBlock, runCopyBlock } from './engine/stance.js';
 import { snapshotJohn, composeStanceNarration } from './engine/narration.js';
 import { STANCE_CHOICE, STANCE_OPTIONS } from './content/stance_content.js';
+import { createBeatLog } from './engine/beatlog.js';
 import { nightThreatens, resolveNight, successChance } from './engine/struggle.js';
 import { dreamEligible, createVision, judge, reckonCorruption } from './engine/vision.js';
 import { COMMANDS, LETTERS, NIGHT_KEYS } from './engine/commands.js';
@@ -130,6 +131,7 @@ function closeApparatus() {
 
 function passage(record, text = record.body, cls = null) {
   const p = el('p', cls, text);
+  beatlog.line(cls?.split(' ')[0] ?? 'text', text, record);
   const n = pushCitation(record, text);
   if (n) {
     const marker = el('sup', 'cite-marker', String(n));
@@ -161,6 +163,7 @@ function sceneBody(record) {
 // ── message scroll ────────────────────────────────────────────
 function log(text, cls) {
   const line = el('div', cls, text);
+  if (cls !== 'bell') beatlog.line(cls ?? 'scroll', text);
   $('log').appendChild(line);
   $('log').scrollTop = $('log').scrollHeight;
 }
@@ -176,11 +179,15 @@ function setKeys(map) {
 }
 
 function act(letter, label, why, fn) {
-  sceneKeys[letter] = fn;
+  const recorded = () => {
+    beatlog.choice(letter, label, Object.keys(sceneKeys));
+    fn();
+  };
+  sceneKeys[letter] = recorded;
   const b = el('button');
   b.appendChild(el('span', null, `${letter} — ${label}`));
   if (why) b.appendChild(el('span', 'why', why));
-  b.onclick = fn;
+  b.onclick = recorded;
   $('choices').appendChild(b);
   renderCommands();
   return b;
@@ -305,12 +312,14 @@ const globalKeys = {
 
 // ── run state ─────────────────────────────────────────────────
 let john, day, stageIdx, journal, currentLook = '';
+let beatlog = createBeatLog(); // the day as rendered (v4 §7)
 let worldCtl = null;   // live only during the world stage (arrow keys)
 let chronicle = null;  // what accumulates across witnesses, toward 1323
 let exam = null;       // the examination in progress
 
 function start(seed, opts = {}) {
   chronicle = loadChronicle(storage());
+  beatlog = createBeatLog();
   john = createJohn();
   // A licence earned in a prior night's dream outlives the day it was
   // granted (D-18): it carries forward until spent on a gilding.
@@ -367,7 +376,11 @@ function runStage() {
 }
 
 const ui = {
-  setHour(name) { $('hour-name').textContent = name; log(`✝ ${name}`, 'bell'); },
+  setHour(name) {
+    $('hour-name').textContent = name;
+    beatlog.begin(day?.stages?.[stageIdx]?.id ?? null, name);
+    log(`✝ ${name}`, 'bell');
+  },
   scene({ rubric = '', verso = '' } = {}) {
     $('rubric').textContent = rubric;
     $('verso-body').textContent = verso;
@@ -480,7 +493,10 @@ function renderStanceOutcome(narration) {
   }
   ui.body(passage(narration.monologue, narration.monologue.text, 'monologue'));
   const gs = el('div', 'gamestate');
-  for (const line of narration.gameState) gs.appendChild(el('div', null, line));
+  for (const line of narration.gameState) {
+    gs.appendChild(el('div', null, line));
+    beatlog.line('gamestate', line);
+  }
   ui.body(gs);
 }
 
@@ -1125,14 +1141,42 @@ function reckoning() {
     addDespair(john, -1); renderStatus();
     log('You write the day as it was, sparing no one, least of all yourself. The page holds it so you need not.', 'pencil-log');
     clearActs();
+    act('L', 'Read the day as it was written.', 'The whole leaf, every hand.', () => renderDayReview());
     act('B', 'Begin another day. (A new witness.)', '', () =>
       start(`${day.seed}-${Math.floor(Math.random() * 1e6)}`));
   });
+  act('L', 'Read the day as it was written.', 'The whole leaf, every hand.', () => renderDayReview());
+  act('B', 'Begin another day. (A new witness.)', '', () =>
+    start(`${day.seed}-${Math.floor(Math.random() * 1e6)}`));
+}
+
+/** The day review (v4 §7): the beat log rendered back as one reading —
+ *  the same data the website's editable log page will consume. Reads
+ *  the just-saved witness's beats (drained into the journal). */
+function renderDayReview() {
+  const beats = journal.beats ?? [];
+  const VOICE_CLS = {
+    narrator: 'narrator', siege: 'narrator siege', monologue: 'monologue',
+    gamestate: 'gamestate-line', 'pencil-log': 'pencil-note', text: null,
+  };
+  const box = el('div', 'day-review');
+  for (const beat of beats) {
+    box.appendChild(el('h4', 'review-hour', `✝ ${beat.hour}`));
+    for (const line of beat.lines) {
+      box.appendChild(el('p', VOICE_CLS[line.voice] ?? 'review-scroll', line.text));
+    }
+    for (const c of beat.choices) {
+      box.appendChild(el('p', 'review-choice', `» ${c.letter} — ${c.label}`));
+    }
+  }
+  ui.body(box);
+  clearActs();
   act('B', 'Begin another day. (A new witness.)', '', () =>
     start(`${day.seed}-${Math.floor(Math.random() * 1e6)}`));
 }
 
 function saveWitness(extra = {}) {
+  journal.beats = beatlog.drain(); // the day as written (v4 §7)
   pushWitness(storage(), {
     ...journal,
     // The witness's own claim to grace is what it earned tonight, not a
