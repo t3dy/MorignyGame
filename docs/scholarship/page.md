@@ -1,0 +1,23 @@
+# Sophie Page
+
+## Who they are
+Professor of Medieval History at University College London (UCL), where she has taught since 2002 after studying at the Warburg Institute, UCL, and Cambridge. Works on European medieval magic and astrology in relation to orthodox religion, natural philosophy, medicine, and cosmology, with a further interest in the imagery of medieval magic (diagrams especially) and the medieval history of animals.
+
+## Core works relevant to this game
+- ***Magic in the Cloister: Pious Motives, Illicit Interests, and Occult Approaches to the Medieval Universe*** (Penn State University Press, 2013) — the game's own bibliography already names this as the central source on monastic ownership of magic texts.
+- *Astrology in Medieval Manuscripts* and *Magic in Medieval Manuscripts* (British Library) — shorter, image-focused surveys.
+- Editor, *The Unorthodox Imagination in Late Medieval Britain* (Manchester University Press, 2011 [verify exact year]).
+- Co-editor with Catherine Rider, *The Routledge History of Medieval Magic* (Routledge, 2019 [verify]).
+
+## Their key intervention
+*Magic in the Cloister* is a close study of the more than thirty magic texts a group of monks with occult interests donated to the library of the Benedictine abbey of St. Augustine's, Canterbury, in the late thirteenth and early fourteenth centuries — the same decades as John's own career. Page's central finding directly complicates Kieckhefer's "clerical underworld" as a separate, marginal milieu: these were not rogue clerics operating outside institutional life but **professed monks**, in good standing, who acquired, catalogued, bound, and studied magic texts as an extension of ordinary monastic intellectual culture (natural philosophy, cosmology, medicine). Magic wasn't smuggled into the cloister against the Rule; it was integrated into the cloister's own scholarly self-image, often shelved and bound alongside licit texts. This is the single most important corrective to any simple "magic vs. monastery" opposition, and it lands almost exactly on John's own biographical situation.
+
+## Narrative & mechanical implications for MORIGNY
+- Page's core finding is the historical warrant for the entire scriptorium concealment table (`SCRIPTORIUM.md` §3.6, `src/engine/scriptorium.js`'s concealment logic, D-8 in `docs/DECISIONS_AND_FORKS.md`) — "camouflage by binding" (a magic text bound into a licit codex surviving an inventory) is her documented finding, not this project's invention, and the design docs already credit her by name for it. Good; keep doing so wherever binding-as-camouflage content appears.
+- She directly complicates Kieckhefer's "clerical underworld" framing — her monks are institutional insiders, not underworld figures — which is exactly the tension the design brief asked the synthesis document to surface. The Orléans "clerical underworld" content (`WORLD_DESIGN.md`) should sit alongside, not replace, a monastic-insider register (armarium acquisition, `SCRIPTORIUM.md` §3.1's "abbey armarium" source) that Page's evidence actually supports as the more common case for a monk like John.
+- Her attention to monks combining magic with natural philosophy and cosmology suggests the exemplar sources in `data/exemplars.js` could eventually include natural-philosophical/astrological texts alongside pure *ars notoria* material, if the design wants to broaden the "clerical underworld" side-content the brief mentions — currently the exemplar pool is narrower than her evidence base would support.
+- Her interest in the *imagery* of medieval magic (diagrams, *notae*-adjacent figures) is directly relevant to the figure-drawing mechanic (`src/engine/scriptorium.js`'s `drawFigure`) and to `ART_SOURCES.md`'s eventual sourcing of any figure imagery — a useful check against inventing figure appearances wholesale.
+- Tension to flag honestly: Page's book is specifically about St. Augustine's, Canterbury — an English Benedictine house, not Morigny. Nothing in her book directly attests to Morigny's own library holdings; her value here is comparative/institutional-pattern evidence, not a direct source for Morigny-specific `attested` claims, and content citing her should be careful not to overstate that distinction.
+
+## Citation note
+This report summarizes publicly available bibliographic information (UCL History department pages, Penn State University Press catalog, published reviews) and does not quote Page directly. It is a secondary research aid, not a substitute for reading *Magic in the Cloister*. Game data drawing on her work needs its own pinned `sources: [{work, locus}]` per `CLAUDE.md` rule 1.

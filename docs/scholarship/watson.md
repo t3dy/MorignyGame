@@ -1,0 +1,22 @@
+# Nicholas Watson
+
+## Who they are
+Henry B. and Anne M. Cabot Professor of English at Harvard University, teaching medieval literature and the history of Christianity. Known for work on Richard Rolle, Julian of Norwich, Margery Kempe, John of Morigny, and for his influential use of the term "vernacular theology."
+
+## Core works relevant to this game
+- "John the Monk's *Book of Visions* of the Blessed and Undefiled Virgin Mary, Mother of God: Its Texts, Compositional Method, and Content," in Claire Fanger, ed., *Conjuring Spirits: Texts and Traditions of Medieval Ritual Magic* (Penn State University Press, 1998) — the essay that announced the modern rediscovery of John of Morigny via a manuscript identified at McMaster University, and the source `BIBLIOGRAPHY.md` cites for the framing ending.
+- Claire Fanger & Nicholas Watson, eds., *John of Morigny, Liber florum celestis doctrine / The Flowers of Heavenly Teaching* (PIMS, 2015) — co-editor of the critical edition with Fanger.
+- Fanger & Watson, "The Prologue to John of Morigny's *Liber Visionum*: Text and Translation," *Esoterica* 3 (2001).
+- Broader corpus on vernacular theology, censorship, and mystical writing in medieval England — largely outside this project's direct scope but relevant background for how visionary authority claims were policed.
+
+## Their key intervention
+Watson's 1998 essay is the modern discovery narrative: John of Morigny's *Liber florum* was known to exist only through the *Grandes Chroniques*' 1323 condemnation notice until Watson identified a manuscript witness at McMaster University and demonstrated it was the burned book's text, surviving under the radar of the standard reference works. His analysis of the *Book of Visions*' compositional method — how John assembled, dated, and structured his own visionary record — is foundational for treating John's autobiography as a deliberately constructed textual artifact, not a transparent diary. Watson's broader scholarship on "vernacular theology" (how English religious writers claimed authority to write in the vernacular, often via visionary sanction) supplies a comparative frame for John's own visionary-authorization strategy, even though John wrote in Latin: the underlying move — claiming direct revelation to license writing that would otherwise be suspect — is the same genre of argument.
+
+## Narrative & mechanical implications for MORIGNY
+- The entire premise that a modern scholar "receives" John's text at all — the game's framing ending and the stemma's `survivingWitness()`/`receivedCopy()` logic (`src/engine/stemma.js`) — is a direct dramatization of Watson's own discovery story. The framing ending (`DESIGN.md` §The Witness) should eventually credit this discovery narrative explicitly in the pencil hand, distinct from crediting Fanger's interpretive work.
+- Watson's account of John's *compositional method* for the Book of Visions (how and when John assembled his visionary record, in what order, for what audience) is exactly the missing data `visions.json` needs — currently flagged `verify` in `BIBLIOGRAPHY.md`'s Research Queue ("The Book of Visions episode list"). This is the single most load-bearing unread text for the discernment system's content.
+- His "vernacular theology" framework — visionary sanction as a strategy for claiming authority to write dangerous material — is a useful comparative lens for the Radical Axis (`WORLD_DESIGN.md` §4): a counterfactual John pushing his visionary authorization further and more publicly is not an anachronistic invention but an intensification of a documented medieval strategy, which supports axis-rule 3's requirement that radical choices extrapolate from John's actual commitments.
+- Because Watson is explicitly the co-editor (not solo author) of the critical edition, any citation drawn from the edition itself should credit Fanger & Watson jointly, matching `BIBLIOGRAPHY.md`'s own citation practice — a small but real accuracy point for the pencil hand's footnotes going forward.
+
+## Citation note
+This report summarizes publicly available bibliographic information (Harvard faculty and department pages, PIMS and Penn State University Press catalog listings) and does not quote Watson directly. It is a secondary research aid; game data drawing on his work needs its own pinned `sources: [{work, locus}]` per `CLAUDE.md` rule 1, and the Book of Visions episode data specifically remains gated on that reading actually happening.

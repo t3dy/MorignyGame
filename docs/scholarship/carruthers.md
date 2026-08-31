@@ -1,0 +1,21 @@
+# Mary Carruthers
+
+## Who they are
+Erich Maria Remarque Professor of Literature and Professor of English, Emerita, at New York University. Leading historian of medieval memory, rhetoric, and composition; past president of the New Chaucer Society and the Medieval Academy of America; Guggenheim Fellow.
+
+## Core works relevant to this game
+- ***The Book of Memory: A Study of Memory in Medieval Culture*** (Cambridge University Press, 1990; 2nd ed. 2008) — this game's bibliography already cites it for the memory-arts background to the *ars notoria*'s promise of infused knowledge.
+- *The Craft of Thought: Meditation, Rhetoric, and the Making of Images, 400–1200* (Cambridge University Press, 1998) — the companion volume, on meditative/compositional technique built on memory training.
+
+## Their key intervention
+Carruthers's field-defining argument is that memory, in medieval culture, was not a passive storage faculty but a **trained, architectural craft**: memory places, ordered images, and rhetorical schemes were actively built and rehearsed as tools for composition, meditation, and knowledge-making, not just retrieval. Memoria was ethically and spiritually loaded — a well-ordered memory was a sign of a well-ordered soul, and monastic *lectio divina* itself was a memory-training discipline, not simply reading. This context matters enormously for the *ars notoria*'s own claim: it promised to *infuse* the liberal arts into a practitioner's memory directly, through ritual and vision, short-circuiting the years of trained mnemonic labor Carruthers describes as the normal, laborious path to the same goal. The *ars notoria*'s appeal only makes sense against the background Carruthers reconstructs — it is a shortcut to something monks like John already knew, from their own ordinary training, was supposed to take a lifetime of disciplined craft.
+
+## Narrative & mechanical implications for MORIGNY
+- Carruthers's picture of *lectio divina* as active memory-training (not passive reading) is the scholarly backbone the recitation loop's design already gestures at (`src/engine/recitation.js`'s distraction/hold-fast mechanic as *custodia oculorum*) — the loop should be understood, and could be more explicitly framed in a pencil note, as dramatizing memory-*work*, not merely attention-work: every verse held against distraction is also a verse being laid into ordered memory.
+- Her argument that the *ars notoria* is a shortcut to something memory-training normally earns slowly is a strong candidate for a pencil-hand note near the scriptorium or recitation systems — it gives the player a concrete reason John found the *ars notoria*'s promise seductive that isn't merely "forbidden knowledge is tempting," but specifically "this shortcuts labor I already know intimately how hard it is."
+- The scriptorium's copying-as-memory-work parallel (*scribere est orare*, `SCRIPTORIUM.md` §Colophons, already invoking the craft-as-devotion register) sits well with Carruthers's broader point that composition, memory, and meditation were understood as one continuous discipline in this period — worth citing her explicitly if that note gets expanded.
+- The scriptorium's "trusting the exemplar" hand (`SLICE_SPEC.md`'s hand table: fast, blind, "does not construe") is, in Carruthers's terms, a scribe who has abandoned the memory-work of understanding for pure mechanical reproduction — a concrete, historically grounded way to narrate why that hand "cannot catch inherited faults" (it isn't reading with the trained, ordering attention Carruthers describes; it is just copying shapes).
+- Honest limit: Carruthers writes about memory and rhetoric broadly across the Latin Middle Ages; she does not, to this researcher's knowledge, discuss the *ars notoria* or John of Morigny specifically. Her value is entirely as intellectual-historical background for why infused knowledge would appeal to a working monk, not as a source of John-specific facts.
+
+## Citation note
+This report summarizes publicly available bibliographic information (NYU faculty pages, Cambridge University Press catalog, standard reference sources) and does not quote Carruthers directly. It is a secondary research aid. Game data drawing on her work needs its own pinned `sources: [{work, locus}]` per `CLAUDE.md` rule 1.

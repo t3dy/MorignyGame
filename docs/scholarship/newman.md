@@ -1,0 +1,21 @@
+# Barbara Newman
+
+## Who they are
+Professor at Northwestern University, with appointments spanning English, Religious Studies, and Classics [exact joint title verify]; a leading scholar of medieval women's visionary writing, mysticism, and theology. Recently appointed editor of *Speculum*, the journal of the Medieval Academy of America.
+
+## Core works relevant to this game
+- ***"What Did It Mean to Say 'I Saw'? The Clash between Theory and Practice in Medieval Visionary Culture,"*** *Speculum* 80.1 (2005): 1–43 [page range verify] — this game's bibliography already cites it as the "design spine for the vision/discernment system."
+- Broader corpus on Hildegard of Bingen, medieval women's visionary and mystical writing, and the theology of the feminine divine (e.g., *Sister of Wisdom*, *From Virile Woman to WomanChrist*, *God and the Goddesses*) — background for visionary-authority questions generally, though not specific to John.
+
+## Their key intervention
+Newman's essay examines the gap between the *theory* of visionary experience articulated by theologians (Augustine's tripartite corporeal/spiritual/intellectual vision, later scholastic refinements) and the messier *practice* of how actual medieval visionaries reported, staged, and defended their experiences. Her core finding is that visionaries did not simply have experiences and then describe them in theological terms after the fact — they actively **worked within and against** received theory to construct visions that would be legible and defensible as authentic, often blurring lines the theory tried to keep separate (bodily/spiritual, waking/dreaming, private/public). Discernment of spirits (*discretio spirituum*) was therefore never a neutral test applied to a raw experience; it was a contested rhetorical and social process in which the visionary, the confessor, and the wider community all had stakes in the verdict.
+
+## Narrative & mechanical implications for MORIGNY
+- This is the direct scholarly warrant for treating discernment as a genuine *mechanic with stakes* rather than a lore flourish — `src/engine/vision.js`'s `judge()` function (four asymmetric outcomes: licentia, delayed, corrupted, mastery) is exactly the kind of contested, consequential verdict Newman describes, and the game's own design docs already credit her for this framing.
+- Newman's point that the visionary is an active constructor of legibility, not a passive recipient, suggests the vision "tells" (`SLICE_SPEC.md`'s color/speech/affect categories, `VISION_TELLS` in content data) should read less like an objective checklist and more like the culturally-available vocabulary John would reach for to make sense of an ambiguous experience — worth a pass to check the current tell text isn't inadvertently too clinical/modern for this (cf. `STYLE_GUIDE.md`'s Struggle-register discipline, which enforces a similar distinction elsewhere).
+- Her finding that discernment was a *social* process (confessor, community, not just the visionary alone) is only partially built: the current `judge()` mechanic is entirely interior to John. A future pass could consider whether a confessor or community reaction to a reported vision belongs anywhere in the suspicion system (`DESIGN.md`'s Suspicion & Secrecy) — flagged as a possibility, not a mandate, since it would be new scope.
+- The essay's core tension (theory vs. practice) is a good lens for the Radical Axis: a counterfactual John who stops privately discerning and starts *publicly arguing* for his visions' theoretical legitimacy is exactly the kind of move Newman documents real visionaries attempting, which supports axis-rule 3's "extrapolated, never imported from modernity" requirement.
+- Honest limit: Newman does not, to this researcher's knowledge, write specifically about John of Morigny; her value is entirely as the theoretical framework behind the discernment mechanic's design, not as a source of John-specific facts.
+
+## Citation note
+This report summarizes publicly available bibliographic information (Northwestern faculty and Speculum editorial announcements, journal indexing) and does not quote Newman directly; the article's exact final page number is marked `[verify]`. It is a secondary research aid. Game data drawing on her work needs its own pinned `sources: [{work, locus}]` per `CLAUDE.md` rule 1.

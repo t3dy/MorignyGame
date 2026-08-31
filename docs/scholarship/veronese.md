@@ -1,0 +1,23 @@
+# Julien Véronèse
+
+## Who they are
+Maître de conférences (associate professor) in medieval history at the Université d'Orléans, and a member of IRHT (Institut de recherche et d'histoire des textes, CNRS). His research centers on the history of magic, astrology, and divination in the medieval and early modern Latin West, with particular attention to ritual/theurgic magic texts.
+
+## Core works relevant to this game
+- *L'Ars notoria au Moyen Âge et à l'époque moderne: Étude d'une tradition de magie théurgique (XIIe–XVIIe siècle)* — doctoral thesis, Université Paris X–Nanterre, 2004 (two volumes; supervised by Colette Beaune).
+- ***L'Ars notoria au Moyen Âge: Introduction et édition critique*** (SISMEL–Edizioni del Galluzzo, "Micrologus' Library" 21, Salomon Latinus I, 2007) — the standard modern critical edition and study of the *ars notoria* text tradition itself, distinct from John's own reworking of it.
+- "Les anges dans l'*ars notoria*: révélation, processus visionnaire et angélologie," in *Les anges et la magie au Moyen Âge* (Mélanges de l'École française de Rome, Moyen Âge 114/2, 2002), 813–849.
+- Editorial work on other Solomonic ritual-magic texts (the *Almandal*/*Almadel*, the *Vinculum Salomonis* [verify exact co-editors and dates for each]).
+
+## Their key intervention
+Véronèse produced the modern critical apparatus for the *ars notoria* itself — the actual prayers, *notae* (figures), and ritual procedure John practiced before he repudiated and rewrote it. Where Fanger and Watson work from John's side (the rewriting), Véronèse establishes what the thing being rewritten actually said and did: its textual history, its manuscript witnesses, its variant recensions, and — crucially for this game — its built-in claim that the practice works through **visionary/angelic mediation**, not mechanical incantation. His 2002 essay on angels in the *ars notoria* shows that visionary revelation was already structurally central to the *ars notoria* before John ever had his own apparitions; John's Marian visions are a substitution of one angelic/visionary warrant for another, not an innovation that broke with the tradition's own logic.
+
+## Narrative & mechanical implications for MORIGNY
+- Véronèse's edition is the primary source this project should eventually use to ground the *actual content* of what John practiced before his conversion — currently the game only references the *ars notoria* at the level of genre description (`DESIGN.md`'s Historical Ground), not specific prayers or *notae*. Any future content depicting John's pre-repentance practice in more detail should cite Véronèse, not merely gesture at "the Notory Art."
+- His finding that the *ars notoria* was already visionary/angelic in its own internal logic strengthens (rather than complicates) the design's claim that John's rewriting is continuous with, not a rupture from, his earlier practice — directly relevant to `STYLE_GUIDE.md`'s Scholarly Value #1 ("take John seriously... the porous boundary... is the game's subject").
+- The figure-fidelity mechanic (`src/engine/scriptorium.js`'s figure check silently setting `procedure.corrupt`, `SCRIPTORIUM.md` §3.4) rests on the *ars notoria*'s own doctrine that the *notae* must be reproduced exactly for the ritual to function — this is Véronèse's field, and his edition is the place to verify that claim's precision rather than treating it as generic "magic requires precision" flavor.
+- Being based at the Université d'Orléans gives him, incidentally, direct institutional proximity to this game's own Orléans setting (`WORLD_DESIGN.md`'s "the clerical underworld... where the old art can be bought back") — not a research finding, just a coincidence worth knowing when citing him for Orléans-specific content.
+- No fabricated *verba ignota* strings should be written without checking whether Véronèse's edition actually transcribes any (`SCRIPTORIUM.md` §6, D-13 in `docs/DECISIONS_AND_FORKS.md`) — if genuine unintelligible strings exist in his edition, using them (properly cited, `status: attested`) would be stronger than the current policy of never showing invented ones.
+
+## Citation note
+This report summarizes publicly available bibliographic information (Université d'Orléans and IRHT/CNRS directory pages, SISMEL and academia.edu listings) and does not quote Véronèse directly; several of his individual editions' exact publication details are marked `[verify]` above pending direct consultation. It is a secondary research aid, not a substitute for the edition itself. Game data needs its own pinned `sources: [{work, locus}]` per `CLAUDE.md` rule 1.

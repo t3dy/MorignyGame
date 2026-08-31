@@ -255,6 +255,82 @@ preferred) from `receivedCopy()` + `transmissionEndingText()`.
 *Deferred, unchanged:* the full mid-campaign Evrart inventory encounter
 (F-5) — verdict-time resolution already makes concealment matter.
 
+## Decisions taken (v3e slice: licentia carries the day boundary, 2026-08-31)
+
+**D-18 · `chronicle.licentia` carries an earned licence past the day it
+was granted.** Bug: `judge()`'s licentia branch fires in `dream()`,
+which runs *after* that day's `daylight()`/scriptorium stage, and the
+next day's `start()` rebuilds `john` from scratch — so the flag set at
+night was never visible to any scriptorium, on that day or the next.
+`grindAndApply()` therefore always refused gold in real play. Fix
+mirrors D-17's `custody[]`: `chronicle.licentia` (additive, defaults
+`false`) is set the moment `dream()`'s outcome is `'licentia'` and
+seeded onto the fresh `john.procedure.licentia` at the top of
+`start()`, so a licence earned one night is spendable at the *next*
+witness's scriptorium. It's cleared the moment a copy is actually
+gilded (`settleConcealment`), not merely earned — one licence, one
+gilding. Reordering the day loop (dream before daylight) was rejected:
+it would break the fixed liturgical hour order (RB office sequence,
+`dayIsLegal()`) and the plain sense that a monk dreams at night, after
+the day's labor, not before it. `recordDay`'s renown bonus and the
+witness's own `licentia` flag (stemma's "blessed" preference) both
+still key off `journal.dream === 'licentia'` (earned *that* day), so a
+licence merely held over from an earlier night doesn't double-count
+its own news twice.
+
+## Decisions taken (v4 planning session, 2026-08-31)
+
+**D-19 · The v4 loop redesign is the plan of record — see
+`docs/V4_LOOP_REDESIGN.md` for the full text.** Headlines, each decided
+with Ted this session: (1) **≤10 inputs per day** — stance-up-front,
+outcome-narrated blocks replace the unit-by-unit recitation/copying
+grammar; (2) **live play itself becomes richer and slower** — D-16's
+1–2-sentence narrator cap is reversed; the scholarly narrator errs
+toward describing too much, explaining contexts and stakes; (3) a
+**fifth voice** (dry technical game-state explainer) joins the four
+hands, distinct from the rubricator, which keeps its liturgical
+register; (4) **flashback vignettes** (childhood/youth/adulthood, one
+choice each, echoing forward) at key decision points; (5) **faculties
+advanced by study hours** (daylight competition, no abstract XP),
+tested by underworld/courtly encounters; (6) the underworld/courtly
+content ships as the **v2 World Layer redesigned** (Orléans/Sens/Paris)
+with a **large seeded encounter pool** of which each run sees a
+fraction — envelope rules bind every encounter; (7) every playthrough
+compiles into a **permanent editable log page** on the website, player
+edits rendered as their own hand (never silent replacement), backed by
+a lightweight hosted store on a still-static app; (8) the Bruno-axis
+extension of the Radical Axis is **gated on the scholarship reports**
+now in `docs/scholarship/` (17 scholars + narrative-design synthesis).
+This closes **F-1** (per-unit hand choice — overtaken: units no longer
+prompt at all).
+
+**D-20 · The redesign deploys as a NEW site version; every prior
+version stays playable.** The existing v1-freeze pattern
+(`deploy.yml` + `deploy/landing.html`) extends: v2 freezes at its last
+good build, the redesign deploys to `/v3/`, the landing page links all
+three. Site numbers and internal design-doc numbers are officially
+divorced (site v2 ≈ internal v3d; the redesign is internal v4, site
+v3); the landing page speaks site numbers only.
+
+**D-21 · The Bruno axis, grounded and decided** (full text in
+`docs/V4_LOOP_REDESIGN.md` §6): (1) the Radical Axis is **recast as
+boundary-contest** per Bailey — radical choices are argumentative acts
+contesting the examiners' authority to draw the licit/illicit line, not
+mere scorn/audacity; the examination's stances get rewritten in these
+terms. (2) The departed path earns an **authored narrated epilogue**
+(no new playable systems) tracing the counterfactual life to its
+plausible fire, every beat under the departure annotation's dating
+discipline. (3) **Disposition stays adult-earned**; flashbacks shift it
+a step at most and mainly determine which radical options feel
+in-character. (4) Magic-adjacent encounters/exemplars carry a
+**`register: cloister | underworld` tag** (Page vs Kieckhefer — two
+sociologies John moves between), narrated and mechanically read
+(suspicion responds differently to armarium audacity than Orléans
+contraband). Encounter-pool mechanisms chosen from the cross-project
+study (`docs/ENCOUNTER_SYSTEMS_STUDY.md`): faculty×affordance gating,
+riders, escalation-ladder deck with prevention-as-data and risk bags,
+kind fan-out narration with mechanically-gated writing.
+
 ## Forks not taken (open, with triggers)
 
 **F-1 · Per-unit hand micro-choice.** Spec says the scribe chooses per

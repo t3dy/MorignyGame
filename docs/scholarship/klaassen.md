@@ -1,0 +1,22 @@
+# Frank Klaassen
+
+## Who they are
+Professor of History at the University of Saskatchewan [verify current rank — sourced as Associate Professor in some listings, may since have been promoted]. Specialist in the manuscript history of late medieval and early modern learned/ritual magic.
+
+## Core works relevant to this game
+- ***The Transformations of Magic: Illicit Learned Magic in the Later Middle Ages and Renaissance*** (Penn State University Press, 2013) — this game's bibliography already cites this as the spine of the epilogue's "whitening" arc.
+- *Making Magic in Elizabethan England: Two Early Modern Vernacular Books of Magic* (Penn State University Press, 2019 [verify]), with Sharon Hubbs Wright.
+- Numerous articles on manuscript taxonomy and the transmission of image magic and necromantic texts across the fifteenth and sixteenth centuries.
+
+## Their key intervention
+Klaassen's central argument, built from a broad manuscript survey, is that late medieval illicit learned magic sorts into two genres with very different fates: **image magic** (astrological talismans, seals, and rings — justifiable in scholastic natural-philosophical terms as manipulating celestial influence rather than commanding spirits) and **ritual/necromantic magic** (explicit spirit conjuration, which could not be laundered into licit Aristotelian categories). He tracks how, across the fifteenth and sixteenth centuries, image magic as an independent genre declines sharply while its techniques and manuscript contexts increasingly merge with angelic and Solomonic ritual material, gradually reframed as pious, Christianized, "white" practice rather than demonic commerce. This is the "transformation"/"whitening" this project's `DESIGN.md` already names: necromantic technique laundered into licit Marian/angelic devotion on the way to Renaissance learned magic (Ficino, Trithemius, Agrippa).
+
+## Narrative & mechanical implications for MORIGNY
+- Klaassen's thesis is already correctly identified as the spine of the Whitening Arc (`DESIGN.md`'s epilogue layer) and the design already reserves later-period imagery for that layer only, honestly dated on screen — this is sound and consistent with his actual argument's chronology (the whitening is a fifteenth–sixteenth-century process, later than John).
+- His genre distinction (image magic vs. ritual/necromantic magic) is a useful precision tool for exemplar content in `data/exemplars.js`: John's own practice (*ars notoria*, then the *Liber florum*) is squarely in the visionary/ritual category Klaassen says could *not* simply be reframed as natural philosophy — which is exactly why John needed a *theological* solution (Marian authorization) rather than a *philosophical* one. This sharpens why John's rewriting had to be visionary/devotional rather than scholastic, a point worth making explicit in a future pencil note.
+- The idea that "whitening" is a **process across manuscript generations**, not a single author's choice, maps directly onto the stemma system (`src/engine/stemma.js`): a witness's descendants (later copies, later owners, later rebindings) could carry the whitening process forward in ways John himself never intended — a rich but currently unbuilt extension of the stemma screen for the epilogue.
+- Klaassen's manuscript-taxonomy method (sorting texts by genre and tracking their contexts of copying/ownership across time) is methodologically close to what the stemma and exemplar systems already simulate in miniature; his work is a good check on whether `data/exemplars.js`'s categories are historically coherent as the exemplar pool grows.
+- Honest limit: Klaassen's own primary evidence is English and fifteenth-century-forward; he does not, to this researcher's knowledge, discuss John of Morigny specifically. His value to this project is structural/comparative (the pattern the *Liber florum*'s later manuscript life plausibly fits into), not a direct source for John-specific `attested` claims.
+
+## Citation note
+This report summarizes publicly available bibliographic information (University of Saskatchewan department listings, Penn State University Press catalog descriptions) and does not quote Klaassen directly; his current academic rank and the Elizabethan book's exact year are marked `[verify]`. It is a secondary research aid. Game data drawing on his work needs its own pinned `sources: [{work, locus}]` per `CLAUDE.md` rule 1.
