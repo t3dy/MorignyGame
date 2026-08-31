@@ -162,11 +162,25 @@ body {
 /* ── narrator / John's-hand monologue split ───────────────── */
 /* Two modes of one pen (STYLE_GUIDE.md §The Four Hands) — no new hue. */
 .narrator { /* default #body p styling already fits: plain roman, iron-gall */ }
+.narrator.siege { margin-top: -0.4rem; opacity: 0.92; }
 .monologue {
   font-style: italic;
   padding-left: 0.9rem;
   border-left: 2px solid var(--gutter);
   margin-top: -0.3rem;
+}
+/* The fifth voice (v4): the machine's dry ledger, visibly outside the
+   manuscript's world — like the pencil, but plainer still. Not a new
+   manuscript hue; interface chrome. */
+.gamestate {
+  font-family: 'Consolas', 'Cascadia Mono', monospace;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--graphite, #55565a);
+  border-top: 1px dotted var(--gutter);
+  margin-top: 0.6rem;
+  padding-top: 0.4rem;
+  opacity: 0.85;
 }
 
 /* ── sourced leaves (ART_SOURCES.md pipeline) ─────────────── */

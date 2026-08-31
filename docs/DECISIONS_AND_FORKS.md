@@ -331,6 +331,24 @@ study (`docs/ENCOUNTER_SYSTEMS_STUDY.md`): faculty×affordance gating,
 riders, escalation-ladder deck with prevention-as-data and risk bags,
 kind fan-out narration with mechanically-gated writing.
 
+**D-22 · The stance engine shipped (v4 build step 1–2).**
+`src/engine/stance.js` runs whole recitation/copy sessions over the
+untouched pure loops, deciding hold/attend by stance policy: *vigilant*
+(hold everything while resolve lasts; textualis at the desk), *the
+common discipline* (fight the flesh only; cursive), *by rote* (attend
+everything, spend nothing; trusting). Scrupulosity's doubled cost and
+pressure's flesh-tilt make the policies age with John's state — no
+special-casing. `src/engine/narration.js` composes the outcome into
+narrator passage + siege clauses + monologue + the game-state ledger
+(fifth voice; never discloses silent failures — tested).
+`src/content/stance_content.js` carries 18 outcome passages ×2 voices,
+enveloped. main.js: offices and the copy loop are stance choices
+(O/V/H, plus P at Matins for the Work's prayer, vigilant by nature);
+the dream judges directly (G/X). Decision budget ≤10/day is a test.
+Verified in live play end-to-end, including a full
+prayer→licentia→next-day-gilding chain. STYLE_GUIDE (five hands,
+narrator unbound) and PACING (§3b retired, §7 rewritten) amended.
+
 ## Forks not taken (open, with triggers)
 
 **F-1 · Per-unit hand micro-choice.** Spec says the scribe chooses per

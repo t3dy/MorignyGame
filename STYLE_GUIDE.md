@@ -1,37 +1,38 @@
 # MORIGNY — Style Guide
 
-The writing carries this game. Four voices, strict registers, and a set of
+The writing carries this game. Five voices, strict registers, and a set of
 scholarly values adopted from Claire Fanger's practice and encoded here as
 binding rules. `CLAUDE.md` makes these enforceable; this file makes
 them writable.
 
 ---
 
-## The Four Hands (voices)
+## The Five Hands (voices)
 
 ### 1. The narrator — iron-gall brown, roman
-*Added in the simplification pass, `docs/DECISIONS_AND_FORKS.md` D-16.*
-An impersonal, third-person voice that orients the player quickly: where
-John is, what he is nominally doing, what is pulling at him. It is
+*Added in the simplification pass (D-16); unbound in the v4 redesign
+(D-19, `docs/V4_LOOP_REDESIGN.md` §2).*
+An impersonal, third-person voice that orients the player: where John
+is, what he is nominally doing, what is pulling at him. It is
 **modern in its clarity and analytical nerve** — closer to how Claire
 Fanger herself writes about John in *Rewriting Magic* than to John's own
-prose — willing to name a psychological dynamic plainly, occasionally to
-gesture at what the scholarship makes of the moment. It is not John, and
-it does not perform his confession for him; it sets the table, briefly,
-and gets out of the way.
+prose — willing to name a psychological dynamic plainly, and to explain
+what the scholarship makes of the moment. It is not John, and
+it does not perform his confession for him.
 
 > *Sample:* "It's the hour between Terce and None. John is at his desk
 > with a commentary on Matthew half-copied in front of him — dull,
 > assigned, safe work — and his attention keeps sliding toward the other
 > book, the one only he knows about."
 
-- **One or two sentences, then stop.** The narrator's whole job is to
-  make the situation legible fast; if it is still talking after two
-  sentences, it has started doing John's job for him. This *replaces*
-  the old "ground before you turn" instruction to open every scene with
-  extended physical description in John's own first-person voice — that
-  produced accurate but overlong passages. The narrator grounds; John's
-  hand (below) now carries the interior weight, briefly and directly.
+- **Unbound (v4, reversing D-16's cap).** In the reading-forward loop
+  the narrator errs toward describing too much: it explains monastic
+  and magical contexts, names the stakes of the choice in front of
+  John, situates a moment in his life and century. The old 1–2
+  sentence cap solved a problem (overlong John-voice grounding) that
+  the register split now solves better. The narrator still never does
+  John's *interior* job — the monologue carries the felt weight — and
+  it still stops when it has nothing load-bearing left to say.
 - It may be more clinical than John ever is — including, when the
   Struggle is the subject, naming the bodily fact plainly (arousal, the
   urge to masturbate) the way a scholarly reader would — because this is
@@ -103,6 +104,25 @@ for what John suffered.
 > — he is auditing his miracle while receiving it. I have made that audit a
 > mechanic, and I am not sure he would forgive me. n. Cf. *Rewriting Magic*,
 > ch. [verify]."
+
+### 5. The game-state voice — interface chrome (v4, D-19)
+The machine's own ledger: dry, technical, numerate. It states the
+stance taken, the grade earned, resources spent, and state deltas
+("Resolve 3→0. Distractions: 3 (3 held, 0 attended)."), rendered
+beneath the narration in the `.gamestate` typography — visibly outside
+the manuscript's world, plainer even than the pencil. Rules:
+
+- **It explains the machine, never the hidden state.** It reports what
+  a scribe could see on his own page tonight — visible faults, public
+  events, spent coin — and never discloses a silent failure (an
+  invisible fault, a corrupt figure, a counterfeit accepted). The
+  reckoning owns that honesty; a test holds the line
+  (`tests/narration.test.js`).
+- It is the one voice that speaks in numerals freely. This does not
+  loosen `INTERFACE.md`'s numeral-free ambient idiom — the sidebar
+  keeps its pips; the ledger is choice-adjacent, not ambient.
+- No affect, no adjectives, no period flavor. If a line starts sounding
+  like the rubricator or the pencil, it has drifted.
 
 ---
 

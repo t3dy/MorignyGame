@@ -54,12 +54,18 @@ copying, **B** to let the bell carry the day. No dialogue box; the message
 scroll answers. These are frequent, low-drama, and cumulative: they set the
 body-state that everything else reads. *Most choices in the game are these.*
 
-### (b) The **attention choice** — mid-recitation, under pressure
-**H** hold fast / **E** attend. Interrupts an activity already in motion,
-costs a spendable resource, and is the only choice type that repeats many
-times within one scene. This is the Struggle's actual texture, and it is
-deliberately *not* conversational — temptation doesn't negotiate, it
-intrudes.
+### (b) The **attention choice** — retired from live play (v4, D-19)
+*Historical: was* **H** hold fast / **E** attend, repeating many times
+within one scene. The v4 redesign (`docs/V4_LOOP_REDESIGN.md` §1) folds
+this into the **stance choice**: the player commits once, up front, to
+how the block will be kept (vigilant / the common discipline / by
+rote), and the engine makes every hold/attend decision by that policy —
+same math, same costs, one input. The Struggle's texture now lives in
+the narrated outcome (the siege clauses, the game-state ledger) rather
+than in repeated prompts. The engines still speak H/E internally
+(`src/engine/stance.js` drives `recitation.js`/`scriptorium.js`
+unmodified), so nothing about the simulation softened — only the
+input surface.
 
 ### (c) The **encounter** — a scene with a state machine
 The night siege, the discernment of a vision, the examination at Paris.
@@ -162,10 +168,13 @@ encounter (type c).
   Playing safe means fewer, later, cleaner witnesses; playing bold means a
   richer book and an earlier trial. That tension *is* the campaign.
 
-## 7. Session shape
+## 7. Session shape (v4)
 
-A day is 10–20 minutes: several type (a) choices, one recitation with a
-handful of type (b) interruptions, one encounter, and — on world days — a
-few conversations. A chronicle (a full campaign to 1323) is a handful of
-days. Short enough to replay, and replay is the point: each run is another
-witness in the stemma.
+A day is **at most 10 decisions** (tested:
+`tests/stance.test.js` §input budget) and mostly *reading*: stance
+choices whose consequences arrive as narrated outcome — the unbound
+narrator, John's monologue, the siege clauses, the game-state ledger.
+Continue-presses (the B that ends an hour) are page turns, not
+decisions, and don't count against the budget. A chronicle (a full
+campaign to 1323) is a handful of days. Short enough to replay, and
+replay is the point: each run is another witness in the stemma.

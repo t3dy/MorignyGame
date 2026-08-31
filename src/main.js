@@ -9,7 +9,9 @@ import {
   addFatigue, addResolve, addSuspicion, addPressure, addDespair,
 } from './engine/state.js';
 import { buildDay, stageRng } from './engine/day.js';
-import { createRecitation } from './engine/recitation.js';
+import { runRecitationBlock, runCopyBlock } from './engine/stance.js';
+import { snapshotJohn, composeStanceNarration } from './engine/narration.js';
+import { STANCE_CHOICE, STANCE_OPTIONS } from './content/stance_content.js';
 import { nightThreatens, resolveNight, successChance } from './engine/struggle.js';
 import { dreamEligible, createVision, judge, reckonCorruption } from './engine/vision.js';
 import { COMMANDS, LETTERS, NIGHT_KEYS } from './engine/commands.js';
@@ -37,8 +39,8 @@ import {
 import { startTalk, ask, knownKeywords } from './engine/talk.js';
 import { NPCS, CLOISTER_NPCS, KIN_NPCS } from './data/npcs.js';
 import {
-  createCopySession, drawFigure, grindAndApply,
-  correctableMethods, correctFault, activeFaults, HANDS,
+  drawFigure, grindAndApply,
+  correctableMethods, correctFault, activeFaults,
   CONCEALMENT_FOUND_CHANCE, conceal, inventoryFinds, scrapeLeaf, undertextDistraction,
 } from './engine/scriptorium.js';
 import { exemplarById } from './data/exemplars.js';
@@ -443,79 +445,77 @@ function officeFull(stage) {
   addFatigue(john, hour.sim.fatigueCost);
   renderStatus();
 
+  // v4 (docs/V4_LOOP_REDESIGN.md §1): stance up front, outcome narrated.
+  ui.body(deliberation(STANCE_CHOICE.office));
+  const officeVerses = stage.procedureSlot
+    ? [VERSICLE.latin, VERSICLE.english]
+    : COMPLINE_PRAYER.verses;
+  stanceActs(stance => recite(stage, officeVerses, false, stance));
   if (stage.procedureSlot) {
-    act('O', 'Obey: say the office only.', 'The Rule asks nothing else of you.', () =>
-      recite(stage, [VERSICLE.latin, VERSICLE.english], false));
-    act('P', 'Pray the Work — the office, and within it, the first prayer.',
-      'If it is scattered, it is nothing; and the night will ask about it.', () =>
-      recite(stage, [VERSICLE.latin, ...PROCEDURE_PRAYER.verses], true));
-  } else {
-    recite(stage, COMPLINE_PRAYER.verses, false);
+    act('P', 'Pray the Work — the office, and within it, the first prayer. Vigilant, as it must be.',
+      `If it is scattered, it is nothing; and the night will ask about it. ${resolveQuote()}`, () =>
+      recite(stage, [VERSICLE.latin, ...PROCEDURE_PRAYER.verses], true, 'vigilant'));
   }
 }
 
-function recite(stage, verses, isProcedure) {
+/** The three stance options, stakes legible, live pool quoted (rule 10). */
+function stanceActs(onChoose) {
+  const spendNote = s => (s === 'hasty' ? '' : ` ${resolveQuote()}`);
+  const keys = { routine: 'O', vigilant: 'V', hasty: 'H' };
+  for (const s of ['routine', 'vigilant', 'hasty']) {
+    act(keys[s], STANCE_OPTIONS[s].label, STANCE_OPTIONS[s].why + spendNote(s), () => onChoose(s));
+  }
+}
+
+function resolveQuote() {
+  return `(You have ${john.resolve} resolve.)`;
+}
+
+/** Render one block's five-voice outcome: narrator, siege, monologue,
+ *  and the game-state voice's dry ledger underneath. */
+function renderStanceOutcome(narration) {
+  ui.body(passage(narration.narrator, narration.narrator.text, 'narrator'));
+  for (const line of narration.siege.lines) {
+    ui.body(passage({ sources: narration.siege.sources, status: narration.siege.status }, line, 'narrator siege'));
+  }
+  ui.body(passage(narration.monologue, narration.monologue.text, 'monologue'));
+  const gs = el('div', 'gamestate');
+  for (const line of narration.gameState) gs.appendChild(el('div', null, line));
+  ui.body(gs);
+}
+
+/** Attended pencil distractions still cost their verse aloud — the
+ *  scholarship got its hearing, so the reader gets the note. */
+function surfaceAttendedPencil(outcome) {
+  for (const d of outcome.distractions) {
+    if (d.action === 'attended' && d.record.kind === 'pencil') log(d.record.text, 'pencil-log');
+  }
+}
+
+function recite(stage, verses, isProcedure, stance) {
   clearActs();
   const rng = stageRng(day, stage.id);
-  const rec = createRecitation(rng, john, { verses, pool: DISTRACTIONS });
-  const verseBox = $('verse');
-
-  const step = () => {
-    verseBox.replaceChildren();
-    renderStatus();
-    if (rec.done) return finish();
-    if (!rec.pending) rec.advance();
-
-    if (rec.pending) {
-      const d = rec.pending;
-      const gloss = el('div', `gloss ${d.kind}`, d.text);
-      gloss.appendChild(el('span', 'provenance', provenance(d)));
-      ui.margin(gloss);
-      log('Something pulls at the edge of the page.', 'refused');
-      clearActs();
-      if (rec.canHoldFast()) {
-        act('H', 'Hold fast to the text.',
-          `Costs ${rec.holdFastCost()} resolve (you have ${john.resolve}).`,
-          () => { rec.holdFast(); step(); });
-      }
-      act('E', 'Examine it. Attend.', 'The verse is lost; the margin gets its hearing.',
-        () => {
-          const record = rec.attend();
-          if (record.kind === 'pencil') log(record.text, 'pencil-log');
-          step();
-        });
-      return;
-    }
-
-    verseBox.appendChild(el('div', 'latin', verses[Math.min(rec.verse, verses.length - 1)]));
-    verseBox.appendChild(el('div', 'said', `verse ${rec.verse} of ${verses.length}`));
-    const filler = el('span', 'line-filler');
-    filler.style.setProperty('--fill', `${(rec.verse / verses.length) * 100}%`);
-    verseBox.appendChild(filler);
-    clearActs();
-    act('O', rec.verse >= verses.length - 1 ? 'Finish the prayer.' : 'The next verse.', '', step);
-  };
-
-  const finish = () => {
-    const grade = rec.grade();
-    if (isProcedure) {
-      john.procedure.prayed = grade !== 'scattered';
-      john.procedure.quality = grade;
-      journal.prayed = john.procedure.prayed;
-    }
-    if (grade === 'scattered' && stage.hourId !== 'compline') {
-      addSuspicion(john, 1);
-      log('Your absence from your own mouth was noticed.', 'refused');
-    }
-    log(`The recitation was ${grade}.`);
-    verseBox.replaceChildren(el('div', 'said',
-      `The recitation was ${grade}.` +
-      (isProcedure && !john.procedure.prayed ? ' The Work’s prayer did not hold.' : '')));
-    clearActs();
-    act('B', 'So ends the hour.', '', next);
-  };
-
-  step();
+  const before = snapshotJohn(john);
+  const outcome = runRecitationBlock(rng, john, { verses, pool: DISTRACTIONS, stance });
+  const grade = outcome.grade;
+  if (isProcedure) {
+    john.procedure.prayed = grade !== 'scattered';
+    john.procedure.quality = grade;
+    journal.prayed = john.procedure.prayed;
+  }
+  if (grade === 'scattered' && stage.hourId !== 'compline') {
+    addSuspicion(john, 1);
+    log('Your absence from your own mouth was noticed.', 'refused');
+  }
+  const narration = composeStanceNarration(outcome, before, snapshotJohn(john));
+  renderStanceOutcome(narration);
+  surfaceAttendedPencil(outcome);
+  log(`The recitation was ${grade}.`);
+  $('verse').replaceChildren(el('div', 'said',
+    `The recitation was ${grade}.` +
+    (isProcedure && !john.procedure.prayed ? ' The Work’s prayer did not hold.' : '')));
+  renderStatus();
+  act('B', 'So ends the hour.', '', next);
 }
 
 function chapter(stage) {
@@ -612,90 +612,40 @@ function beginCopy(stage, exemplar, assigned, undertext = null) {
     if (acq) ui.body(passage(acq, acq.text));
   }
 
-  const rng = stageRng(day, `${stage.id}-copy-${exemplar.id}`);
   const pool = [...COPY_DISTRACTIONS, ...DISTRACTIONS.filter(d => d.kind === 'flesh')];
   if (undertext) {
     const phrase = faultPhrase(undertext.faultClass);
     const text = (UNDERTEXT_TEXT[undertext.faultClass] ?? UNDERTEXT_TEXT.eyeskip)(phrase);
     pool.push(undertextDistraction(undertext, text));
   }
-  const session = createCopySession(rng, john, { exemplar, light: 'day', pool });
-  if (undertext) session.copy.support = 'palimpsest';
-  let hand = 'textualis';
-  let seenEvents = 0;
-  const verseBox = $('verse');
 
-  const drainEvents = () => {
-    for (; seenEvents < session.events.length; seenEvents++) {
-      const ev = session.events[seenEvents];
+  // v4: the stance chooses the hand and the whole session runs on it.
+  ui.body(deliberation(STANCE_CHOICE.copy));
+  stanceActs(stance => {
+    clearActs();
+    const rng = stageRng(day, `${stage.id}-copy-${exemplar.id}`);
+    const before = snapshotJohn(john);
+    const outcome = runCopyBlock(rng, john, { exemplar, light: 'day', pool, stance });
+    const copy = outcome.copy;
+    if (undertext) copy.support = 'palimpsest';
+
+    for (const ev of outcome.events) {
       if (ev.type === 'noticed') { log(SCRIPTORIUM_TEXT.light.noticed.text, 'refused'); }
       if (ev.type === 'caught') { log(SCRIPTORIUM_TEXT.caught.text); }
       if (ev.type === 'fire') { log(SCRIPTORIUM_TEXT.light.fire.text, 'refused'); }
       if (ev.type === 'seen') { log(SCRIPTORIUM_TEXT.light.seen.text, 'refused'); }
     }
-  };
+    const narration = composeStanceNarration(outcome, before, snapshotJohn(john));
+    renderStanceOutcome(narration);
+    surfaceAttendedPencil(outcome);
 
-  const showUnit = () => {
-    verseBox.replaceChildren();
-    renderStatus();
-    const unit = session.layout[session.unitIndex];
-    verseBox.appendChild(el('div', 'latin', unit.kind === 'verba'
-      ? 'A line of the unknown words, letter by letter, construing nothing.'
-      : 'The line under the eye, and the line under the pen.'));
-    verseBox.appendChild(el('div', 'said',
-      `unit ${session.unitIndex + 1} of ${session.layout.length} · ` +
-      `units of light remaining: ${session.layout.length - session.unitIndex} · ` +
-      `${SCRIPTORIUM_TEXT.hands[hand].name}`));
-    clearActs();
-    act('O', 'Copy the unit.', `In ${SCRIPTORIUM_TEXT.hands[hand].name}.`, () => {
-      session.advance(hand);
-      after();
-    });
-    for (const [key, id] of [['S', 'textualis'], ['C', 'cursive'], ['F', 'trusting']]) {
-      if (id !== hand) {
-        act(key, `Change hand: ${SCRIPTORIUM_TEXT.hands[id].name}.`,
-          SCRIPTORIUM_TEXT.hands[id].line, () => { hand = id; showUnit(); });
-      }
-    }
-  };
-
-  const showDistraction = () => {
-    const d = session.pending;
-    const gloss = el('div', `gloss ${d.kind}`, d.text);
-    gloss.appendChild(el('span', 'provenance', provenance(d)));
-    ui.margin(gloss);
-    log('Something pulls at the edge of the page.', 'refused');
-    clearActs();
-    if (session.canHoldFast()) {
-      act('H', 'Hold fast to the leaf.',
-        `Costs ${session.holdFastCost()} resolve (you have ${john.resolve}).`,
-        () => { session.holdFast(); after(); });
-    }
-    act('E', 'Examine it. Attend.', 'The hand it leaves behind is unsteady.', () => {
-      const record = session.attend();
-      if (record.kind === 'pencil') log(record.text, 'pencil-log');
-      after();
-    });
-  };
-
-  const after = () => {
-    drainEvents();
-    renderStatus();
-    if (session.pending) return showDistraction();
-    if (session.done) return finishCopy();
-    showUnit();
-  };
-
-  const finishCopy = () => {
-    const copy = session.copy;
-    verseBox.replaceChildren(el('div', 'said', `The copying was ${copy.grade}.`));
+    $('verse').replaceChildren(el('div', 'said', `The copying was ${copy.grade}.`));
     const gradeText = SCRIPTORIUM_TEXT.grades[copy.grade];
     ui.body(passage(gradeText, gradeText.text));
-    if (assigned) { addResolve(john, 1); renderStatus(); }
+    if (assigned) addResolve(john, 1);
+    renderStatus();
     afterWork(stage, exemplar, assigned, copy, { examined: false });
-  };
-
-  showUnit();
+  });
 }
 
 function afterWork(stage, exemplar, assigned, copy, flags) {
@@ -1111,12 +1061,10 @@ function dream(stage) {
     clearActs();
     act('B', 'Toward Matins, and the reckoning.', '', next);
   };
-  act('D', 'Discern the visitation.', 'Everything now depends on reading the marks right.', () => {
-    subPrompt('Judge: of God (G), or make the Cross against it (X)?', {
-      G: () => outcome(judge(john, vision, true)),
-      X: () => outcome(judge(john, vision, false)),
-    });
-  });
+  act('G', 'Judge it of God.', 'If you are right, the licence; if wrong, the rot rides in silently.', () =>
+    outcome(judge(john, vision, true)));
+  act('X', 'Make the Cross against it.', 'If you are right, mastery; if wrong, the licence is delayed and the fault is yours.', () =>
+    outcome(judge(john, vision, false)));
   act('E', 'Examine the tells once more.', '', () => {
     for (const t of vision.tells) log(`${t.category}: ${t.ambiguous ? '(ambiguous) ' : ''}${t.text}`);
   });
