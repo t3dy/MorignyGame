@@ -494,3 +494,22 @@ canvas.worldmap {
   #verso { border-right: none; border-bottom: 1px solid var(--gutter); }
   #margin { border-left: none; border-top: 1px dotted var(--gutter); }
 }
+
+/* The dateline: the house's own reckoning, beside the hour. */
+#dateline {
+  float: right;
+  font-variant: small-caps;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+  font-size: 0.8em;
+}
+
+/* The unremembered stretch between two played days. */
+.narrator.interval {
+  font-style: italic;
+  opacity: 0.78;
+  border-top: 1px dotted var(--gutter);
+  border-bottom: 1px dotted var(--gutter);
+  padding: 0.5rem 0;
+  margin: 0.6rem 0;
+}

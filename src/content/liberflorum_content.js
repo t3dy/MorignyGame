@@ -206,6 +206,66 @@ export const GLOSS_OUTCOME = {
   },
 };
 
+// ── The interval: what the record does not remember ────────────────────
+
+export const INTERVAL_ENVELOPE = {
+  sources: [{ work: 'Fanger, Rewriting Magic', locus: 'the Book of Visions as retrospectively constructed and selective (frame; verify)' }],
+  status: 'adapted', verify: true,
+};
+
+/**
+ * The narrator on the stretch of ordinary life between two remembered
+ * days. Composed from the real interval, so a fortnight and a lost year
+ * read differently — and the apparatus can be honest that the gap is
+ * the shape of John's own selective record, not a loading screen.
+ */
+export const INTERVAL_TEXT = {
+  short: n =>
+    `${n} weeks pass in the ordinary way — offices, meals, the same forty faces — and ` +
+    'leave nothing behind that anyone thought worth writing down.',
+  season: n =>
+    `A season turns. ${n} weeks of the Office kept and the desk attended, none of which ` +
+    'John records, because a life is mostly the part nobody records.',
+  long: n =>
+    `The better part of a year goes by — ${n} weeks of it — and the book gains nothing, ` +
+    'and neither does the record. What survives of a man is not evenly spaced.',
+};
+
+export const BEAT_ARRIVALS = {
+  provost: {
+    narrator: {
+      text:
+        'The house makes him provost. It is a real office with real teeth — rents, tithes, ' +
+        'the practical administration of the abbey\'s property — and it means the community ' +
+        'has decided he is trustworthy with money, which is a harder trust than most. Two ' +
+        'things follow. He is now protected in a way an ordinary choir monk is not, and he ' +
+        'is now visible in a way an ordinary choir monk is not. Both of those will matter ' +
+        'when somebody eventually asks what else he has been writing.',
+      sources: [{ work: 'Fanger, Rewriting Magic', locus: 'John as provost of Morigny after 1308 (frame; verify)' }],
+      status: 'adapted', verify: true,
+    },
+    monologue: {
+      sources: [], status: 'invented',
+      text: 'They have given me the rents. I know what it means and I took it anyway: a man who holds the accounts is a man nobody searches first.',
+    },
+  },
+  'new-compilation': {
+    narrator: {
+      text:
+        'The year the record puts the New Compilation at: begun in August, finished within ' +
+        'months. Whatever John has been building until now, this is where he rebuilds it — ' +
+        'simplified, resacralised, with the old errors left visible and glossed rather than ' +
+        'scraped away.',
+      sources: [{ work: 'Fanger, Rewriting Magic', locus: 'the New Compilation begun August 1315 (frame; verify)' }],
+      status: 'adapted', verify: true,
+    },
+    monologue: {
+      sources: [], status: 'invented',
+      text: 'Again, then. Not because the first was false — because I was a child when I made it, and children are not wrong to be children.',
+    },
+  },
+};
+
 // ── The Barking Dogs ───────────────────────────────────────────────────
 
 export const BARKING_DOGS = {

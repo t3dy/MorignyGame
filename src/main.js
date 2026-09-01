@@ -28,8 +28,14 @@ import {
 } from './engine/liberflorum.js';
 import {
   COMPOSE_SCENE, COMPOSE_OPTIONS, INCIPITS, INCIPITS_ENVELOPE, COMPOSE_OUTCOME,
+  INTERVAL_TEXT, INTERVAL_ENVELOPE, BEAT_ARRIVALS,
 } from './content/liberflorum_content.js';
 import { SeededRandom } from './engine/random.js';
+import {
+  loadCalendar, stride, advance as advanceTime, format as formatDate, weeks as toWeeks,
+} from './engine/calendar.js';
+import { loadPractice, bookCharacter } from './engine/practice.js';
+import { loadBridget } from './engine/bridget.js';
 import { nightThreatens, resolveNight, successChance } from './engine/struggle.js';
 import { dreamEligible, createVision, judge, reckonCorruption } from './engine/vision.js';
 import { COMMANDS, LETTERS, NIGHT_KEYS } from './engine/commands.js';
@@ -349,6 +355,8 @@ let pendingMemory = null;      // a vignette owed, to be paid at the reckoning
 /** At most one special beat per day — a memory OR an encounter, never
  *  both. Keeps the input budget at 10 and the pacing readable. */
 let specialFiredToday = false;
+let lastStride = 0;       // days of sim-time this witness stands after
+let crossedBeats = [];    // historical beats the stride carried us past
 let worldCtl = null;   // live only during the world stage (arrow keys)
 let chronicle = null;  // what accumulates across witnesses, toward 1323
 let exam = null;       // the examination in progress
@@ -369,6 +377,16 @@ function start(seed, opts = {}) {
   chronicle.risk = loadRiskBag(chronicle.risk);
   // The book he is writing, which outlives every day (NEWDIRECTIONS §4).
   chronicle.liberFlorum = loadLiberFlorum(chronicle.liberFlorum);
+  chronicle.calendar = loadCalendar(chronicle.calendar);
+  chronicle.practice = loadPractice(chronicle.practice);
+  chronicle.bridget = loadBridget(chronicle.bridget);
+  // Sim-time: a played day is a day the record remembers, and the
+  // calendar moves weeks or a season between them (engine/calendar.js).
+  if (chronicle.days > 0) {
+    lastStride = stride(new SeededRandom(`${seed}-stride`));
+    crossedBeats = advanceTime(chronicle.calendar, lastStride);
+  } else { lastStride = 0; crossedBeats = []; }
+  saveChronicle(storage(), chronicle);
   chronicle.encountersFired = chronicle.encountersFired ?? [];
   if (!Array.isArray(chronicle.deck) || !chronicle.deck.length) {
     chronicle.deck = buildEncounterDeck(
@@ -395,7 +413,7 @@ function start(seed, opts = {}) {
     log('— A letter has come from Paris. —', 'bell');
   } else {
     day = buildDay(seed, opts);
-    log(`— A new witness begins. seed: ${seed}${opts.journey ? ' · a road day' : ''} —`, 'bell');
+    log(`— ${formatDate(chronicle.calendar)}. A new witness begins.${opts.journey ? ' A road day.' : ''} —`, 'bell');
   }
   stageIdx = 0;
   runStage();
@@ -431,6 +449,7 @@ function runStage() {
 const ui = {
   setHour(name) {
     $('hour-name').textContent = name;
+    if (chronicle?.calendar) $('dateline').textContent = formatDate(chronicle.calendar);
     beatlog.begin(day?.stages?.[stageIdx]?.id ?? null, name);
     log(`✝ ${name}`, 'bell');
   },
@@ -502,12 +521,28 @@ function officeBrief(stage) {
   act('B', 'Let the bell carry the day onward.', '', next);
 }
 
+/** The stretch of unremembered life since the last played day, and any
+ *  historical beat it carried us past (engine/calendar.js). */
+function renderInterval() {
+  if (!lastStride) return;
+  const w = toWeeks(lastStride);
+  const text = w <= 6 ? INTERVAL_TEXT.short(w) : w <= 20 ? INTERVAL_TEXT.season(w) : INTERVAL_TEXT.long(w);
+  ui.body(passage(INTERVAL_ENVELOPE, text, 'narrator interval'));
+  for (const beat of crossedBeats) {
+    const arrival = BEAT_ARRIVALS[beat.id];
+    if (arrival) ui.body(deliberation(arrival));
+  }
+  lastStride = 0;
+  crossedBeats = [];
+}
+
 function officeFull(stage) {
   const hour = HOURS.find(h => h.id === stage.hourId);
   const text = HOUR_TEXT[stage.hourId];
   ui.setHour(hour.names[0]);
   ui.scene({ rubric: text.rubric, verso: TIER_TEXT[pressureTier(john.pressure)] });
   ui.body(sceneBody(text));
+  if (stage.procedureSlot) renderInterval(); // Matins opens the day, and the year
   addFatigue(john, hour.sim.fatigueCost);
   renderStatus();
 
