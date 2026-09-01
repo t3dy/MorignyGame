@@ -37,7 +37,7 @@ jobs:
       - run: npm run build
         env:
           GITHUB_PAGES: 'true'
-      - name: Assemble Pages (v2 build + preserved v1 + landing page)
+      - name: Assemble Pages (v3 build + preserved v1, v2 + landing page)
         run: |
           set -e
           touch dist/.nojekyll
@@ -61,12 +61,13 @@ jobs:
             cp pages-out/index.html pages-out/v1/index.html
           fi
 
-          # v2 is the only thing this job ever rebuilds. v1/ and the
-          # legacy root assets/ it depends on (absolute /MorignyGame/assets/
-          # paths baked into v1/index.html) are never touched here.
-          rm -rf pages-out/v2
-          mkdir -p pages-out/v2
-          cp -r dist/* pages-out/v2/
+          # v3 is the only thing this job ever rebuilds. v1/ and v2/ are
+          # frozen where they stand — v2's last good build stays exactly
+          # as the previous deploy left it, the way v1 was frozen before
+          # it. Adding a v4 later means changing only the paths below.
+          rm -rf pages-out/v3
+          mkdir -p pages-out/v3
+          cp -r dist/* pages-out/v3/
 
           # The landing page is regenerated fresh every deploy from its
           # tracked source, not hand-maintained on the gh-pages branch.
