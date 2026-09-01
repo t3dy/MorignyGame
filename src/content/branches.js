@@ -32,7 +32,7 @@ import { PLACES, PLACE_IDS } from '../data/places.js';
 import { LEGITIMATIONS } from '../engine/address.js';
 import {
   DAYLIGHT_PLACES, DESK_AFTER, CONCEALMENT_CHOICE, LEGITIMATION_SCENE,
-  RECKONING_SCENE, RECKONING_OPTIONS,
+  RECKONING_SCENE, RECKONING_OPTIONS, ROAD_SURFACE, TALK_SURFACE,
 } from './day_content.js';
 import { LEGITIMATION_OPTIONS as LEGIT_OPTS } from './liberflorum_content.js';
 import { EXAMINATION } from './content.js';
@@ -282,6 +282,10 @@ export const BRANCHES = [
       })),
     }),
   })),
+
+  // ── Surfaces: acted through movement and typing ────────────────────
+  { id: 'road', where: 'the errand to Étampes', kind: 'surface', cites: true, content: () => ROAD_SURFACE },
+  { id: 'talk', where: 'speaking with anyone', kind: 'surface', cites: true, content: () => TALK_SURFACE },
 
   // ── Memories and encounters ────────────────────────────────────────
   ...Object.values(MEMORIES).map(v => ({

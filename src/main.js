@@ -58,6 +58,7 @@ import {
   SUMMONS_SCENE, EXAMINATION_SCENE, STANCE_FRAMING, STANCE_FRAMING_ENVELOPE,
   VERDICT_SCENE, STEMMA_SCENE,
 } from './content/examination_content.js';
+import { ROAD_SURFACE, TALK_SURFACE } from './content/day_content.js';
 import {
   GIFTS, GIFT_IDS, loadAscent, ascentOpen, currentOrder, complete as ascentComplete,
   petition, giftBonus,
@@ -410,6 +411,7 @@ let pendingMemory = null;      // a vignette owed, to be paid at the reckoning
 /** At most one special beat per day — a memory OR an encounter, never
  *  both. Keeps the input budget at 10 and the pacing readable. */
 let specialFiredToday = false;
+let talkExplained = false;   // the Talk controls are stated once per run
 let currentPlace = null;      // the room the daylight hour is being spent in
 let pendingUndertext = null;  // a scrapeable old fault, computed once per day
 let lastStride = 0;       // days of sim-time this witness stands after
@@ -1368,9 +1370,9 @@ function worldStage() {
   ui.setHour('The Road');
   ui.scene({ rubric: JOURNEY.depart.rubric, verso: '' });
   ui.body(passage(JOURNEY.depart));
-  ui.body(el('p', 'said',
-    'Walk with the arrow keys. T talks to a neighbor; K keeps a rung hour where you stand; ' +
-    'the abbey door ends the day’s wandering.'));
+  ui.body(passage(ROAD_SURFACE.narrator, ROAD_SURFACE.narrator.text, 'narrator'));
+  ui.body(passage(ROAD_SURFACE.monologue, ROAD_SURFACE.monologue.text, 'monologue'));
+  ui.body(howToPlay(ROAD_SURFACE.interaction));
 
   const world = createWorld();
   const canvas = el('canvas', 'worldmap');
@@ -1453,6 +1455,14 @@ function openTalk(npc) {
   talkOpen = true;
   if (!journal.talked.includes(npc.id)) journal.talked.push(npc.id);
   const convo = startTalk(npc);
+  if (!talkExplained) {
+    // A surface owes its controls (docs/BRANCH_AUDIT.md): there is no
+    // menu to read them off.
+    ui.body(passage(TALK_SURFACE.narrator, TALK_SURFACE.narrator.text, 'narrator'));
+    ui.body(passage(TALK_SURFACE.monologue, TALK_SURFACE.monologue.text, 'monologue'));
+    ui.body(howToPlay(TALK_SURFACE.interaction));
+    talkExplained = true;
+  }
   log(`You speak with ${npc.label}.`, 'bell');
   log(npc.greeting);
 

@@ -33,6 +33,13 @@ Two kinds:
 |---|---|---|
 | **decision** | two or more live options | all four voices (below) |
 | **continue** | one button that turns the page | a label that says *where it goes* |
+| **surface** | the player acts by moving or typing, not by choosing | orientation, an interior voice, and **its controls, stated** |
+
+A **surface** is the road and the Talk line. It owes `interaction` more
+strictly than a menu does, not less: with no options on screen, the
+instructions are the only affordance the player has. A surface with no
+stated controls is a blank room with an invisible door, and the auditor
+rejects one whose interaction line names no actual key.
 
 "To Vespers." is a good continue. "Onward." is not, and the auditor
 rejects it: a page-turn must still tell the reader where the page
@@ -126,9 +133,14 @@ onto `renderBranch()` and the declared content module by module. Order
 of work:
 
 1. ~~the opening~~ — done, and it was the worst of them
-2. the day's stances and the reckoning menus
-3. the world layer and Talk
-4. the 1323 sequence
+2. ~~the day's stances and the reckoning menus~~ — done; the desk, the
+   concealment choice and the reckoning had no narration at all
+3. ~~the world layer and Talk~~ — done, as the first two surfaces
+4. ~~the 1323 sequence~~ — done, and D-21's recast landed with it
 
-Until a moment is declared, it is unaudited. That is the honest state
-and the reason this file lists it.
+**All 54 declared branches are clean.** What remains is not a backlog of
+unaudited moments but the ordinary discipline: anything new goes in the
+map first. If you find yourself writing a choice at an `act()` call
+site, stop — that is the failure this whole apparatus exists to prevent,
+and it is how the game shipped an opening that read "Take up the day
+again.".

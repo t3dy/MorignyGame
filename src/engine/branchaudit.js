@@ -29,10 +29,18 @@
  * A DECISION (two or more live options) owes all four, with `pencil`
  * required only when `cites` is declared. A CONTINUE (a single button
  * that turns the page) owes only that its label says where it goes.
+ *
+ * A SURFACE is the third kind: a moment where the player acts by moving
+ * or typing rather than choosing from a list — the road, and the Talk
+ * keyword line. A surface owes orientation and an interior voice like
+ * any scene, and it owes `interaction` MORE strictly than a menu does,
+ * not less: with no options on screen, the instructions are the only
+ * affordance the player has. A surface with no stated controls is a
+ * blank room with an invisible door.
  */
 
 export const VOICES = ['narrator', 'monologue', 'pencil', 'interaction'];
-export const BRANCH_KINDS = ['decision', 'continue'];
+export const BRANCH_KINDS = ['decision', 'continue', 'surface'];
 
 /** Length below which a passage is not doing its job. */
 const MIN_NARRATOR = 120;
@@ -78,6 +86,21 @@ export function auditBranch(branch) {
     if (label.length < MIN_LABEL) add('error', 'the continue has no label worth reading');
     if (VAGUE_CONTINUES.some(re => re.test(label.trim()))) {
       add('error', `"${label}" does not say where it goes`);
+    }
+    return { id: branch.id, where: branch.where, kind: branch.kind, findings };
+  }
+
+  // ── surfaces: no menu, so the controls must be spelled out ─────────
+  if (branch.kind === 'surface') {
+    const narrator = textOf(content.narrator);
+    if (!narrator) add('error', 'no narrator: the reader is not told where he is');
+    else if (narrator.length < MIN_NARRATOR) add('warn', 'narrator is too thin to orient anybody');
+    if (!textOf(content.monologue)) add('error', 'no interior voice: this is a control scheme, not a place');
+    const how = textOf(content.interaction);
+    if (!how) {
+      add('error', 'a surface MUST state its controls — there is no menu to read them off');
+    } else if (!/\b(key|keys|arrow|type|press|click|walk)\b/i.test(how)) {
+      add('error', 'the interaction line names no actual control');
     }
     return { id: branch.id, where: branch.where, kind: branch.kind, findings };
   }
@@ -153,8 +176,9 @@ export function report(results) {
   const lines = [];
   const decisions = results.filter(r => r.kind === 'decision').length;
   const continues = results.filter(r => r.kind === 'continue').length;
+  const surfaces = results.filter(r => r.kind === 'surface').length;
   const clean = results.filter(r => !r.findings.length).length;
-  lines.push(`${results.length} declared branches (${decisions} decisions, ${continues} continues)`);
+  lines.push(`${results.length} declared branches (${decisions} decisions, ${continues} continues, ${surfaces} surfaces)`);
   lines.push(`${clean} clean · ${errors(results).length} with errors · ${warnings(results).length} with warnings`);
   for (const r of results) {
     if (!r.findings.length) continue;

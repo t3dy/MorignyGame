@@ -20,7 +20,35 @@ import { INCIPIT, RETURNING } from '../src/content/incipit.js';
 describe('The auditor itself', () => {
   test('it names the four things a branch owes the reader', () => {
     assert.deepEqual(VOICES, ['narrator', 'monologue', 'pencil', 'interaction']);
-    assert.deepEqual(BRANCH_KINDS, ['decision', 'continue']);
+    assert.deepEqual(BRANCH_KINDS, ['decision', 'continue', 'surface']);
+  });
+
+  test('a surface must state its controls — there is no menu to read them off', () => {
+    const mute = auditBranch({
+      id: 'mute', where: 'the road', kind: 'surface',
+      content: { narrator: { text: 'x'.repeat(200) }, monologue: { text: 'y'.repeat(80) } },
+    });
+    assert.match(mute.findings.map(f => f.message).join(' '), /MUST state its controls/);
+
+    const vague = auditBranch({
+      id: 'vague', where: 'the road', kind: 'surface',
+      content: {
+        narrator: { text: 'x'.repeat(200) },
+        monologue: { text: 'y'.repeat(80) },
+        interaction: { text: 'Move about as you like and see what happens.' },
+      },
+    });
+    assert.match(vague.findings.map(f => f.message).join(' '), /names no actual control/);
+
+    const good = auditBranch({
+      id: 'good', where: 'the road', kind: 'surface',
+      content: {
+        narrator: { text: 'x'.repeat(200) },
+        monologue: { text: 'y'.repeat(80) },
+        interaction: { text: 'Walk with the arrow keys; press T to speak.' },
+      },
+    });
+    assert.equal(good.findings.length, 0);
   });
 
   test('it catches a menu pretending to be a scene', () => {

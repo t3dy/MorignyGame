@@ -198,3 +198,67 @@ export const PLACE_MONOLOGUE = {
   garden: { ...INV, text: 'Beans, and an hour nobody is counting. I come back able to think again and I do not write that part down.' },
   gate: { ...INV, text: 'Whatever the road has brought today. It is the only door in the house that opens outward.' },
 };
+
+// ── Surfaces: the road and the Talk line ───────────────────────────────
+// A surface is a moment the player acts through movement or typing
+// rather than a menu (docs/BRANCH_AUDIT.md). With no options on screen,
+// the controls ARE the affordance and must be stated plainly.
+
+const WORLD = [{ work: 'Regional geography: Morigny abbey and Étampes on the Juine', locus: 'the road the errand actually took' }];
+const TYPES = [{ work: 'Period types after Kieckhefer; Pentiment-style town surface', locus: 'the people a monk met outside the walls' }];
+
+export const ROAD_SURFACE = {
+  rubric: '¶ Of the road to Étampes, and the hours that travel with you.',
+  narrator: {
+    text:
+      'The errand takes him outside the walls, and the Rule does not stay behind. Terce, Sext ' +
+      'and None fall due while he is on the road, and an office kept in a market square is a ' +
+      'different act from one kept in choir: it is observed by strangers. That is the whole ' +
+      'texture of the world layer — everything the abbey tracks keeps running, in front of ' +
+      'people who have no idea what they are looking at and will remember it anyway. ' +
+      'Sanctity and suspicion are both forms of visibility.',
+    sources: [...WORLD, { work: 'RB 1980 (Rule of St Benedict)', locus: 'RB 50, brethren working at a distance (frame)' }],
+    status: 'adapted', verify: true,
+  },
+  monologue: {
+    ...INV,
+    text:
+      'Poppy for the infirmary, ink for the sacristy, and the road. A monk outside his wall ' +
+      'is a snail out of its shell: quicker, softer, and in season.',
+  },
+  interaction: {
+    ...INV,
+    text:
+      'Walk with the arrow keys. Press T to speak with anyone standing beside you, and K to ' +
+      'keep an hour where you stand when its bell falls due — conspicuous, but kept. Walking ' +
+      'back to the abbey door ends the day\'s wandering. An hour missed on the road costs you ' +
+      'the same as an hour missed in choir.',
+  },
+};
+
+export const TALK_SURFACE = {
+  rubric: '¶ Of asking, one word at a time.',
+  narrator: {
+    text:
+      'Conversation here works the way it worked in the games this interface descends from, ' +
+      'and the way it works with a person who has their own reasons: you raise a subject and ' +
+      'they answer it. Some words open others. Some words cost you something to have said ' +
+      'aloud, in front of somebody who will remember that you knew them. These are not ' +
+      'dialogue trees with a right answer; they are people with jobs, and what they will ' +
+      'tell you depends on what they think you are.',
+    sources: TYPES, status: 'adapted',
+  },
+  monologue: {
+    ...INV,
+    text:
+      'Ask plainly and hear what comes back. Half of what I know about this house I learned ' +
+      'by saying a word to the wrong person and watching their face do arithmetic.',
+  },
+  interaction: {
+    ...INV,
+    text:
+      'Type a word and press Enter. Everyone answers to name, job, and bye; other words are ' +
+      'suggested to you as you unlock them. Press Escape to break off. Some subjects, once ' +
+      'raised, cannot be unraised.',
+  },
+};
