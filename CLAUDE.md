@@ -22,19 +22,38 @@ for everything in this repository.
 2. **Never fabricate quotations** — not from John, not from Fanger, not from
    anyone. Invented text in John's voice is `status: invented`, and the
    in-game apparatus can disclose that.
-3. **The Struggle register rules in `STYLE_GUIDE.md` are binding**: interior
-   simulation only; never depicted; never mocked; no reward loop that makes
-   lapse desirable. Any new mechanic touching this system gets a style-guide
-   check before merge.
+3. **The Struggle simulates the temptation the sources actually
+   document: the desire for forbidden KNOWLEDGE.** *(Corrected
+   2026-08-31 — see `docs/RESEARCH_PIPELINE.md` §5 for the error this
+   replaces.)* Fanger's John is tempted by knowledge, deceived through
+   devotion, and asks God for comprehensive knowledge precisely so that
+   he may *resist* sin. The register rules in `STYLE_GUIDE.md` remain
+   binding: interior simulation only; never depicted; never mocked; no
+   reward loop that makes lapse desirable. Ritual purity — including
+   continence — stays a real gate on operation, because the sources put
+   it there; but it is a **precondition**, not the interior drama, and
+   no record may imply Fanger documents a sexual struggle she does not.
+   Any new mechanic touching this system gets a style-guide check
+   before merge.
 4. **Use Fanger's method, not her person.** The pencil hand is the
    designer-scholar's own voice. It never bears her name or invents her
-   words. Cite her constantly; impersonate her never.
-5. **Fixed history stays fixed.** 1323 always arrives on the historical
-   path. No *unmarked* alternate history: the Radical Axis
-   (`WORLD_DESIGN.md` §4) may carry a run out of the record ONLY through
-   the mandatory in-fiction departure annotation ("Here the witness
-   departs from the record"), logged in the witness. Default agency =
-   endurance, revision, transmission.
+   words. Cite her constantly; impersonate her never. Where the game
+   wants a scholar's *perspective*, the player occupies it — second
+   person, in the archive — rather than any named living person.
+5. **Fixed history stays fixed, and the line sits where the record
+   actually ends.** 1323 always arrives on the historical path. No
+   *unmarked* alternate history: the Radical Axis (`WORLD_DESIGN.md`
+   §4) may carry a run out of the record ONLY through the mandatory
+   in-fiction departure annotation ("Here the witness departs from the
+   record"), logged in the witness. **But transgression is not by
+   itself departure** (`NEWDIRECTIONS.md` §11): John demonstrably
+   copied a necromantic book, sought out Jacob of Bologna, worked the
+   Four Rings of Solomon, kept necromantic books after his conversion,
+   and was composing a *nova nigromancia*. A player doing those things
+   is inside the record and gets citations, not an annotation. The
+   annotation fires where the *trajectory* leaves what the sources can
+   support — refusing the recognition that historically came. Default
+   agency = endurance, revision, transmission.
 6. **Asset provenance before pixels.** No image or audio enters the repo
    without a complete `assets_manifest.json` entry (schema in
    `ART_SOURCES.md`). Processing beyond cleanup demotes `attested` →
@@ -61,6 +80,28 @@ for everything in this repository.
     for every new choice. See `PACING.md` §Legible stakes,
     `STYLE_GUIDE.md` §Legible stakes, and `docs/CLARITY_STYLE_GUIDE.md`
     for worked examples and the choice-label template.
+11. **The research pipeline is mandatory** (`docs/RESEARCH_PIPELINE.md`,
+    enforced by `tests/works.test.js`). Every `sources[].work` string
+    must resolve to the works registry in `src/data/works.js`; you may
+    not invent a citation string in a content file. Adding a work means
+    adding it to the registry first, with its `kind` and what it
+    grounds. **Digests are finding aids, never authorities**: a summary
+    of a source (including anything in `docs/research/` and the briefs
+    in `docs/scholarship/`) tells you where to look — you cite the work
+    it summarises, and carry `verify: true` until someone has seen the
+    claim in the work itself. Rule 1 says cite something; this rule
+    says cite something *real*, and know what kind of claim you are
+    making. It exists because rule 1 alone did not prevent the
+    sexual-temptation error (`docs/RESEARCH_PIPELINE.md` §5).
+12. **Two modes of ritual agency** (`NEWDIRECTIONS.md` §11). Every
+    ritual act declares whether John **adjures** (petitions; efficacy
+    in the divine order; he cannot compel) or **conjures** (commands;
+    efficacy in the operator). Both are playable and both get the full
+    writing budget. Adjuration must never be the merely-weaker option:
+    it is slower and less certain, and it is the only road on which
+    *licentia* can be granted — which is the only thing that makes a
+    witness blessed and a transmission worth having. Conjuration works
+    now; adjuration is what works after 1323.
 
 ## Data layout (all under `src/data/`, as ES modules so both the
 Vite app and the Node test runner import them directly)

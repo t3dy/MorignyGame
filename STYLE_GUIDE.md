@@ -128,45 +128,86 @@ the manuscript's world, plainer even than the pencil. Rules:
 
 ## The Struggle — binding register rules
 
-The historical subject is real and named plainly *in the narrator and the
-pencil hand*: John's recorded battles with sexual temptation — including
-the urge to masturbate — nocturnal pollution, and the ritual-purity system
-that made his body a component of his magic. The rules:
+> **Corrected 2026-08-31.** This section previously described John's
+> central struggle as sexual temptation, citing Fanger. On reading a
+> careful summary of her actual argument, the position is close to the
+> opposite: no passage was found in which John says he struggled with
+> that, and "the sexual component is not prominent in the Fanger text
+> that we have." What she documents is that **the desire for forbidden
+> knowledge is the temptation** — and that John asks for comprehensive
+> knowledge precisely so that he may resist sin. Full account of the
+> error and what it cost: `docs/RESEARCH_PIPELINE.md` §5.
 
-1. **Never depicted.** No explicit description or imagery, in any hand, ever.
-   The simulation is interior: pressure, attention, pacing, resolve, lapse,
-   confession, relief, despair. *Named plainly* is not the same as
-   *depicted* — the narrator may say "he's aroused"; nothing ever shows
-   or narrates the act itself, in any hand.
-2. **John's voice uses John's idiom, always** — temptation, the flesh,
-   pollution, the enemy, the siege — never clinical, never modern, no
-   exceptions, including inside his own head at the exact moment the
-   narrator paragraph above him just named the plain fact. **The narrator
-   is the one hand permitted to be direct about what is happening**
-   ("his body wants something his vows don't allow"); John's own
-   monologue answers in his own terms ("the flesh will not be quiet
-   tonight"). This split — clear naming outside him, period idiom
-   inside him — *is* the fourth wall doing its historiographic work,
-   made concrete at the game's single most sensitive moment. The pencil
-   hand still does the citing ("what John calls pollution, we would
-   call…"), but it no longer has to carry the whole burden of plain
-   language alone.
+The historical subject is the **appetite for knowledge that should not
+be had, and the devotional practice through which it deceives him** —
+named plainly in the narrator and the pencil hand. Fanger's loop:
+
+```
+sin → temptation → desire for knowledge → magical experiment →
+demonic deception → recognition → confession → purification →
+divinely authorized knowledge → power to resist further temptation
+```
+
+Knowledge is simultaneously what tempts him and what he begs for as his
+defence. That circularity is the Struggle, and it is far stranger than
+what it replaces.
+
+**Ritual purity, including continence, remains real** — the ars notoria
+and the *Liber florum* both gate operation on it, and that is attested.
+It is a **precondition of the Work**, felt as a constraint and a cost.
+It is not the interior drama, and no record may imply the scholarship
+documents an agony it does not. Where the game touches bodily
+discipline it stays at the level the sources do: fasting, continence,
+confession current, the body as a component of the practice.
+
+The rules:
+
+1. **Never depicted.** The simulation is interior: appetite, attention,
+   pacing, resolve, lapse, confession, relief, despair. No explicit
+   description or imagery, in any hand, ever. Where continence is at
+   stake it is named as the sources name it — a purity requirement kept
+   or broken — and never narrated.
+2. **John's voice uses John's idiom, always** — temptation, the enemy,
+   the appetite, the itch to know, the beautiful book — never clinical,
+   never modern, no exceptions, including inside his own head at the
+   exact moment the narrator paragraph above him just named the plain
+   fact. **The narrator is the one hand permitted to be direct**
+   ("he wants to know a thing his vows do not let him want, and the
+   wanting is not going to stop"); John answers in his own terms
+   ("the book is in the room again tonight, and it is not even a real
+   book, and I can see the hand of it"). This split — clear naming
+   outside him, period idiom inside him — *is* the fourth wall doing
+   its historiographic work.
 3. **Never comic at his expense.** The Gothic margins may be wry — they
    historically were — but the drolleries pressure John; they do not mock
    him. The player should feel besieged with him, not amused at him.
 4. **Scrupulosity is the deep subject.** The design treats over-confession,
    despair, and *acedia* as the graver danger, following the texture of the
    sources. Lapse text is quiet; despair text gets the full writing budget.
-5. **No titillation loops.** Nothing in the reward structure may make the
-   player *want* John to lapse. Failure is interesting, never spicy.
+5. **No cheap thrill loops.** Nothing in the reward structure may make
+   the player *want* John to fall. Failure is interesting, never
+   glamorous. This binds the conjuring mode too (rule 12): the dirty
+   magician's road must be genuinely attractive *and* genuinely
+   costly — never a power fantasy the game is winking at.
+6. **The deception is devotional, and that is the horror.** The art
+   looked holy — Christian prayers, elevated Latin, angels, fasting,
+   good objectives. John's error is not choosing an obviously evil
+   book; it is choosing the beautiful, plausible, intellectually
+   attractive one that seemed almost too compatible with monastic
+   devotion. Write it that way. The demons intrude *into correct
+   practice*; they are not a punishment the game administers for
+   wrongdoing.
 
 ### Content note (first-launch copy, canonical wording)
+*Revised 2026-08-31 with the Struggle correction.*
 > This game simulates the inner life of a real fourteenth-century monk,
 > John of Morigny, as recorded in his own visionary autobiography: his
-> religious practice, and his struggles with sexual temptation and
-> scrupulosity, in the confessional language of his time. Nothing is
-> explicitly depicted. The historical John is treated throughout with the
-> dignity owed to the dead.
+> religious practice, his hunger for knowledge he was forbidden to
+> pursue, and his struggles with temptation, deception, and
+> scrupulosity, in the confessional language of his time. It depicts
+> demonic apparition and spiritual crisis. Nothing is explicitly
+> depicted. The historical John is treated throughout with the dignity
+> owed to the dead.
 
 ---
 
