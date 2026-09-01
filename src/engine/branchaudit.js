@@ -118,10 +118,11 @@ export function auditBranch(branch) {
   // Interaction clarity: the player must be able to tell what pressing
   // a key will do. A stakes line that never mentions a consequence is
   // atmosphere, not instruction.
-  // A consequence may be quantified ("costs 2 resolve"), directional
-  // ("leans Radical"), or conditional ("if wrong, the rot rides in").
-  // All three tell the player what pressing the key does.
-  const CONSEQUENCE = /\(|\bcosts?\b|\+\d|−|\bleans\b|\bif (you|wrong|right)\b|\brisks?\b|\bwill\b/i;
+  // A consequence may be quantified ("costs 2 resolve", "50% found"),
+  // directional ("leans Radical"), or conditional ("if wrong, the rot
+  // rides in"). All three tell the player what pressing the key does;
+  // a bare percentage is the clearest of the lot.
+  const CONSEQUENCE = /\(|\bcosts?\b|\+\d|−|\d+%|\bleans\b|\bif (you|wrong|right)\b|\brisks?\b|\bwill\b/i;
   const anyConsequence = options.some(o => CONSEQUENCE.test(o.why ?? ''));
   if (options.length && !anyConsequence) {
     add('warn', 'no option states a consequence: the player is choosing blind');

@@ -28,6 +28,13 @@ import {
 } from './bridget_content.js';
 import { NIGHT_DELIBERATION, NIGHT_CHOICES, CONFESSION, VISION_SCENE } from './content.js';
 import { GIFTS } from '../engine/ascent.js';
+import { PLACES, PLACE_IDS } from '../data/places.js';
+import { LEGITIMATIONS } from '../engine/address.js';
+import {
+  DAYLIGHT_PLACES, DESK_AFTER, CONCEALMENT_CHOICE, LEGITIMATION_SCENE,
+  RECKONING_SCENE, RECKONING_OPTIONS,
+} from './day_content.js';
+import { LEGITIMATION_OPTIONS as LEGIT_OPTS } from './liberflorum_content.js';
 
 /** Shape an options object into the list the auditor reads. */
 const opts = (source, extra = {}) =>
@@ -187,6 +194,70 @@ export const BRANCHES = [
       ...BRIDGET_NIGHT,
       options: opts(BRIDGET_NIGHT_OPTIONS, { endure: { key: 'W' }, tell: { key: 'T' }, renounce: { key: 'G' } }),
     }),
+  },
+
+  // ── The day's rooms and desks (declared 2026-09-01) ────────────────
+  {
+    id: 'daylight:places',
+    where: 'the daylight hour — which room',
+    kind: 'decision',
+    cites: true,
+    content: () => ({
+      ...DAYLIGHT_PLACES,
+      options: PLACE_IDS.map(id => ({
+        id, key: PLACES[id].key, label: PLACES[id].label + '.',
+        why: PLACES[id].line + ' (Choosing a room does not yet spend the hour.)',
+      })),
+    }),
+  },
+  {
+    id: 'desk:after',
+    where: 'the desk, a copy finished',
+    kind: 'decision',
+    cites: true,
+    content: () => ({
+      ...DESK_AFTER,
+      options: [
+        { id: 'examine', key: 'E', label: 'Examine: read the leaf over.', why: 'Mends what reading can show. The silent faults stay silent. (Repeatable.)' },
+        { id: 'figure', key: 'G', label: 'Gaze: draw the figure.', why: 'Geometry, proportion, the words in their houses. Failure is silent and surfaces at the reckoning.' },
+        { id: 'rubricate', key: 'R', label: 'Rubricate: lay a colour on the leaf.', why: 'The colours keep accounts of their own — orpiment sickens, verdigris corrodes, gold needs a licence.' },
+        { id: 'rest', key: 'B', label: 'Where does the leaf rest, tonight?', why: 'Ends the hour, and decides what an inventory can reach. (Cannot be undone.)' },
+      ],
+    }),
+  },
+  {
+    id: 'desk:concealment',
+    where: 'the desk — where the quire sleeps',
+    kind: 'decision',
+    cites: true,
+    content: () => ({
+      ...CONCEALMENT_CHOICE,
+      options: [
+        { id: 'loose', key: 'L', label: 'Leave the quires loose.', why: 'Movable, scatterable. 50% found if the house is ever searched.' },
+        { id: 'bound', key: 'D', label: 'Bind them into a licit codex.', why: 'It looks like a book and is read as one. 15% found.' },
+        { id: 'shelved', key: 'S', label: 'Shelve them openly in the armarium.', why: 'Safest from suspicion, and an inventory is a list of exactly this. Always found.' },
+      ],
+    }),
+  },
+  {
+    id: 'compose:legitimation',
+    where: 'the writing — under what frame',
+    kind: 'decision',
+    cites: true,
+    content: () => ({
+      ...LEGITIMATION_SCENE,
+      options: Object.entries(LEGIT_OPTS).map(([id, o]) => ({
+        id, key: o.key, label: o.label,
+        why: `${LEGITIMATIONS[id].line} (Covers up to ${LEGITIMATIONS[id].cover}.)`,
+      })),
+    }),
+  },
+  {
+    id: 'reckoning',
+    where: 'the end of every day',
+    kind: 'decision',
+    cites: true,
+    content: () => ({ ...RECKONING_SCENE, options: opts(RECKONING_OPTIONS) }),
   },
 
   // ── Memories and encounters ────────────────────────────────────────

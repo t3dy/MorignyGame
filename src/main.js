@@ -51,6 +51,10 @@ import {
 import { LIFEPATH_CODA } from './content/lifepath.js';
 import { INCIPIT, RETURNING } from './content/incipit.js';
 import {
+  DAYLIGHT_PLACES, DESK_AFTER, CONCEALMENT_CHOICE, LEGITIMATION_SCENE,
+  RECKONING_SCENE, RECKONING_OPTIONS, PLACE_MONOLOGUE,
+} from './content/day_content.js';
+import {
   GIFTS, GIFT_IDS, loadAscent, ascentOpen, currentOrder, complete as ascentComplete,
   petition, giftBonus,
 } from './engine/ascent.js';
@@ -732,6 +736,9 @@ function daylight(stage) {
   if (chronicle.days === 0) ui.leaf(LEAVES.scriptorium);
   ui.body(deliberation(DAYLIGHT));
   memoryEcho('orleans-art');
+  ui.body(passage(DAYLIGHT_PLACES.narrator, DAYLIGHT_PLACES.narrator.text, 'narrator'));
+  ui.body(passage(DAYLIGHT_PLACES.monologue, DAYLIGHT_PLACES.monologue.text, 'monologue'));
+  ui.body(howToPlay(DAYLIGHT_PLACES.interaction));
   for (const id of PLACE_IDS) {
     const place = PLACES[id];
     act(place.key, place.label + '.', place.line, () => enterPlace(stage, id));
@@ -746,6 +753,9 @@ function enterPlace(stage, placeId) {
   currentPlace = placeId;
   $('rubric').textContent = '¶ ' + place.label + '.';
   ui.body(passage({ sources: place.sources, status: place.status }, place.line, 'narrator'));
+  if (PLACE_MONOLOGUE[placeId]) {
+    ui.body(passage(PLACE_MONOLOGUE[placeId], PLACE_MONOLOGUE[placeId].text, 'monologue'));
+  }
   for (const a of (PLACE_ACTIONS[placeId] ?? [])) {
     if (a.when && !a.when()) continue;
     act(a.key, a.label, a.why(), () => a.go(stage));
@@ -1219,6 +1229,12 @@ function beginCopy(stage, exemplar, assigned, undertext = null) {
 
 function afterWork(stage, exemplar, assigned, copy, flags) {
   clearActs();
+  if (!flags.deskNarrated) {
+    ui.body(passage(DESK_AFTER.narrator, DESK_AFTER.narrator.text, 'narrator'));
+    ui.body(passage(DESK_AFTER.monologue, DESK_AFTER.monologue.text, 'monologue'));
+    ui.body(howToPlay(DESK_AFTER.interaction));
+    flags.deskNarrated = true;
+  }
 
   act('E', 'Examine: read the leaf over.', 'What reading can show, mend.', () => {
     const visible = activeFaults(copy)
@@ -1269,8 +1285,12 @@ function afterWork(stage, exemplar, assigned, copy, flags) {
     });
   });
 
-  act('B', 'Where does the leaf rest, tonight?', 'A copy is found or not by where it lives.', () => {
+  act('B', 'Where does the leaf rest, tonight?', 'Ends the hour, and decides what an inventory can reach. (Cannot be undone.)', () => {
     clearActs();
+    $('rubric').textContent = CONCEALMENT_CHOICE.rubric;
+    ui.body(passage(CONCEALMENT_CHOICE.narrator, CONCEALMENT_CHOICE.narrator.text, 'narrator'));
+    ui.body(passage(CONCEALMENT_CHOICE.monologue, CONCEALMENT_CHOICE.monologue.text, 'monologue'));
+    ui.body(howToPlay(CONCEALMENT_CHOICE.interaction));
     const stakes = state => `${Math.round(CONCEALMENT_FOUND_CHANCE[state] * 100)}% found, if the house is ever searched.`;
     act('L', 'Leave the quires loose.', stakes('loose'), () => settleConcealment(exemplar, assigned, copy, 'loose'));
     act('D', 'Bind them into a licit codex.', stakes('bound'), () => settleConcealment(exemplar, assigned, copy, 'bound'));
@@ -1695,8 +1715,12 @@ function chooseAddress(vision, judgement) {
 
 function chooseLegitimation(vision, judgement, addressId) {
   clearActs();
+  $('rubric').textContent = LEGITIMATION_SCENE.rubric;
   ui.body(passage(ADDRESS_ENVELOPE,
     `${addressById(addressId).label}: ${addressById(addressId).line}`, 'narrator'));
+  ui.body(passage(LEGITIMATION_SCENE.narrator, LEGITIMATION_SCENE.narrator.text, 'narrator'));
+  ui.body(passage(LEGITIMATION_SCENE.monologue, LEGITIMATION_SCENE.monologue.text, 'monologue'));
+  ui.body(howToPlay(LEGITIMATION_SCENE.interaction));
   for (const [id, o] of Object.entries(LEGITIMATION_OPTIONS)) {
     const frame = LEGITIMATIONS[id];
     act(o.key, o.label, `${frame.line} (Covers up to ${frame.label === 'nothing at all' ? 'nothing' : frame.cover}.)`,
@@ -1761,6 +1785,9 @@ function reckoning() {
 }
 
 function reckoningLedger() {
+  ui.body(passage(RECKONING_SCENE.narrator, RECKONING_SCENE.narrator.text, 'narrator'));
+  ui.body(passage(RECKONING_SCENE.monologue, RECKONING_SCENE.monologue.text, 'monologue'));
+
 
   const corrupted = reckonCorruption(john);
   const lines = [
@@ -1810,18 +1837,19 @@ function reckoningLedger() {
     log('Word of the book has travelled further than the book has. Something will come of it.', 'refused');
   }
 
-  act('J', 'Journal: write the day into the Liber.', 'He wrote it all down. That is why any of this exists.', () => {
+  act('J', RECKONING_OPTIONS.journal.label, RECKONING_OPTIONS.journal.why, () => {
     addDespair(john, -1); renderStatus();
     log('You write the day as it was, sparing no one, least of all yourself. The page holds it so you need not.', 'pencil-log');
     clearActs();
-    act('L', 'Read the day as it was written.', 'The whole leaf, every hand.', () => renderDayReview());
+    act('L', RECKONING_OPTIONS.review.label, RECKONING_OPTIONS.review.why, () => renderDayReview());
     offerBookReading();
-    act('B', 'Begin another day. (A new witness.)', '', () =>
+    act('B', RECKONING_OPTIONS.next.label, RECKONING_OPTIONS.next.why, () =>
       start(`${day.seed}-${Math.floor(Math.random() * 1e6)}`));
   });
-  act('L', 'Read the day as it was written.', 'The whole leaf, every hand.', () => renderDayReview());
+  act('L', RECKONING_OPTIONS.review.label, RECKONING_OPTIONS.review.why, () => renderDayReview());
+  ui.body(howToPlay(RECKONING_SCENE.interaction));
   offerBookReading();
-  act('B', 'Begin another day. (A new witness.)', '', () =>
+  act('B', RECKONING_OPTIONS.next.label, RECKONING_OPTIONS.next.why, () =>
     start(`${day.seed}-${Math.floor(Math.random() * 1e6)}`));
 }
 
@@ -1829,8 +1857,7 @@ function reckoningLedger() {
  *  first never hides the book (caught in play, 2026-09-01). */
 function offerBookReading() {
   if (!chronicle.liberFlorum.prayers.length) return;
-  act('F', 'Read the Liber florum over from the beginning.',
-    'What you have actually been making, which is not always what you meant.', () => renderBookReading());
+  act('F', RECKONING_OPTIONS.book.label, RECKONING_OPTIONS.book.why, () => renderBookReading());
 }
 
 /**
@@ -1887,7 +1914,7 @@ function renderBookReading() {
       act('B', 'Close the book.', '', () => renderBookReading());
     });
   }
-  act('B', 'Begin another day. (A new witness.)', '', () =>
+  act('B', RECKONING_OPTIONS.next.label, RECKONING_OPTIONS.next.why, () =>
     start(`${day.seed}-${Math.floor(Math.random() * 1e6)}`));
 }
 
@@ -1912,7 +1939,7 @@ function renderDayReview() {
   }
   ui.body(box);
   clearActs();
-  act('B', 'Begin another day. (A new witness.)', '', () =>
+  act('B', RECKONING_OPTIONS.next.label, RECKONING_OPTIONS.next.why, () =>
     start(`${day.seed}-${Math.floor(Math.random() * 1e6)}`));
 }
 
@@ -2093,6 +2120,13 @@ function incipit() {
  * voice, scholarly hand, then how to play. Used by the opening; the
  * rest of the game is being migrated onto it.
  */
+/** The interaction voice: what pressing a key actually does. */
+function howToPlay(record) {
+  const box = el('div', 'interaction');
+  box.appendChild(el('div', null, record.text));
+  return box;
+}
+
 function renderBranch(branch) {
   $('rubric').textContent = branch.rubric ?? '';
   if (branch.narrator) ui.body(passage(branch.narrator, branch.narrator.text, 'narrator'));
@@ -2101,11 +2135,7 @@ function renderBranch(branch) {
     ui.body(passage(branch.pencil, branch.pencil.text, 'pencil-note'));
     ui.footnote(branch.pencil);
   }
-  if (branch.interaction) {
-    const how = el('div', 'interaction');
-    how.appendChild(el('div', null, branch.interaction.text));
-    ui.body(how);
-  }
+  if (branch.interaction) ui.body(howToPlay(branch.interaction));
 }
 
 /** The prologue, scene by scene, then into the first Matins. */
