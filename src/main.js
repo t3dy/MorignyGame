@@ -16,6 +16,8 @@ import {
 } from './content/stance_content.js';
 import { createBeatLog } from './engine/beatlog.js';
 import { FACULTIES, loadFaculties, study } from './engine/faculties.js';
+import { loadMemories, memoryDue, fireMemory, echoFor } from './engine/memory.js';
+import { MEMORIES } from './content/memories.js';
 import { nightThreatens, resolveNight, successChance } from './engine/struggle.js';
 import { dreamEligible, createVision, judge, reckonCorruption } from './engine/vision.js';
 import { COMMANDS, LETTERS, NIGHT_KEYS } from './engine/commands.js';
@@ -324,6 +326,7 @@ const globalKeys = {
 // ── run state ─────────────────────────────────────────────────
 let john, day, stageIdx, journal, currentLook = '';
 let beatlog = createBeatLog(); // the day as rendered (v4 §7)
+let pendingMemory = null;      // a vignette owed, to be paid at the reckoning
 let worldCtl = null;   // live only during the world stage (arrow keys)
 let chronicle = null;  // what accumulates across witnesses, toward 1323
 let exam = null;       // the examination in progress
@@ -331,12 +334,14 @@ let exam = null;       // the examination in progress
 function start(seed, opts = {}) {
   chronicle = loadChronicle(storage());
   beatlog = createBeatLog();
+  pendingMemory = null;
   john = createJohn();
   // A licence earned in a prior night's dream outlives the day it was
   // granted (D-18): it carries forward until spent on a gilding.
   john.procedure.licentia = chronicle.licentia;
   // Faculties are a life's accretion, not a day's mood (v4 §5).
   john.faculties = loadFaculties(chronicle.faculties);
+  chronicle.memories = loadMemories(chronicle.memories); // the life behind the day (v4 §4)
   journal = {
     seed, journey: !!opts.journey,
     prayed: false, night: null, dream: null, confession: null,
@@ -593,10 +598,11 @@ function daylight(stage) {
   ui.scene({ rubric: DAYLIGHT.rubric, verso: TIER_TEXT[pressureTier(john.pressure)] });
   if (chronicle.days === 0) ui.leaf(LEAVES.scriptorium); // once: the room is new the first day, not every day
   ui.body(deliberation(DAYLIGHT));
+  memoryEcho('orleans-art'); // why the other book pulls the way it does
   act('S', 'Scribe: the assigned leaf.', 'Obedience is a wall, and walls also shelter.',
     () => beginCopy(stage, exemplarById('armarium-lectionary'), true));
   act('I', 'Illuminate: steal the hour for the Work.', 'The light is where you are watched.',
-    () => chooseWorkExemplar(stage));
+    () => maybeMemory('first-work-hour', () => chooseWorkExemplar(stage)));
   const undertext = scrapeLeaf(stageRng(day, `${stage.id}-scrape`), loadWitnesses(storage()));
   if (undertext) {
     const ghostExemplar = exemplarById(undertext.exemplarId) ?? exemplarById('armarium-lectionary');
@@ -625,11 +631,49 @@ function daylight(stage) {
     const letters = { learning: 'G', discretio: 'D', craft: 'C', worldliness: 'W' };
     for (const [id, meta] of Object.entries(FACULTIES)) {
       promptText += ` ${letters[id]} ${meta.label} ·`;
-      keys[letters[id]] = () => studyHour(id);
+      keys[letters[id]] = () => maybeMemory('first-study', () => studyHour(id));
     }
     subPrompt(promptText.replace(/·$/, '?'), keys);
   });
   act('B', 'Let the hour pass in choir and garden.', 'Nothing gained, nothing risked.', next);
+}
+
+/**
+ * Interpose a memory vignette (v4 §4) if one is due on this event,
+ * else continue straight on. The vignette is mostly narrated and
+ * carries one real choice; afterwards the day resumes where it was.
+ */
+function maybeMemory(event, then) {
+  const vignette = memoryDue(chronicle.memories, MEMORIES, event);
+  if (!vignette) return then();
+  clearActs();
+  $('rubric').textContent = vignette.rubric;
+  ui.body(deliberation(vignette));
+  for (const choice of vignette.choices) {
+    act(choice.key, choice.label, choice.why, () => {
+      const applied = fireMemory(chronicle.memories, john, vignette, choice);
+      saveChronicle(storage(), chronicle);
+      clearActs();
+      ui.body(deliberation(choice.outcome));
+      const gs = el('div', 'gamestate');
+      const bits = [];
+      if (applied.disposition) bits.push(`Disposition ${applied.disposition > 0 ? '+' : ''}${applied.disposition}.`);
+      if (applied.faculty) bits.push(`${FACULTIES[applied.faculty].label} +1.`);
+      bits.push('This will be remembered.');
+      const line = `Memory: ${vignette.id}. ${bits.join(' ')}`;
+      gs.appendChild(el('div', null, line));
+      beatlog.line('gamestate', line);
+      ui.body(gs);
+      renderStatus();
+      act('B', 'Return to the present.', '', then);
+    });
+  }
+}
+
+/** A memory's echo, if it fired and had one — the narrator citing the boy. */
+function memoryEcho(id) {
+  const text = echoFor(chronicle.memories, MEMORIES, id);
+  if (text) ui.body(passage({ sources: [], status: 'invented' }, text, 'narrator echo'));
 }
 
 /** The study hour (v4 §5): one hour, one faculty, honest fatigue. */
@@ -1018,6 +1062,11 @@ function transmitCopy(recipient) {
   const hasFault = c.corrupt || (c.faults?.length ?? 0) > 0;
   log((hasFault ? SCRIPTORIUM_TEXT.transmission.corrupt : SCRIPTORIUM_TEXT.transmission.clean).text, 'pencil-log');
   renderStatus();
+  // The first time anything of his leaves his hands, he remembers the
+  // first hands that were not his own (v4 §4) — but not mid-conversation:
+  // a vignette that seized the screen would break the Talk surface, so
+  // it waits for the reckoning, where the day is being weighed anyway.
+  pendingMemory = 'first-transmission';
 }
 
 /** Legible stakes for a night verb (CLAUDE.md rule 10): the exact chance
@@ -1120,10 +1169,11 @@ function dream(stage) {
     clearActs();
     act('B', 'Toward Matins, and the reckoning.', '', next);
   };
+  memoryEcho('the-renouncing'); // the night he first decided what a vision was
   act('G', 'Judge it of God.', 'If you are right, the licence; if wrong, the rot rides in silently.', () =>
-    outcome(judge(john, vision, true)));
+    maybeMemory('first-discernment', () => outcome(judge(john, vision, true))));
   act('X', 'Make the Cross against it.', 'If you are right, mastery; if wrong, the licence is delayed and the fault is yours.', () =>
-    outcome(judge(john, vision, false)));
+    maybeMemory('first-discernment', () => outcome(judge(john, vision, false))));
   act('E', 'Examine the tells once more.', '', () => {
     for (const t of vision.tells) log(`${t.category}: ${t.ambiguous ? '(ambiguous) ' : ''}${t.text}`);
   });
@@ -1132,6 +1182,17 @@ function dream(stage) {
 function reckoning() {
   ui.setHour('The Reckoning');
   ui.scene({ rubric: '¶ The examination of conscience, and the ledger of the day.', verso: '' });
+  // A vignette owed from mid-day (transmission) is paid here, before
+  // the ledger — then the reckoning proper resumes.
+  if (pendingMemory) {
+    const owed = pendingMemory;
+    pendingMemory = null;
+    return maybeMemory(owed, () => { ui.scene({ rubric: '¶ The examination of conscience, and the ledger of the day.', verso: '' }); reckoningLedger(); });
+  }
+  reckoningLedger();
+}
+
+function reckoningLedger() {
 
   const corrupted = reckonCorruption(john);
   const lines = [
