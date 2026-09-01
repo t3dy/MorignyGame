@@ -27,7 +27,7 @@ data. This document is the fix.
 ## 2. What a branch is
 
 **A branch is any moment the game stops and waits for the player.**
-Two kinds:
+Three kinds:
 
 | Kind | What it is | What it owes |
 |---|---|---|
@@ -143,4 +143,4 @@ unaudited moments but the ordinary discipline: anything new goes in the
 map first. If you find yourself writing a choice at an `act()` call
 site, stop — that is the failure this whole apparatus exists to prevent,
 and it is how the game shipped an opening that read "Take up the day
-again.".
+again."
