@@ -146,7 +146,9 @@ export const CHARACTERS = ['devotional', 'liber-florum', 'dirty'];
 export function bookCharacter(practice, book) {
   const prayers = book?.prayers ?? [];
   const conjuring = prayers.filter(p => p.mode === 'conjuring').length;
-  const scraped = prayers.filter(p => p.corrupt && p.glosses.length === 0).length;
+  // Unmarked corruptions still in the book, plus leaves scraped clean.
+  const unmarked = prayers.filter(p => p.corrupt && p.glosses.length === 0).length;
+  const scraped = unmarked + (book?.scraped ?? 0);
 
   // Performance weighs heaviest, and deliberately so: the knowing/doing
   // line is the one John himself drew ("may I know and understand

@@ -20,7 +20,7 @@ import {
   TREES, TREE_IDS, CHARACTERS, createPractice, loadPractice, canInvest,
   invest, renounce as renouncePractice, resacralise, perform, bookCharacter,
 } from '../src/engine/practice.js';
-import { createLiberFlorum, composePrayer } from '../src/engine/liberflorum.js';
+import { createLiberFlorum, composePrayer, scrapePrayer } from '../src/engine/liberflorum.js';
 
 describe('Sim-time: a life, not a week', () => {
   test('the campaign opens after the renunciation and runs to the fire', () => {
@@ -259,6 +259,22 @@ describe('What the book becomes', () => {
     glossed.prayers[0].glosses.push({ reason: 'a later vision showed it' });
     assert.ok(bookCharacter(p, scraped).scores.dirty > bookCharacter(p, glossed).scores.dirty,
       'a book that hides its corrections is making a different claim about itself');
+  });
+
+  test('an ACTUALLY scraped leaf still counts, though the prayer is gone', () => {
+    // Caught in wiring: scraping removes the prayer from the book, so
+    // counting only surviving prayers would let the act erase the
+    // evidence of itself. The scrape is tallied on the book.
+    const p = createPractice();
+    const book = createLiberFlorum();
+    const bad = composePrayer(book, { vision: {}, judgement: 'corrupted', mode: 'adjuring', incipit: 'x' });
+    const before = bookCharacter(p, book).scores.dirty;
+    scrapePrayer(book, bad.id);
+    assert.equal(book.prayers.length, 0, 'the leaf is reused; the prayer is gone');
+    assert.equal(book.scraped, 1);
+    assert.equal(bookCharacter(p, book).scores.dirty, before,
+      'and the book still remembers that something was scraped out of it');
+    assert.throws(() => scrapePrayer(book, 'prayer-99'), /no such prayer/);
   });
 
   test('the three characters are the ones we promised', () => {

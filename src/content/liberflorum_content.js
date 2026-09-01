@@ -266,6 +266,68 @@ export const BEAT_ARRIVALS = {
   },
 };
 
+// ── Reading your own book (the drift, made legible) ────────────────────
+
+/**
+ * The book's character is never a meter (decided 2026-09-01). The
+ * player learns what the Liber florum is becoming by READING it: the
+ * incipits, which prayers adjure and which command, what was glossed
+ * and what was scraped away. These are the pencil hand's summations,
+ * shown only once the drift is unmistakable.
+ */
+export const BOOK_READING = {
+  rubric: '¶ Of reading over what you have made.',
+  narrator: {
+    text:
+      'He reads it through from the beginning, which he does not often do. A book assembled ' +
+      'this way — prayer by prayer, each one written out of a night — has a character its ' +
+      'author does not choose all at once and cannot see while he is inside it. Reading it ' +
+      'entire is the only way to find out what he has actually been making.',
+    sources: [{ work: 'Fanger, Rewriting Magic', locus: 'the Liber florum as a record of its own knowledge process (frame; verify)' }],
+    status: 'adapted', verify: true,
+  },
+  monologue: {
+    sources: [], status: 'invented',
+    text: 'Twenty leaves and I do not recognise the man on the first of them. That is either growth or drift and I would very much like to be told which.',
+  },
+};
+
+export const BOOK_CHARACTER_NOTES = {
+  devotional: {
+    text:
+      'What is taking shape here is a prayer book. A good one, orthodox, unremarkable — the ' +
+      'sort of thing a hundred houses owned and nobody burned. If it goes on like this it ' +
+      'will be safe, and it will not be the Liber florum: John\'s book was condemned because ' +
+      'it claimed something, and this one so far claims very little.',
+    cites: ['fanger-rewriting'],
+    sources: [{ work: 'Fanger, Rewriting Magic', locus: 'the audacity of the Liber florum\'s claim (frame; verify)' }],
+    status: 'adapted', verify: true,
+  },
+  'liber-florum': {
+    text:
+      'This is recognisably the book Fanger describes: audacious within obedience. It keeps ' +
+      'the condemned art\'s central promise — supernatural access to knowledge — and relocates ' +
+      'the mechanism into a Marian and sacramental economy, petitioning rather than ' +
+      'commanding, with its own errors left visible and glossed. It is the version that gets ' +
+      'burned in 1323 and survives anyway, in copies, in houses its author never saw.',
+    cites: ['fanger-rewriting'],
+    sources: [{ work: 'Fanger, Rewriting Magic', locus: 'the Liber florum as a Christian reconstruction of the ars notoria (frame; verify)' }],
+    status: 'adapted', verify: true,
+  },
+  dirty: {
+    text:
+      'Here the witness has drifted out of the book John wrote. The prayers command where his ' +
+      'petitioned; the exceptive arts have been performed and not merely known; corrections ' +
+      'have been scraped away rather than glossed. Frances Yates\'s phrase for the type is ' +
+      'the "dirty" magician [verify], and whatever this book is becoming, it is no longer ' +
+      'making the claim that the historical Liber florum made — that its efficacy came from ' +
+      'somewhere other than its operator.',
+    cites: ['kieckhefer-magic'],
+    sources: [{ work: 'Kieckhefer, Magic in the Middle Ages', locus: 'coercive necromancy against petitionary practice (frame)' }],
+    status: 'adapted', verify: true,
+  },
+};
+
 // ── The Barking Dogs ───────────────────────────────────────────────────
 
 export const BARKING_DOGS = {

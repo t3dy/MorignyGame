@@ -527,3 +527,7 @@ canvas.worldmap {
   text-align: right;
   color: var(--ink, #3b3226);
 }
+
+/* Reading the book over: the prayers as they stand. */
+.book-reading { margin: 0.8rem 0; }
+.book-reading .incipit { margin: 0.35rem 0; }

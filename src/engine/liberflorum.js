@@ -46,6 +46,10 @@ export function createLiberFlorum() {
     compilation: 'old',
     /** Set when the Barking Dogs attack: the hinge of the two acts. */
     attacked: false,
+    /** Leaves scraped clean rather than glossed. The prayer leaves the
+     *  book — that is what scraping IS — so the count has to live here,
+     *  or the act would erase the evidence of itself. */
+    scraped: 0,
   };
 }
 
@@ -56,6 +60,7 @@ export function loadLiberFlorum(saved) {
   if (Array.isArray(saved.prayers)) fresh.prayers = saved.prayers.map(p => ({ ...p }));
   if (COMPILATIONS.includes(saved.compilation)) fresh.compilation = saved.compilation;
   fresh.attacked = !!saved.attacked;
+  if (Number.isFinite(saved.scraped)) fresh.scraped = saved.scraped;
   return fresh;
 }
 
@@ -105,6 +110,19 @@ export function glossPrayer(book, prayerId, { reason, day }) {
   const gloss = { reason, day: day ?? null };
   prayer.glosses.push(gloss);
   return gloss;
+}
+
+/**
+ * Scrape a leaf clean: the prayer leaves the book entirely. Tidier, and
+ * the book forgets — which is a different claim about what a book is
+ * for than the one John's own New Compilation makes.
+ */
+export function scrapePrayer(book, prayerId) {
+  const i = book.prayers.findIndex(p => p.id === prayerId);
+  if (i < 0) throw new Error(`no such prayer: ${prayerId}`);
+  book.prayers.splice(i, 1);
+  book.scraped += 1;
+  return book;
 }
 
 /** Prayers whose corruption has not yet been marked. */

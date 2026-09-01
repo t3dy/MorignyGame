@@ -25,10 +25,12 @@ import {
 import { ENCOUNTERS } from './content/encounters.js';
 import {
   loadLiberFlorum, composePrayer, disposition as bookDisposition,
+  glossPrayer, scrapePrayer, unglossedCorruptions,
 } from './engine/liberflorum.js';
 import {
   COMPOSE_SCENE, COMPOSE_OPTIONS, INCIPITS, INCIPITS_ENVELOPE, COMPOSE_OUTCOME,
   INTERVAL_TEXT, INTERVAL_ENVELOPE, BEAT_ARRIVALS,
+  BOOK_READING, BOOK_CHARACTER_NOTES, GLOSS_SCENE, GLOSS_OPTIONS, GLOSS_OUTCOME,
 } from './content/liberflorum_content.js';
 import { SeededRandom } from './engine/random.js';
 import {
@@ -1552,10 +1554,78 @@ function reckoningLedger() {
     log('You write the day as it was, sparing no one, least of all yourself. The page holds it so you need not.', 'pencil-log');
     clearActs();
     act('L', 'Read the day as it was written.', 'The whole leaf, every hand.', () => renderDayReview());
+    offerBookReading();
     act('B', 'Begin another day. (A new witness.)', '', () =>
       start(`${day.seed}-${Math.floor(Math.random() * 1e6)}`));
   });
   act('L', 'Read the day as it was written.', 'The whole leaf, every hand.', () => renderDayReview());
+  offerBookReading();
+  act('B', 'Begin another day. (A new witness.)', '', () =>
+    start(`${day.seed}-${Math.floor(Math.random() * 1e6)}`));
+}
+
+/** Offered wherever the reckoning re-renders its menu, so journaling
+ *  first never hides the book (caught in play, 2026-09-01). */
+function offerBookReading() {
+  if (!chronicle.liberFlorum.prayers.length) return;
+  act('F', 'Read the Liber florum over from the beginning.',
+    'What you have actually been making, which is not always what you meant.', () => renderBookReading());
+}
+
+/**
+ * Reading the book over (NEWDIRECTIONS §11; decided 2026-09-01): the
+ * drift is legible by READING, never as a meter. The prayers are shown
+ * as they stand — incipit, how it was obtained, whether an error was
+ * glossed or scraped — and the pencil hand names the character only
+ * once it is unmistakable.
+ */
+function renderBookReading() {
+  const book = chronicle.liberFlorum;
+  clearActs();
+  $('rubric').textContent = BOOK_READING.rubric;
+  ui.body(deliberation(BOOK_READING));
+
+  const list = el('div', 'book-reading');
+  for (const p of book.prayers) {
+    const line = el('p', 'incipit', `${p.ordinal}. ${p.incipit}…`);
+    const marks = [];
+    if (p.mode === 'conjuring') marks.push('commanded');
+    if (p.corrupt && p.glosses.length) marks.push('glossed: the error stands, and the correction beside it');
+    if (p.corrupt && !p.glosses.length) marks.push('unmarked');
+    if (marks.length) line.appendChild(el('span', 'provenance', ` [${marks.join(' · ')}]`));
+    list.appendChild(line);
+  }
+  ui.body(list);
+
+  const { character, scores } = bookCharacter(chronicle.practice, book);
+  // Only name it once the reading is not ambiguous.
+  const sorted = Object.values(scores).sort((a, b) => b - a);
+  if (book.prayers.length >= 3 && sorted[0] > sorted[1]) {
+    const note = BOOK_CHARACTER_NOTES[character];
+    ui.body(passage(note, note.text, 'pencil-note'));
+    ui.footnote(note);
+  }
+
+  const corrupt = unglossedCorruptions(book);
+  if (corrupt.length) {
+    ui.body(deliberation(GLOSS_SCENE));
+    const target = corrupt[0];
+    act('G', GLOSS_OPTIONS.gloss.label, GLOSS_OPTIONS.gloss.why, () => {
+      glossPrayer(book, target.id, { reason: 'read over, and found wanting', day: chronicle.days });
+      saveChronicle(storage(), chronicle);
+      clearActs();
+      ui.body(deliberation(GLOSS_OUTCOME.gloss));
+      act('B', 'Close the book.', '', () => renderBookReading());
+    });
+    act('S', GLOSS_OPTIONS.scrape.label, GLOSS_OPTIONS.scrape.why, () => {
+      scrapePrayer(book, target.id);
+      john.disposition += 1;
+      saveChronicle(storage(), chronicle);
+      clearActs();
+      ui.body(deliberation(GLOSS_OUTCOME.scrape));
+      act('B', 'Close the book.', '', () => renderBookReading());
+    });
+  }
   act('B', 'Begin another day. (A new witness.)', '', () =>
     start(`${day.seed}-${Math.floor(Math.random() * 1e6)}`));
 }
