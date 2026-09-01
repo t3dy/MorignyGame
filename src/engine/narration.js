@@ -43,8 +43,8 @@ export function composeSiege(outcome) {
   const lines = [];
   const held = outcome.distractions.filter(d => d.action === 'held').length;
   const attended = outcome.distractions.filter(d => d.action === 'attended');
-  const flesh = attended.filter(d => d.record.kind === 'flesh').length;
-  const other = attended.length - flesh;
+  const appetite = attended.filter(d => d.record.kind === 'appetite').length;
+  const other = attended.length - appetite;
 
   if (!outcome.distractions.length) {
     lines.push(SIEGE_TEXT.quiet());
@@ -52,7 +52,7 @@ export function composeSiege(outcome) {
   }
   if (held) lines.push(SIEGE_TEXT.heldAll(held));
   if (outcome.firstBreak != null) lines.push(SIEGE_TEXT.brokeAt(outcome.firstBreak));
-  if (flesh) lines.push(SIEGE_TEXT.fleshAttended(flesh));
+  if (appetite) lines.push(SIEGE_TEXT.appetiteAttended(appetite));
   if (other) lines.push(SIEGE_TEXT.wanderings(other));
   return { lines, ...SIEGE_ENVELOPE };
 }

@@ -47,7 +47,7 @@ export function stanceDecision(stance, session, pending) {
   if (!session.canHoldFast()) return 'attend';
   if (stance === 'vigilant') return 'hold';
   // routine: the flesh is fought; the rest of the margin gets in.
-  return pending.kind === 'flesh' ? 'hold' : 'attend';
+  return pending.kind === 'appetite' ? 'hold' : 'attend';
 }
 
 function baseOutcome(kind, stance) {

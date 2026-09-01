@@ -15,8 +15,8 @@ export function distractionChance(john) {
 
 /** Pressure tilts the pool toward the flesh; pencil notes stay rare but present. */
 export function distractionWeight(record, john) {
-  const base = { mundane: 3, memory: 2, flesh: 2, pencil: 1 }[record.kind] ?? 1;
-  if (record.kind === 'flesh') return base * (1 + john.pressure * 0.3);
+  const base = { mundane: 3, memory: 2, appetite: 2, pencil: 1 }[record.kind] ?? 1;
+  if (record.kind === 'appetite') return base * (1 + john.pressure * 0.3);
   return base;
 }
 

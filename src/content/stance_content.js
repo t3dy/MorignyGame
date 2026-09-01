@@ -460,10 +460,10 @@ export const SIEGE_TEXT = {
     `${n === 1 ? 'once' : 'each time'} he paid the toll and refused it.`,
   brokeAt: ordinal =>
     `His guard held to the ${['first', 'second', 'third', 'fourth', 'fifth', 'sixth'][ordinal - 1] ?? `${ordinal}th`} pull, and there it broke.`,
-  fleshAttended: n =>
+  appetiteAttended: n =>
     n === 1
-      ? 'The flesh got its hearing once, and left its weight behind.'
-      : `The flesh got its hearing ${n} times, and left its weight each time.`,
+      ? 'The appetite got its hearing once, and left its weight behind.'
+      : `The appetite got its hearing ${n} times, and left its weight each time.`,
   wanderings: n =>
     n === 1
       ? 'One lesser wandering came and went, a verse the poorer.'

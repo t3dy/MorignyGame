@@ -15,7 +15,7 @@ import {
   STANCE_CHOICE, STANCE_OPTIONS, STUDY_SCENE, STUDY_TEXT, STUDY_LEVELED,
 } from './content/stance_content.js';
 import { createBeatLog } from './engine/beatlog.js';
-import { FACULTIES, loadFaculties, study } from './engine/faculties.js';
+import { FACULTIES, loadFaculties, study, reach } from './engine/faculties.js';
 import { loadMemories, memoryDue, fireMemory, echoFor } from './engine/memory.js';
 import { MEMORIES } from './content/memories.js';
 import {
@@ -23,6 +23,12 @@ import {
   availableOptions, applyOption,
 } from './engine/encounters.js';
 import { ENCOUNTERS } from './content/encounters.js';
+import {
+  loadLiberFlorum, composePrayer, disposition as bookDisposition,
+} from './engine/liberflorum.js';
+import {
+  COMPOSE_SCENE, COMPOSE_OPTIONS, INCIPITS, INCIPITS_ENVELOPE, COMPOSE_OUTCOME,
+} from './content/liberflorum_content.js';
 import { SeededRandom } from './engine/random.js';
 import { nightThreatens, resolveNight, successChance } from './engine/struggle.js';
 import { dreamEligible, createVision, judge, reckonCorruption } from './engine/vision.js';
@@ -265,11 +271,18 @@ function renderStatus() {
   if (trained.length) {
     const row = el('div', 'stat faculties');
     row.appendChild(el('span', null, 'lectio'));
+    const bookD = chronicle?.liberFlorum ? bookDisposition(chronicle.liberFlorum) : 0;
     row.appendChild(el('span', 'pips',
-      trained.map(id => `${FACULTIES[id].label} ${'●'.repeat(john.faculties[id])}`).join(' · ')));
+      trained.map(id => {
+        const have = john.faculties[id];
+        const can = reach(john, id, { book: bookD });
+        // Trained but out of reach shows as hollow: the knowledge is
+        // his, and tonight he cannot get at it (NEWDIRECTIONS §2).
+        return `${FACULTIES[id].label} ${'●'.repeat(can)}${'○'.repeat(have - can)}`;
+      }).join(' · ')));
     s.appendChild(row);
   }
-  if (john.purity.polluted) s.appendChild(el('div', 'flag bad', 'unclean — the Work is shut'));
+  if (john.purity.polluted) s.appendChild(el('div', 'flag bad', 'the observance is broken — the Work is shut'));
   if (isScrupulous(john)) s.appendChild(el('div', 'flag bad', 'scrupulous — holding fast costs double'));
   if (john.procedure.licentia) s.appendChild(el('div', 'flag gold', 'LICENTIA'));
   $('tier').textContent = pressureTier(john.pressure).toLowerCase();
@@ -354,6 +367,8 @@ function start(seed, opts = {}) {
   // The encounter deck is built once per chronicle and outlasts the run
   // (v4 §6b): a witness meets a fraction of the world, never all of it.
   chronicle.risk = loadRiskBag(chronicle.risk);
+  // The book he is writing, which outlives every day (NEWDIRECTIONS §4).
+  chronicle.liberFlorum = loadLiberFlorum(chronicle.liberFlorum);
   chronicle.encountersFired = chronicle.encountersFired ?? [];
   if (!Array.isArray(chronicle.deck) || !chronicle.deck.length) {
     chronicle.deck = buildEncounterDeck(
@@ -795,7 +810,7 @@ function beginCopy(stage, exemplar, assigned, undertext = null) {
     if (acq) ui.body(passage(acq, acq.text));
   }
 
-  const pool = [...COPY_DISTRACTIONS, ...DISTRACTIONS.filter(d => d.kind === 'flesh')];
+  const pool = [...COPY_DISTRACTIONS, ...DISTRACTIONS.filter(d => d.kind === 'appetite')];
   if (undertext) {
     const phrase = faultPhrase(undertext.faultClass);
     const text = (UNDERTEXT_TEXT[undertext.faultClass] ?? UNDERTEXT_TEXT.eyeskip)(phrase);
@@ -1155,7 +1170,7 @@ function transmitCopy(recipient) {
  *  as a economy and not a mood. */
 function nightStakes(verb) {
   const pct = Math.round(successChance(john, verb) * 100);
-  const cost = { vigil: ' · costs 2 fatigue', cold: ' · costs 1 fatigue' }[verb] ?? '';
+  const cost = { vigil: ' · costs 2 fatigue', remove: ' · costs 1 fatigue' }[verb] ?? '';
   const resolveNote = (verb === 'prayer' || verb === 'endure')
     ? ` (your resolve, ${john.resolve}/5, is part of that number)`
     : '';
@@ -1201,8 +1216,8 @@ function night(stage) {
   for (const [key, verb] of Object.entries(NIGHT_KEYS)) {
     act(key, NIGHT_CHOICES[verb], nightStakes(verb), () => settle(resolveNight(rng, john, verb)));
   }
-  act('Y', 'Yield.',
-    'The game will not choose this for you. This always ends the same way — pollution, and a day\'s despair.', () => {
+  act('Y', 'Get up and go to the book.',
+    'The game will not choose this for you. It always ends the same way — the observance broken, the Work shut until you confess it, and a day\'s despair.', () => {
     john.purity.polluted = true;
     john.purity.confessed = false;
     john.pressure = 2;
@@ -1247,7 +1262,9 @@ function dream(stage) {
     ui.body(el('p', key === 'licentia' ? 'gold' : null, DISCERNMENT_OUTCOMES[key]));
     renderStatus();
     clearActs();
-    act('B', 'Toward Matins, and the reckoning.', '', next);
+    // The other half of the practice (NEWDIRECTIONS §4): the vision is
+    // raw material until it is written up as a prayer.
+    act('B', 'Toward Matins, and the reckoning.', '', () => composeStage(vision, key));
   };
   memoryEcho('the-renouncing'); // the night he first decided what a vision was
   act('G', 'Judge it of God.', 'If you are right, the licence; if wrong, the rot rides in silently.', () =>
@@ -1256,6 +1273,50 @@ function dream(stage) {
     maybeMemory('first-discernment', () => outcome(judge(john, vision, false))));
   act('E', 'Examine the tells once more.', '', () => {
     for (const t of vision.tells) log(`${t.category}: ${t.ambiguous ? '(ambiguous) ' : ''}${t.text}`);
+  });
+}
+
+/**
+ * The composition stage (NEWDIRECTIONS.md §4): a vision becomes a
+ * prayer, the prayer enters the book, and the book disposes him for
+ * what comes next. This is the recursion Fanger identifies as the
+ * engine of John's whole project — and the reason the Liber florum
+ * "tries to reproduce the process by which John himself came to know."
+ */
+function composeStage(vision, judgement) {
+  ui.setHour('The Writing');
+  ui.scene({ rubric: COMPOSE_SCENE.rubric, verso: '' });
+  ui.body(deliberation(COMPOSE_SCENE));
+  clearActs();
+
+  const book = chronicle.liberFlorum;
+  act('W', COMPOSE_OPTIONS.compose.label, COMPOSE_OPTIONS.compose.why, () => {
+    const rng = stageRng(day, `${day.seed}-compose-${book.prayers.length}`);
+    const pool = INCIPITS[judgement] ?? INCIPITS.mastery;
+    const incipit = pool[Math.floor(rng.next() * pool.length) % pool.length];
+    const prayer = composePrayer(book, {
+      vision, judgement, mode: 'adjuring', incipit, day: chronicle.days,
+    });
+    addFatigue(john, 1);
+    saveChronicle(storage(), chronicle);
+    clearActs();
+    ui.body(deliberation(COMPOSE_OUTCOME[judgement] ?? COMPOSE_OUTCOME.mastery));
+    ui.body(passage(INCIPITS_ENVELOPE, `${prayer.ordinal}. ${incipit}…`, 'incipit'));
+    const gs = el('div', 'gamestate');
+    // Never discloses corruption — a defective prayer looks like any
+    // other on the night it is written (narration.js's standing rule).
+    const line = `Liber florum: prayer ${prayer.ordinal} written (${book.compilation} compilation). ` +
+      `The book now disposes you ${bookDisposition(book) >= 0 ? '+' : ''}${bookDisposition(book)}.`;
+    gs.appendChild(el('div', null, line));
+    beatlog.line('gamestate', line);
+    ui.body(gs);
+    renderStatus();
+    act('B', 'Toward Matins, and the reckoning.', '', next);
+  });
+  act('N', COMPOSE_OPTIONS.withhold.label, COMPOSE_OPTIONS.withhold.why, () => {
+    clearActs();
+    log('It stays in you, and you will not have it long. Nothing that is not written is kept.', 'pencil-log');
+    act('B', 'Toward Matins, and the reckoning.', '', next);
   });
 }
 

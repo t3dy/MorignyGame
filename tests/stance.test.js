@@ -20,7 +20,7 @@ function fakeRng(...values) {
 }
 
 const mundane = { id: 'd-mundane', kind: 'mundane', text: 'a fly', effects: { pressure: 0, despair: 0 } };
-const flesh = { id: 'd-flesh', kind: 'flesh', text: 'the flesh', effects: { pressure: 1, despair: 0 } };
+const appetite = { id: 'd-appetite', kind: 'appetite', text: 'the want to know', effects: { pressure: 1, despair: 0 } };
 
 /** A minimal exemplar fixture, same shape scriptorium.test.js uses. */
 function fixture(sim = {}) {
@@ -61,7 +61,7 @@ describe('Stance policies', () => {
     const john = createJohn();
     const before = john.pressure;
     const rng = fakeRng(0.1, 0.5, 0.9);
-    const out = runRecitationBlock(rng, john, { verses: ['a', 'b'], pool: [flesh], stance: 'hasty' });
+    const out = runRecitationBlock(rng, john, { verses: ['a', 'b'], pool: [appetite], stance: 'hasty' });
     assert.equal(out.resolveSpent, 0);
     assert.equal(john.resolve, 3, 'not a point of resolve was spent');
     assert.ok(out.lapses >= 1);
@@ -70,13 +70,13 @@ describe('Stance policies', () => {
     assert.ok(out.distractions.every(d => d.action === 'attended'));
   });
 
-  test('routine fights the flesh and lets the rest of the margin in', () => {
+  test('routine fights the appetite and lets the rest of the margin in', () => {
     const john = createJohn(); // pressure 3 → weights: mundane 3, flesh 3.8
     // spawn(0.1)+pick(0.5→flesh): held. spawn(0.1)+pick(0.1→mundane): attended.
     const rng = fakeRng(0.1, 0.5, 0.1, 0.1, 0.99);
-    const out = runRecitationBlock(rng, john, { verses: ['a', 'b'], pool: [mundane, flesh], stance: 'routine' });
+    const out = runRecitationBlock(rng, john, { verses: ['a', 'b'], pool: [mundane, appetite], stance: 'routine' });
     assert.deepEqual(out.distractions.map(d => [d.record.kind, d.action]),
-      [['flesh', 'held'], ['mundane', 'attended']]);
+      [['appetite', 'held'], ['mundane', 'attended']]);
     assert.equal(out.firstBreak, 2, 'the break is the attended one, by ordinal');
   });
 
@@ -94,7 +94,7 @@ describe('Stance policies', () => {
     addDespair(john, 3); // scrupulous: hold-fast costs 2
     john.resolve = 1;    // can no longer afford to hold
     const session = { canHoldFast: () => false, holdFastCost: () => 2 };
-    assert.equal(stanceDecision('routine', session, flesh), 'attend',
+    assert.equal(stanceDecision('routine', session, appetite), 'attend',
       'the will is willing; the purse is empty');
   });
 });
@@ -127,7 +127,7 @@ describe('Stance copy blocks', () => {
   test('the block runs to completion with zero external decisions', () => {
     const john = createJohn();
     const out = runCopyBlock(new SeededRandom('zero-input'), john, {
-      exemplar: fixture({ units: 8 }), pool: [mundane, flesh], stance: 'routine',
+      exemplar: fixture({ units: 8 }), pool: [mundane, appetite], stance: 'routine',
     });
     assert.equal(out.copy.complete, true);
     assert.ok(out.grade, 'a grade was reached without a single prompt');
@@ -174,7 +174,7 @@ describe('Stance determinism', () => {
       const run = () => {
         const john = createJohn();
         return runRecitationBlock(new SeededRandom('det-1'), john, {
-          verses: ['a', 'b', 'c', 'd'], pool: [mundane, flesh], stance,
+          verses: ['a', 'b', 'c', 'd'], pool: [mundane, appetite], stance,
         });
       };
       assert.deepEqual(JSON.parse(JSON.stringify(run())), JSON.parse(JSON.stringify(run())),
@@ -187,7 +187,7 @@ describe('Stance determinism', () => {
       const john = createJohn();
       const out = runCopyBlock(new SeededRandom('det-2'), john, {
         exemplar: fixture({ units: 12, faults: ['eyeskip', 'dittography'] }),
-        pool: [mundane, flesh], stance,
+        pool: [mundane, appetite], stance,
       });
       return `${out.hand}:${out.resolveSpent}:${out.lapses}`;
     });

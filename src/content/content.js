@@ -190,7 +190,7 @@ export const DREAM_SHUT = {
 };
 
 // ── Distractions (the margin's pull during recitation) ──────────────────
-// kind: 'mundane' | 'memory' | 'flesh' | 'pencil'
+// kind: 'mundane' | 'memory' | 'appetite' | 'pencil'
 // effects apply only when ATTENDED.
 export const DISTRACTIONS = [
   {
@@ -238,32 +238,37 @@ export const DISTRACTIONS = [
     status: 'adapted',
   },
   {
-    id: 'flesh-warmth',
-    kind: 'flesh',
-    text: 'A warmth that has no business in a choir stall, and knows it, and does not leave.',
+    id: 'appetite-unfinished',
+    kind: 'appetite',
+    text:
+      'The sixth figure is wrong and I know which line is wrong, and I am supposed to be ' +
+      'singing. It would take an hour. It would take less than an hour.',
     effects: { pressure: 2, despair: 0 },
     sources: [],
     status: 'invented',
   },
   {
-    id: 'flesh-remembered',
-    kind: 'flesh',
+    id: 'appetite-remembered',
+    kind: 'appetite',
     text:
-      'The enemy does not invent; he quotes. Something remembered is offered back to me ' +
-      'with interest, and I am ashamed how good the interest is.',
+      'The enemy does not invent; he quotes. A page of the old art comes back entire — I ' +
+      'could set it down tonight from memory — and I am ashamed how good my memory is.',
     effects: { pressure: 3, despair: 1 },
-    sources: [],
-    status: 'invented',
+    sources: [{ work: 'Fanger, Rewriting Magic', locus: 'the retained knowledge that made the rewriting possible (frame; verify)' }],
+    status: 'adapted',
+    verify: true,
   },
   {
-    id: 'flesh-despair',
-    kind: 'flesh',
+    id: 'appetite-reasonable',
+    kind: 'appetite',
     text:
-      'The thought under the thought: that I have already fallen so often that this once is ' +
-      'arithmetic, not sin. This is the most dangerous voice, because it sounds like reason.',
+      'The thought under the thought: that to know a thing is not to do it, and I may ' +
+      'lawfully know anything. This is the most dangerous voice, because it is quoting my ' +
+      'own book back at me, and my own book is right.',
     effects: { pressure: 2, despair: 1 },
-    sources: [],
-    status: 'invented',
+    sources: [{ work: 'Fanger, "Libri Nigromantici" (2012)', locus: 'knowing the exceptive arts versus performing them (frame; verify)' }],
+    status: 'adapted',
+    verify: true,
   },
   {
     id: 'pencil-rb22',
@@ -326,32 +331,40 @@ export const NIGHT_DELIBERATION = {
   BESIEGED: {
     narrator: {
       text:
-        'He\'s lying in the dark, wide awake, and his body wants something his vows don\'t ' +
-        'allow. This is the part of the record Fanger reads most carefully — not the ' +
-        'transgression itself, but what he does to himself for wanting it.',
-      sources: [{ work: 'Fanger, Rewriting Magic', locus: 'sexual-temptation material, frame; loci on Research Queue' }],
-      status: 'adapted',
+        'He\'s lying in the dark, wide awake, and he wants to know something he is not ' +
+        'permitted to know. This is the temptation Fanger actually documents at the centre ' +
+        'of his book — not the flesh but the appetite: the devil notices him over a ' +
+        'necromantic volume and the temptation succeeds, and what it produces is not sin so ' +
+        'much as a research programme. The cruelty of it is that the appetite is the same ' +
+        'one that makes him a good monk. He wants to understand. He has always wanted to ' +
+        'understand.',
+      sources: [{ work: 'Fanger, Rewriting Magic', locus: 'the desire for forbidden knowledge as the object of temptation (frame; verify)' }],
+      status: 'adapted', verify: true,
     },
     monologue: {
       text:
-        'The flesh will not be quiet tonight. I could rise and pray it down, or stand on the ' +
-        'cold stone till it forgets what it wants — that costs me sleep I do not have to ' +
-        'spare. Or I could let it win, the way I have before, and be someone smaller for it ' +
-        'by morning.',
+        'It is in the room again — not the book, the book is elsewhere, but the shape of ' +
+        'what it said. One more working would settle it. One. I could rise and pray the ' +
+        'want down, or put the thing where my hands cannot reach it before morning. Or I ' +
+        'could go and read, the way I have before, and be a man who knows more and is ' +
+        'worth less by Prime.',
       sources: [], status: 'invented',
     },
   },
   CRISIS: {
     narrator: {
       text:
-        'He\'s lying in the dark, losing the argument with his own body — and it doesn\'t feel ' +
-        'like an outside enemy anymore. It feels like him.',
+        'He is losing the argument, and the argument is not with an enemy. It is with the ' +
+        'part of himself that got him his degree — the part that does not stop at a locked ' +
+        'door because a door is a question. He cannot renounce the appetite without ' +
+        'renouncing the man.',
       sources: [], status: 'invented',
     },
     monologue: {
       text:
-        'It is not outside me. That is the horror of it: the voice arguing for surrender is ' +
-        'using my own memory, in my own words, and I am running out of ground to give it.',
+        'It is not outside me. That is the horror of it: the voice arguing for it is the ' +
+        'same voice that construes my Latin, and it is making an excellent case, and I have ' +
+        'no argument against it that does not also silence my whole mind.',
       sources: [], status: 'invented',
     },
   },
@@ -359,62 +372,66 @@ export const NIGHT_DELIBERATION = {
 
 export const TIER_TEXT = {
   QUIET: 'The house of the mind is swept, and nothing walks in it tonight.',
-  STIRRED: 'Something paces at the edge of thought, not yet knocking, patient as rot.',
+  STIRRED: 'A question paces at the edge of thought, not yet knocking, patient as rot.',
   BESIEGED:
-    'The siege is set. Every unguarded thought is a gate, and I am a town with too many gates.',
+    'The siege is set, and it is laid by a thing I want to know. Every unguarded thought is ' +
+    'a gate, and I am a town with too many gates.',
   CRISIS:
-    'It is here, and it is not outside me, which is the horror of it; the enemy holds ground ' +
-    'that is mine, and argues from my own memory, in my own voice.',
+    'It is here, and it is not outside me, which is the horror of it; the enemy argues from ' +
+    'my own learning, in my own voice, and every argument it makes is one I taught it.',
 };
 export const TIER_ENVELOPE = { sources: [], status: 'invented' };
 
 // ── Night verbs and outcomes ────────────────────────────────────────────
 export const NIGHT_CHOICES = {
-  vigil: 'Rise and keep vigil — outlast it on your knees, and pay for it tomorrow.',
+  vigil: 'Rise and keep vigil — outlast the wanting on your knees, and pay for it tomorrow.',
   prayer: 'Set the prayer against it, word by word, like sandbags.',
-  cold: 'The stone floor, bare feet, the old remedy: give the body a different argument.',
+  remove: 'Get up and put the thing beyond your own reach: the armarium, and give away the key.',
   endure: 'Lie still in the dark and hold. Only hold.',
 };
 
 export const NIGHT_OUTCOMES = {
   vigil: {
     mastery:
-      'Toward Matins the siege lifted all at once, the way weather lifts; I was on my knees ' +
+      'Toward Matins the wanting lifted all at once, the way weather lifts; I was on my knees ' +
       'and then I was only a tired man on his knees, which is a good thing to be.',
     endured: 'I outlasted it. There is no glory in it. The lamp burned; I watched it burn.',
     lapse:
-      'I kept the vigil an hour and then the vigil kept nothing. Of what followed I write only ' +
-      'that it followed, and that afterward the dark was very quiet, and I was alone in it.',
+      'I kept the vigil an hour and then the vigil kept nothing. I went and read. I record ' +
+      'only that I went, and that I was not disappointed, which is the worst of it.',
   },
   prayer: {
     mastery:
       'At the third verse the words stopped being sandbags and started being water; I went ' +
-      'under them gladly, and when I surfaced the enemy had lost interest in me.',
+      'under them gladly, and when I surfaced the question had lost its urgency.',
     endured: 'I prayed the thing to a standstill. A standstill is not a victory. I will take it.',
     lapse:
-      'The prayer and the temptation braided together until I could not tell which I was ' +
-      'saying. Then I was saying neither. I record this against myself, as is right.',
+      'The prayer and the appetite braided together until I could not tell which I was ' +
+      'saying — and then I was saying the other one, and it had a rhythm, and I followed it.',
   },
-  cold: {
+  remove: {
     mastery:
-      'The cold made the body’s case absurd, and absurdity is a kind of exorcism; I nearly ' +
-      'laughed, and the enemy cannot abide being laughed at.',
-    endured: 'The stone argued; the flesh sulked; morning came on schedule. Nothing worse.',
+      'I walked it down to the armarium myself and gave Denis the key without explaining, and ' +
+      'by the stairs it had stopped being a live thing and become an object in a cupboard.',
+    endured: 'The distance argued for me while I could not. Sometimes the answer is a locked door.',
     lapse:
-      'The cold worked until it became one more sensation, and the enemy is a chemist of ' +
-      'sensation. I fell. The floor was still cold afterward, which felt like a comment.',
+      'I got as far as the cloister with it under my arm and then I thought: I will look ' +
+      'once, on the way, by this window, where the moon is good. The moon was very good.',
   },
   endure: {
     mastery:
-      'I held. I did nothing, said nothing, was nothing but a man refusing, and it turned out ' +
-      'refusing was enough, this once.',
+      'I held. I did nothing, said nothing, was nothing but a man refusing to get up, and it ' +
+      'turned out refusing to get up was enough, this once.',
     endured: 'I held until it got bored of me. Being boring is an underpraised discipline.',
     lapse:
-      'Stillness became drift, and drift became consent by inches, and there was no single ' +
-      'moment I chose it, which does not mean I did not choose it.',
+      'Stillness became drift, and drift became a sentence I was composing about the figures, ' +
+      'and by the time I noticed I was composing it I was already at the desk.',
   },
 };
-export const NIGHT_ENVELOPE = { sources: [], status: 'invented' };
+export const NIGHT_ENVELOPE = {
+  sources: [{ work: 'Fanger, Rewriting Magic', locus: 'the desire for forbidden knowledge as temptation (frame; verify)' }],
+  status: 'adapted', verify: true,
+};
 
 // ── Confession beats (at chapter) ───────────────────────────────────────
 export const CONFESSION = {
@@ -545,13 +562,19 @@ export const PENCIL_NOTES = [
   {
     id: 'note-struggle',
     text:
-      'The night system simulates what John actually recorded: sexual temptation, pollution ' +
-      'anxiety, and the scruple-spiral that was worse than either. Fanger’s care with this ' +
-      'material set the register rules I am writing under. Nothing is depicted; everything ' +
-      'is felt. That was her method before it was my mechanic.',
+      'I had this wrong, and the correction is worth more than the mechanic. I built this ' +
+      'night system on the assumption that John’s recorded struggle was sexual, and cited ' +
+      'Fanger for it. Reading her more carefully: she does not document that. What she ' +
+      'documents is that his temptation is the desire for forbidden knowledge — the devil ' +
+      'notices him over a necromantic book — and, astonishingly, that he asks God for ' +
+      'comprehensive knowledge precisely so that he may resist sin. The thing that tempts ' +
+      'him is the thing he begs for as his defence. Ritual purity, continence included, is ' +
+      'real and attested, but it gates the Work; it is not the drama. I have left this note ' +
+      'where the old one stood rather than quietly replacing it.',
     cites: ['fanger-rewriting'],
-    sources: [{ work: 'Fanger, Rewriting Magic', locus: 'frame; loci on Research Queue' }],
-    status: 'attested',
+    sources: [{ work: 'Fanger, Rewriting Magic', locus: 'the object of temptation (frame; verify — via digest, see docs/RESEARCH_PIPELINE.md §5)' }],
+    status: 'adapted',
+    verify: true,
   },
   {
     id: 'note-audit',
@@ -1250,14 +1273,14 @@ export const COPY_DISTRACTIONS = [
   },
   {
     id: 'copy-idle-hand',
-    kind: 'flesh',
+    kind: 'appetite',
     text: 'The copying hand is busy and the other is idle, and idleness in one member is heard by all the rest. I set the free hand to the penknife’s work, and give it a duty.',
     effects: { pressure: 2, despair: 0 },
     sources: [], status: 'invented',
   },
   {
     id: 'copy-enemy-illumination',
-    kind: 'flesh',
+    kind: 'appetite',
     text: 'Between one letter and the next, unbidden, the enemy offers an illumination of his own devising. I will not gild it. Margin, take what I refuse.',
     effects: { pressure: 2, despair: 1 },
     sources: [], status: 'invented',
@@ -1328,7 +1351,8 @@ export const SCRIPTORIUM_NOTES = [
 // ── Content note (first launch; canonical wording from STYLE_GUIDE.md) ──
 export const CONTENT_NOTE =
   'This game simulates the inner life of a real fourteenth-century monk, John of Morigny, ' +
-  'as recorded in his own visionary autobiography: his religious practice, and his ' +
-  'struggles with sexual temptation and scrupulosity, in the confessional language of his ' +
-  'time. Nothing is explicitly depicted. The historical John is treated throughout with ' +
-  'the dignity owed to the dead.';
+  'as recorded in his own visionary autobiography: his religious practice, his hunger for ' +
+  'knowledge he was forbidden to pursue, and his struggles with temptation, deception, and ' +
+  'scrupulosity, in the confessional language of his time. It depicts demonic apparition ' +
+  'and spiritual crisis. Nothing is explicitly depicted. The historical John is treated ' +
+  'throughout with the dignity owed to the dead.';

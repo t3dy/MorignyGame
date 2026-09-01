@@ -133,7 +133,7 @@ export const COMMANDS = {
   Y: {
     verb: 'Yield',
     gloss: 'consent by inches',
-    refusal: 'Yield to what? The day is plain. (The night may ask again.)',
+    refusal: 'Yield to what? The day is plain and the book is shut. (The night may ask again.)',
   },
   Z: {
     verb: 'Zelus animae',
@@ -145,4 +145,4 @@ export const COMMANDS = {
 export const LETTERS = Object.keys(COMMANDS);
 
 /** Night-siege verbs → struggle engine verbs. Y (yield) is handled apart. */
-export const NIGHT_KEYS = { V: 'vigil', K: 'prayer', M: 'cold', W: 'endure' };
+export const NIGHT_KEYS = { V: 'vigil', K: 'prayer', M: 'remove', W: 'endure' };

@@ -64,7 +64,7 @@ function fixture(sim = {}, extra = {}) {
 
 const POOL = [
   { id: 'd1', kind: 'mundane', text: 'a fly on the wet ink', effects: { pressure: 0, despair: 0 }, status: 'invented', sources: [] },
-  { id: 'd2', kind: 'flesh', text: 'the margin stirs', effects: { pressure: 2, despair: 1 }, status: 'invented', sources: [] },
+  { id: 'd2', kind: 'appetite', text: 'the margin stirs', effects: { pressure: 2, despair: 1 }, status: 'invented', sources: [] },
 ];
 
 // ── data contract ────────────────────────────────────────────
@@ -567,7 +567,7 @@ describe('Scriptorium writing coverage (every state has writing)', () => {
   });
 
   test('the copy margin has a population, in known registers', () => {
-    const kinds = ['mundane', 'memory', 'flesh', 'pencil'];
+    const kinds = ['mundane', 'memory', 'appetite', 'pencil'];
     assert.ok(COPY_DISTRACTIONS.length >= 10, 'a margin needs a population');
     for (const d of COPY_DISTRACTIONS) {
       lint(d, `COPY_DISTRACTIONS.${d.id}`);

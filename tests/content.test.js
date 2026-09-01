@@ -110,8 +110,13 @@ describe('Writing coverage (every state has writing)', () => {
     const besieged = NIGHT_DELIBERATION.BESIEGED;
     assert.ok(!/masturbat|arous|sex/i.test(besieged.monologue.text),
       "John's own monologue must stay in period idiom, even at BESIEGED");
-    assert.ok(/flesh|enemy|siege|temptation/i.test(besieged.monologue.text),
-      'and it should actually use that idiom, not just avoid modern words');
+    // Retargeted 2026-08-31: the temptation the sources document is the
+    // appetite for forbidden knowledge (CLAUDE.md rule 3). John's own
+    // words for it stay period-direct — the book, the working, the want.
+    assert.ok(/book|working|read|know|enemy|want/i.test(besieged.monologue.text),
+      'and it should actually name the appetite, not merely avoid modern words');
+    assert.ok(!/sexual temptation|pollution anxiety/i.test(besieged.narrator.text),
+      'the narrator must not reassert the corrected premise');
   });
 
   test('the daylight fork (obedience vs. the Work) states both roads and their feel', () => {
@@ -151,7 +156,7 @@ describe('Writing coverage (every state has writing)', () => {
   });
 
   test('every distraction speaks, in a known register', () => {
-    const kinds = ['mundane', 'memory', 'flesh', 'pencil'];
+    const kinds = ['mundane', 'memory', 'appetite', 'pencil'];
     assert.ok(DISTRACTIONS.length >= 8, 'a margin needs a population');
     for (const d of DISTRACTIONS) {
       assert.ok(kinds.includes(d.kind), `${d.id} kind`);

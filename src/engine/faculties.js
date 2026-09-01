@@ -55,6 +55,51 @@ export function loadFaculties(saved) {
 }
 
 /**
+ * ── DISPOSITION-GATED CAPACITY (NEWDIRECTIONS.md §2) ─────────────────
+ *
+ * Hugh of St Victor's model is a ladder: discipline makes a properly
+ * formed student, who then learns better. John radicalises it into
+ * something nearly ontological — the right practices change a person's
+ * CAPACITY to know, and learning is an effect of grace whose efficacy
+ * depends on the disposition of the recipient.
+ *
+ * So a faculty level is what he has trained, and `reach()` is how much
+ * of it he can actually get at tonight. A learned man who is unclean,
+ * unconfessed, and has broken his observance cannot reach his own
+ * learning. Fanger's formulation: "devotion was engaged with the aim of
+ * learning, and learning was engaged with the aim of devotion."
+ *
+ * Digest-sourced; carries verify (docs/RESEARCH_PIPELINE.md §1).
+ */
+
+/** What disposes a knower, and by how much. Sums to the reach modifier. */
+export function dispositionOf(john, { book = 0 } = {}) {
+  let d = 0;
+  if (!john.purity.polluted) d += 1;      // the observance intact
+  if (john.purity.confessed) d += 1;      // confession current
+  if (john.procedure.prayed) d += 1;      // the Work's prayer said today
+  if (john.despair >= 3) d -= 1;          // the scruple-wheel narrows him
+  if (john.fatigue >= 7) d -= 1;          // a spent body is a poor instrument
+  d += Math.max(-2, Math.min(2, book));   // what his own book has become
+  return d;
+}
+
+/**
+ * How much of a trained faculty he can actually reach right now.
+ * Never below zero, never above what he has trained: disposition
+ * cannot invent learning he does not have, and cannot take away more
+ * than he has.
+ */
+export function reach(john, id, opts = {}) {
+  const trained = john.faculties?.[id] ?? 0;
+  if (!trained) return 0;
+  const d = dispositionOf(john, opts);
+  // A neutral disposition (2) reaches everything trained; each point
+  // below narrows him, each above cannot exceed the training.
+  return Math.max(0, Math.min(trained, trained + (d - 2)));
+}
+
+/**
  * One study hour into one faculty. Each level costs level+1 hours
  * (1, 2, 3, 4, 5): the deep end of any art is the slow end.
  * Returns { leveled, level, toNext }.

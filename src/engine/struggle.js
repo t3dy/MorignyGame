@@ -8,7 +8,7 @@ import {
   pressureTier, addPressure, addDespair, addFatigue, addResolve, clamp,
 } from './state.js';
 
-export const NIGHT_VERBS = ['vigil', 'prayer', 'cold', 'endure'];
+export const NIGHT_VERBS = ['vigil', 'prayer', 'remove', 'endure'];
 
 export function nightThreatens(john) {
   const tier = pressureTier(john.pressure);
@@ -19,7 +19,7 @@ export function successChance(john, verb) {
   switch (verb) {
     case 'vigil': return clamp(0.75 - 0.03 * john.pressure, 0.05, 0.95);
     case 'prayer': return clamp(0.60 + 0.05 * john.resolve, 0.05, 0.95);
-    case 'cold': return 0.65;
+    case 'remove': return 0.65;
     case 'endure':
       return clamp(0.45 + 0.03 * john.resolve - 0.04 * john.pressure, 0.05, 0.95);
     default: throw new Error(`unknown verb: ${verb}`);
@@ -30,7 +30,7 @@ export function successChance(john, verb) {
 export function resolveNight(rng, john, verb) {
   const success = successChance(john, verb);
   if (verb === 'vigil') addFatigue(john, 2);
-  if (verb === 'cold') addFatigue(john, 1);
+  if (verb === 'remove') addFatigue(john, 1);
 
   const roll = rng.next();
   let outcome;

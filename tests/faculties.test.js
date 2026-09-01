@@ -8,6 +8,7 @@
 import { strict as assert } from 'assert';
 import {
   FACULTIES, FACULTY_MAX, createFaculties, loadFaculties, study,
+  reach, dispositionOf,
 } from '../src/engine/faculties.js';
 import { errorChance, HANDS } from '../src/engine/scriptorium.js';
 import { createJohn } from '../src/engine/state.js';
@@ -62,6 +63,87 @@ describe('Craft steadies the hand (the live effect)', () => {
     const trainedChance = errorChance(HANDS.textualis, 0, trained);
     assert.ok(trainedChance < untrainedChance, 'craft lowers the error rate');
     assert.ok(trainedChance >= untrainedChance * 0.5 - 1e-9, 'but never below half — craft is not magic');
+  });
+});
+
+describe('Disposition gates capacity (NEWDIRECTIONS §2 — John, not Hugh)', () => {
+  const learned = () => {
+    const john = createJohn();
+    john.faculties = loadFaculties({ learning: 4 });
+    return john;
+  };
+
+  test('a well-disposed knower reaches everything he has trained', () => {
+    const john = learned();
+    john.procedure.prayed = true;          // disposition 3 → full reach
+    assert.equal(reach(john, 'learning'), 4);
+  });
+
+  test('disposition can never invent learning he does not have', () => {
+    const john = createJohn();
+    john.faculties = loadFaculties({});
+    john.procedure.prayed = true;
+    assert.equal(reach(john, 'learning'), 0, 'grace does not hand out a degree');
+  });
+
+  test('a learned man out of order cannot reach his own learning', () => {
+    const john = learned();
+    john.purity.polluted = true;           // observance broken
+    john.purity.confessed = false;         // and not yet confessed
+    assert.ok(reach(john, 'learning') < 4, 'the knower is narrowed, not the knowledge lost');
+    john.purity.polluted = false;
+    john.purity.confessed = true;
+    john.procedure.prayed = true;
+    assert.equal(reach(john, 'learning'), 4, 'and restored when he is restored');
+  });
+
+  test('from a bare observance, the scruple-wheel and exhaustion each narrow him', () => {
+    // Baseline: clean and confessed, but the Work's prayer unsaid.
+    const scrupulous = learned(); scrupulous.despair = 4;
+    const spent = learned(); spent.fatigue = 8;
+    assert.equal(reach(learned(), 'learning'), 4, 'a bare observance still reaches everything');
+    assert.equal(reach(scrupulous, 'learning'), 3, 'despair narrows the knower');
+    assert.equal(reach(spent, 'learning'), 3, 'so does a spent body');
+  });
+
+  test('a surplus of disposition is a BUFFER — good order absorbs one bad thing', () => {
+    // This is the design, not an accident of the formula: a man who
+    // has kept the observance and said the Work's prayer has reserve,
+    // and reserve is what a bad night spends instead of his capacity.
+    const devout = learned(); devout.procedure.prayed = true;
+    const devoutAndScrupulous = learned();
+    devoutAndScrupulous.procedure.prayed = true;
+    devoutAndScrupulous.despair = 4;
+    assert.equal(reach(devout, 'learning'), 4);
+    assert.equal(reach(devoutAndScrupulous, 'learning'), 4, 'the surplus took the hit');
+    // But the reserve is finite: two bad things get through.
+    devoutAndScrupulous.fatigue = 8;
+    assert.equal(reach(devoutAndScrupulous, 'learning'), 3);
+  });
+
+  test('dispositionOf reads the state a player can actually see', () => {
+    const john = learned();
+    const bare = dispositionOf(john);
+    john.procedure.prayed = true;
+    assert.ok(dispositionOf(john) > bare, 'saying the Work\'s prayer disposes him');
+    john.purity.polluted = true;
+    assert.ok(dispositionOf(john) < dispositionOf(learned()) + 1, 'breaking the observance costs');
+  });
+
+  test('his own book disposes him too, and its influence is bounded', () => {
+    const john = learned(); john.procedure.prayed = true;
+    const sound = reach(john, 'learning', { book: 5 });
+    const corrupt = reach(john, 'learning', { book: -5 });
+    assert.equal(sound, 4, 'a good book cannot exceed his training');
+    assert.ok(corrupt < 4, 'a corrupt book narrows him');
+    assert.ok(corrupt >= 0);
+  });
+
+  test('reach never goes negative', () => {
+    const john = learned();
+    john.purity.polluted = true; john.purity.confessed = false;
+    john.despair = 5; john.fatigue = 10;
+    assert.ok(reach(john, 'learning', { book: -5 }) >= 0);
   });
 });
 

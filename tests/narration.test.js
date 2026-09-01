@@ -32,7 +32,7 @@ function lint(record, label) {
 }
 
 const mundane = { id: 'd-m', kind: 'mundane', text: 'a fly', effects: { pressure: 0, despair: 0 } };
-const flesh = { id: 'd-f', kind: 'flesh', text: 'the flesh', effects: { pressure: 1, despair: 0 } };
+const appetite = { id: 'd-a', kind: 'appetite', text: 'the want to know', effects: { pressure: 1, despair: 0 } };
 
 function fakeRng(...values) {
   const queue = [...values];
@@ -102,20 +102,20 @@ describe('The siege, composed from real facts', () => {
     assert.deepEqual(lines, [SIEGE_TEXT.quiet()]);
   });
 
-  test('held, broken, flesh, and wanderings each get their clause', () => {
+  test('held, broken, appetite, and wanderings each get their clause', () => {
     const outcome = {
       firstBreak: 2,
       distractions: [
-        { record: flesh, action: 'held' },
+        { record: appetite, action: 'held' },
         { record: mundane, action: 'attended' },
-        { record: flesh, action: 'attended' },
+        { record: appetite, action: 'attended' },
       ],
     };
     const { lines } = composeSiege(outcome);
     assert.equal(lines.length, 4);
     assert.match(lines[0], /Once the margin pulled/);
     assert.match(lines[1], /second pull, and there it broke/);
-    assert.match(lines[2], /flesh got its hearing once/);
+    assert.match(lines[2], /appetite got its hearing once/);
     assert.match(lines[3], /One lesser wandering/);
   });
 });
@@ -153,7 +153,7 @@ describe('The game-state voice', () => {
     const john = createJohn();
     const before = snapshotJohn(john);
     const out = runCopyBlock(new SeededRandom('bundle'), john, {
-      exemplar: fixture({ units: 6 }), pool: [mundane, flesh], stance: 'routine',
+      exemplar: fixture({ units: 6 }), pool: [mundane, appetite], stance: 'routine',
     });
     const n = composeStanceNarration(out, before, snapshotJohn(john));
     assert.ok(n.narrator.text && n.monologue.text);
