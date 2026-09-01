@@ -18,6 +18,12 @@ import { createBeatLog } from './engine/beatlog.js';
 import { FACULTIES, loadFaculties, study } from './engine/faculties.js';
 import { loadMemories, memoryDue, fireMemory, echoFor } from './engine/memory.js';
 import { MEMORIES } from './content/memories.js';
+import {
+  loadRiskBag, buildEncounterDeck, drawEncounter, spendEncounter,
+  availableOptions, applyOption,
+} from './engine/encounters.js';
+import { ENCOUNTERS } from './content/encounters.js';
+import { SeededRandom } from './engine/random.js';
 import { nightThreatens, resolveNight, successChance } from './engine/struggle.js';
 import { dreamEligible, createVision, judge, reckonCorruption } from './engine/vision.js';
 import { COMMANDS, LETTERS, NIGHT_KEYS } from './engine/commands.js';
@@ -327,6 +333,9 @@ const globalKeys = {
 let john, day, stageIdx, journal, currentLook = '';
 let beatlog = createBeatLog(); // the day as rendered (v4 §7)
 let pendingMemory = null;      // a vignette owed, to be paid at the reckoning
+/** At most one special beat per day — a memory OR an encounter, never
+ *  both. Keeps the input budget at 10 and the pacing readable. */
+let specialFiredToday = false;
 let worldCtl = null;   // live only during the world stage (arrow keys)
 let chronicle = null;  // what accumulates across witnesses, toward 1323
 let exam = null;       // the examination in progress
@@ -342,6 +351,17 @@ function start(seed, opts = {}) {
   // Faculties are a life's accretion, not a day's mood (v4 §5).
   john.faculties = loadFaculties(chronicle.faculties);
   chronicle.memories = loadMemories(chronicle.memories); // the life behind the day (v4 §4)
+  // The encounter deck is built once per chronicle and outlasts the run
+  // (v4 §6b): a witness meets a fraction of the world, never all of it.
+  chronicle.risk = loadRiskBag(chronicle.risk);
+  chronicle.encountersFired = chronicle.encountersFired ?? [];
+  if (!Array.isArray(chronicle.deck) || !chronicle.deck.length) {
+    chronicle.deck = buildEncounterDeck(
+      new SeededRandom(chronicle.deckSeed ?? (chronicle.deckSeed = `deck-${seed}`)),
+      ENCOUNTERS,
+    );
+  }
+  specialFiredToday = false;
   journal = {
     seed, journey: !!opts.journey,
     prayed: false, night: null, dream: null, confession: null,
@@ -635,7 +655,7 @@ function daylight(stage) {
     }
     subPrompt(promptText.replace(/·$/, '?'), keys);
   });
-  act('B', 'Let the hour pass in choir and garden.', 'Nothing gained, nothing risked.', next);
+  act('B', 'Let the hour pass in choir and garden.', 'Nothing gained, nothing risked.', leaveDaylight);
 }
 
 /**
@@ -643,9 +663,16 @@ function daylight(stage) {
  * else continue straight on. The vignette is mostly narrated and
  * carries one real choice; afterwards the day resumes where it was.
  */
+/** Every road out of the daylight block passes here: the world gets its
+ *  chance to ride the hour before Vespers takes it (v4 §6b). */
+function leaveDaylight() {
+  maybeEncounter(next);
+}
+
 function maybeMemory(event, then) {
   const vignette = memoryDue(chronicle.memories, MEMORIES, event);
   if (!vignette) return then();
+  specialFiredToday = true; // a memory is the day's one special beat
   clearActs();
   $('rubric').textContent = vignette.rubric;
   ui.body(deliberation(vignette));
@@ -666,6 +693,59 @@ function maybeMemory(event, then) {
       ui.body(gs);
       renderStatus();
       act('B', 'Return to the present.', '', then);
+    });
+  }
+}
+
+/**
+ * An encounter RIDES a block that already has a job (v4 §6b): after the
+ * day's labor resolves, the world may put something in front of him.
+ * At most one special beat per day, memories taking precedence — they
+ * are rarer and tied to specific moments.
+ */
+function maybeEncounter(then) {
+  if (specialFiredToday) return then();
+  const ctx = {
+    affordances: ['cloister'],
+    faculties: john.faculties,
+    disposition: john.disposition,
+    risk: chronicle.risk,
+    days: chronicle.days,
+    fired: chronicle.encountersFired,
+  };
+  const drawn = drawEncounter(chronicle.deck, ENCOUNTERS, ctx);
+  if (!drawn) return then();
+  specialFiredToday = true;
+  spendEncounter(chronicle.deck, chronicle.encountersFired, drawn.encounter, drawn.index);
+  saveChronicle(storage(), chronicle);
+
+  const enc = drawn.encounter;
+  clearActs();
+  $('rubric').textContent = enc.rubric;
+  ui.body(deliberation(enc));
+  const gsIn = el('div', 'gamestate');
+  const label = `Encounter: ${enc.id} · ${enc.register} · ${enc.tier}.`;
+  gsIn.appendChild(el('div', null, label));
+  beatlog.line('gamestate', label);
+  ui.body(gsIn);
+
+  for (const { option, unlockedBy } of availableOptions(enc, ctx)) {
+    const why = unlockedBy ? `${option.why} [open to you: ${FACULTIES[unlockedBy].label}]` : option.why;
+    act(option.key, option.label, why, () => {
+      const applied = applyOption(option, john, chronicle.risk);
+      saveChronicle(storage(), chronicle);
+      clearActs();
+      ui.body(deliberation(option.outcome));
+      const gs = el('div', 'gamestate');
+      const bits = Object.entries(applied.state).map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`);
+      const risks = Object.entries(applied.risk).map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`);
+      const line = `${enc.id}/${option.id}. ${bits.length ? bits.join(', ') + '.' : 'Nothing measurable changed.'}` +
+        (risks.length ? ` Risk: ${risks.join(', ')}.` : '');
+      gs.appendChild(el('div', null, line));
+      beatlog.line('gamestate', line);
+      ui.body(gs);
+      renderStatus();
+      act('B', 'And the day goes on.', '', then);
     });
   }
 }
@@ -693,7 +773,7 @@ function studyHour(facultyId) {
   ui.body(gs);
   journal.studied = facultyId;
   renderStatus();
-  act('B', 'To Vespers.', '', next);
+  act('B', 'To Vespers.', '', leaveDaylight);
 }
 
 function chooseWorkExemplar(stage) {
@@ -844,7 +924,7 @@ function settleConcealment(exemplar, assigned, copy, state) {
   ui.body(deliberation(SCRIPTORIUM_TEXT.concealment[state]));
   ui.footnote(SCRIPTORIUM_NOTES.find(n => n.id === 'note-scribere'));
   clearActs();
-  act('B', 'To Vespers.', '', next);
+  act('B', 'To Vespers.', '', leaveDaylight);
 }
 
 const PIGMENT_LINES = {
