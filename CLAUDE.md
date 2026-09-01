@@ -102,6 +102,20 @@ for everything in this repository.
     *licentia* can be granted — which is the only thing that makes a
     witness blessed and a transmission worth having. Conjuration works
     now; adjuration is what works after 1323.
+13. **Every branch is declared and audited** (`docs/BRANCH_AUDIT.md`,
+    enforced by `tests/branches.test.js`). A branch is any moment the
+    game stops and waits for the player. Declare it in
+    `src/content/branches.js` and write its content as data in a
+    `content/` module — **never as an inline string at an `act()` call
+    site**, because a choice that is not data is a choice nobody
+    reviews. A *decision* owes the reader four things: third-person
+    orientation, an interior voice, scholarly grounding where it makes
+    a claim, and a plain statement of what pressing each key will do. A
+    *continue* owes a label that says where it goes. The cold-read test
+    governs: if a reader arrived at this moment knowing nothing, would
+    they know where they are, who is speaking, what is being asked, and
+    what each key does? This rule exists because the game shipped an
+    opening that read, in its entirety, "Take up the day again."
 
 ## Data layout (all under `src/data/`, as ES modules so both the
 Vite app and the Node test runner import them directly)

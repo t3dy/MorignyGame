@@ -49,6 +49,7 @@ import {
   loadLifepath, currentScene, chooseLifepath, asMemories, lifepathCatalog,
 } from './engine/lifepath.js';
 import { LIFEPATH_CODA } from './content/lifepath.js';
+import { INCIPIT, RETURNING } from './content/incipit.js';
 import {
   GIFTS, GIFT_IDS, loadAscent, ascentOpen, currentOrder, complete as ascentComplete,
   petition, giftBonus,
@@ -2065,27 +2066,46 @@ function incipit() {
   chronicle.lifepath = loadLifepath(chronicle.lifepath);
   chronicle.practice = loadPractice(chronicle.practice);
   chronicle.faculties = loadFaculties(chronicle.faculties);
-  ui.setHour('Incipit');
-  ui.scene({ rubric: '¶ Here begins the book of the flowers of heavenly teaching.', verso: '' });
-  ui.leaf(LEAVES.incipit);
-  ui.body(el('p', null,
-    'MORIGNY — the life of Brother John, monk of Morigny, priest and canon lawyer, ' +
-    'who practiced a forbidden art, repented of it, and rebuilt it in the Virgin’s name; ' +
-    'and who wrote down his temptations so exactly that we can, seven centuries on, attempt this.'));
-  ui.body(el('p', 'pencil-note', CONTENT_NOTE));
   const seed = `witness-${Math.floor(Math.random() * 1e6)}`;
+  const opening = chronicle.lifepath.done ? RETURNING : INCIPIT;
+  ui.setHour('Incipit');
+  ui.scene({ rubric: opening.rubric, verso: '' });
+  ui.leaf(LEAVES.incipit);
+  renderBranch(opening);
+
   if (!chronicle.lifepath.done) {
-    // The opening is his early life, played — not a mode-select menu
-    // (docs/LOOP_SYNTHESIS.md §10; rebuilt 2026-09-01).
-    act('B', 'Begin at the beginning: Chartres, and a boy of thirteen.',
-      'Five scenes of the life before the life. What you choose here is the man you will play.',
-      () => lifepathStage(seed));
+    act('B', INCIPIT.options[0].label, INCIPIT.options[0].why, () => lifepathStage(seed));
+    act('N', INCIPIT.options[1].label, INCIPIT.options[1].why, () => {
+      clearActs();
+      ui.body(el('p', 'pencil-note', CONTENT_NOTE));
+      act('B', INCIPIT.options[0].label, INCIPIT.options[0].why, () => lifepathStage(seed));
+    });
   } else {
-    act('B', 'Take up the day again.', `seed: ${seed}`, () => start(seed));
-    act('E', 'Take up the day again — a road day: the errand to Étampes.',
-      'The world, with witnesses. Arrow keys walk; T talks.', () => start(seed, { journey: true }));
+    act('B', RETURNING.options[0].label, RETURNING.options[0].why, () => start(seed));
+    act('E', RETURNING.options[1].label, RETURNING.options[1].why, () => start(seed, { journey: true }));
   }
   renderCommands();
+}
+
+/**
+ * Render a declared branch (src/content/branches.js) in all four
+ * voices, in the order the audit requires: orientation, interior
+ * voice, scholarly hand, then how to play. Used by the opening; the
+ * rest of the game is being migrated onto it.
+ */
+function renderBranch(branch) {
+  $('rubric').textContent = branch.rubric ?? '';
+  if (branch.narrator) ui.body(passage(branch.narrator, branch.narrator.text, 'narrator'));
+  if (branch.monologue) ui.body(passage(branch.monologue, branch.monologue.text, 'monologue'));
+  if (branch.pencil) {
+    ui.body(passage(branch.pencil, branch.pencil.text, 'pencil-note'));
+    ui.footnote(branch.pencil);
+  }
+  if (branch.interaction) {
+    const how = el('div', 'interaction');
+    how.appendChild(el('div', null, branch.interaction.text));
+    ui.body(how);
+  }
 }
 
 /** The prologue, scene by scene, then into the first Matins. */

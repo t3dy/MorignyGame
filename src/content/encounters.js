@@ -339,7 +339,7 @@ export const ENCOUNTERS = {
     options: [
       {
         id: 'buy', key: 'B',
-        label: 'Buy it.',
+        label: 'Buy the quire, unread.',
         why: 'You do not know what it is yet. Leans Radical. (+1 exposure, +1 debt, disposition +1.)',
         effect: { disposition: 1, risk: { exposure: 1, debt: 1 } },
         outcome: {

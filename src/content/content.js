@@ -440,8 +440,13 @@ export const CONFESSION = {
       text:
         'Chapter has turned to the naming of faults, the way it does every morning — but ' +
         'this morning John is unclean, and nothing moves for him again until he says so, ' +
-        'out loud, in this room, in front of the benches.',
-      sources: [], status: 'invented',
+        'out loud, in this room, in front of the benches. Confession is not incidental to ' +
+        'his practice: the Work is gated on purity, so the sacrament is also the mechanism ' +
+        'by which the Work reopens. Fanger calls penance the sacrament of the middle of ' +
+        'life — the one that can be repeated whenever a man falls — which is why John files ' +
+        'his entire book under it.',
+      sources: [{ work: 'Fanger, Rewriting Magic', locus: 'penance as the sacrament of the middle of life; the Liber florum filed under it (frame; verify)' }],
+      status: 'adapted', verify: true,
     },
     monologue: {
       text:
@@ -455,8 +460,12 @@ export const CONFESSION = {
     narrator: {
       text:
         'Nothing grave sits on John this morning as chapter turns to the naming of faults — ' +
-        'but the scrupulous voice in him doesn\'t care what\'s true.',
-      sources: [], status: 'invented',
+        'but the scrupulous voice in him doesn\'t care what\'s true. Over-confession is its ' +
+        'own disorder, and the confessional writers of his century knew it well: a man who ' +
+        'confesses what is not matter grinds himself finer than any sin managed, and the ' +
+        'remedy he keeps reaching for is the disease.',
+      sources: [{ work: 'Fanger, Rewriting Magic', locus: 'scrupulosity in John (frame; verify)' }],
+      status: 'adapted', verify: true,
     },
     monologue: {
       text:

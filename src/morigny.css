@@ -531,3 +531,15 @@ canvas.worldmap {
 /* Reading the book over: the prayers as they stand. */
 .book-reading { margin: 0.8rem 0; }
 .book-reading .incipit { margin: 0.35rem 0; }
+
+/* How to play: the interaction voice. Not a manuscript hand — this is
+   the game explaining itself, so it looks like the interface. */
+.interaction {
+  border: 1px solid var(--gutter);
+  border-left: 3px solid var(--vermilion, #a63a22);
+  background: rgba(166, 58, 34, 0.04);
+  padding: 0.7rem 0.9rem;
+  margin: 0.9rem 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
