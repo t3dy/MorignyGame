@@ -32,16 +32,21 @@ import {
   INTERVAL_TEXT, INTERVAL_ENVELOPE, BEAT_ARRIVALS,
   BOOK_READING, BOOK_CHARACTER_NOTES, GLOSS_SCENE, GLOSS_OPTIONS, GLOSS_OUTCOME,
   COMPOSE_ADDRESS, ADDRESS_OPTIONS, LEGITIMATION_OPTIONS, ADDRESS_ENVELOPE, SLIPPED,
+  RESTRICTED_SHELF, INFIRMARY_HOUR, WORKSHOP_HOUR, GARDEN_HOUR,
 } from './content/liberflorum_content.js';
 import { SeededRandom } from './engine/random.js';
 import {
   loadCalendar, stride, advance as advanceTime, format as formatDate, weeks as toWeeks,
 } from './engine/calendar.js';
-import { loadPractice, bookCharacter } from './engine/practice.js';
+import { loadPractice, bookCharacter, invest } from './engine/practice.js';
 import {
   ADDRESSES, LEGITIMATIONS, resolveAddress, suspicionFor, operatorPerceives,
   loadLedger, record as recordAddress, addressByLevel, addressById,
 } from './engine/address.js';
+import { PLACES, PLACE_IDS } from './data/places.js';
+import {
+  FACTIONS, loadFactions, reactTo, ecclesiasticalPressure, poles,
+} from './engine/factions.js';
 import {
   loadBridget, METHOD, teach, inCrisis, renunciationAvailable,
   renounce as bridgetRenounce, analyse as bridgetAnalyse, literate,
@@ -309,6 +314,17 @@ function renderStatus() {
       }).join(' · ')));
     s.appendChild(row);
   }
+  if (chronicle?.factions) {
+    // The house has several minds (LOOP_SYNTHESIS §6). Named, not numbered:
+    // who is most for him and most against him this season.
+    const { friend, enemy } = poles(chronicle.factions);
+    if (chronicle.factions[friend] !== chronicle.factions[enemy]) {
+      const row = el('div', 'stat faculties');
+      row.appendChild(el('span', null, 'the house'));
+      row.appendChild(el('span', 'pips', FACTIONS[friend].label + ' · against: ' + FACTIONS[enemy].label));
+      s.appendChild(row);
+    }
+  }
   if (john.purity.polluted) s.appendChild(el('div', 'flag bad', 'the observance is broken — the Work is shut'));
   if (isScrupulous(john)) s.appendChild(el('div', 'flag bad', 'scrupulous — holding fast costs double'));
   if (john.procedure.licentia) s.appendChild(el('div', 'flag gold', 'LICENTIA'));
@@ -376,6 +392,8 @@ let pendingMemory = null;      // a vignette owed, to be paid at the reckoning
 /** At most one special beat per day — a memory OR an encounter, never
  *  both. Keeps the input budget at 10 and the pacing readable. */
 let specialFiredToday = false;
+let currentPlace = null;      // the room the daylight hour is being spent in
+let pendingUndertext = null;  // a scrapeable old fault, computed once per day
 let lastStride = 0;       // days of sim-time this witness stands after
 let crossedBeats = [];    // historical beats the stride carried us past
 let worldCtl = null;   // live only during the world stage (arrow keys)
@@ -402,6 +420,7 @@ function start(seed, opts = {}) {
   chronicle.practice = loadPractice(chronicle.practice);
   chronicle.bridget = loadBridget(chronicle.bridget);
   chronicle.addresses = loadLedger(chronicle.addresses);
+  chronicle.factions = loadFactions(chronicle.factions);
   // Sim-time: a played day is a day the record remembers, and the
   // calendar moves weeks or a season between them (engine/calendar.js).
   if (chronicle.days > 0) {
@@ -417,6 +436,8 @@ function start(seed, opts = {}) {
     );
   }
   specialFiredToday = false;
+  currentPlace = null;
+  pendingUndertext = scrapeLeaf(new SeededRandom(`${seed}-scrape`), loadWitnesses(storage()));
   journal = {
     seed, journey: !!opts.journey,
     prayed: false, night: null, dream: null, confession: null,
@@ -685,60 +706,177 @@ const CONFESSION_SOURCES = [
 // Spec: docs/SCRIPTORIUM_STAGE_SPEC.md. Silent failures keep success's
 // face on screen by design (docs/NARRATIVE_DESIGN_REPORT.md §4).
 
+/**
+ * The daylight hour, in two questions (docs/LOOP_SYNTHESIS.md §5):
+ * WHERE does he spend it, and WHAT does he do there. Page's monastery
+ * is a production environment — books, private doors, herbs, lead,
+ * seals, and a gate the world comes through — so the room he chooses
+ * decides what is even possible, and gives encounters somewhere to
+ * happen.
+ */
 function daylight(stage) {
   ui.setHour('Terce · Sext · None');
   ui.scene({ rubric: DAYLIGHT.rubric, verso: TIER_TEXT[pressureTier(john.pressure)] });
-  if (chronicle.days === 0) ui.leaf(LEAVES.scriptorium); // once: the room is new the first day, not every day
+  if (chronicle.days === 0) ui.leaf(LEAVES.scriptorium);
   ui.body(deliberation(DAYLIGHT));
-  memoryEcho('orleans-art'); // why the other book pulls the way it does
-  act('S', 'Scribe: the assigned leaf.', 'Obedience is a wall, and walls also shelter.',
-    () => beginCopy(stage, exemplarById('armarium-lectionary'), true));
-  act('I', 'Illuminate: steal the hour for the Work.', 'The light is where you are watched.',
-    () => maybeMemory('first-work-hour', () => chooseWorkExemplar(stage)));
-  const undertext = scrapeLeaf(stageRng(day, `${stage.id}-scrape`), loadWitnesses(storage()));
-  if (undertext) {
-    const ghostExemplar = exemplarById(undertext.exemplarId) ?? exemplarById('armarium-lectionary');
-    act('U', 'Use the knife: scrape an old leaf.',
-      'The ghost of an old fault will ride along, and cost a little pressure to face.',
-      () => beginCopy(stage, ghostExemplar, ghostExemplar.id === 'armarium-lectionary', undertext));
-  }
-  const canGiveAway = chronicle.custody.some(c => !c.given);
-  act('T', 'Talk: the armarius, the sacrist' + (canGiveAway ? ', Bridget, or Brother Anseau' : '') + '.',
-    canGiveAway ? 'Requisitions, warnings — or a copy, if you trust someone with it.' : 'Requisitions, and warnings.', () => {
-      const keys = {
-        A: () => openTalk(CLOISTER_NPCS.find(n => n.id === 'denis')),
-        S: () => openTalk(CLOISTER_NPCS.find(n => n.id === 'maur')),
-      };
-      let prompt = 'Speak with: the armarius (A), or the sacrist (S)';
-      if (canGiveAway) {
-        keys.K = () => openTalk(KIN_NPCS.find(n => n.id === 'bridget'));
-        keys.N = () => openTalk(CLOISTER_NPCS.find(n => n.id === 'anseau'));
-        prompt += ', Bridget (K), or Brother Anseau (N)';
-      }
-      subPrompt(prompt + '?', keys);
-    });
-  act('L', 'Lectio: give the hour to study.', 'Slow coin — a faculty advanced, and nothing the desk can show tonight.', () => {
-    const keys = {};
-    let promptText = 'Study what?';
-    const letters = { learning: 'G', discretio: 'D', craft: 'C', worldliness: 'W' };
-    for (const [id, meta] of Object.entries(FACULTIES)) {
-      promptText += ` ${letters[id]} ${meta.label} ·`;
-      keys[letters[id]] = () => maybeMemory('first-study', () => studyHour(id));
-    }
-    subPrompt(promptText.replace(/·$/, '?'), keys);
-  });
-  const b = chronicle.bridget;
-  if (b.asked && !b.method && b.literacy < 100) {
-    act('K', 'Your sister has asked again to be taught her letters.',
-      'Fifteen, and late for it. There is a slow road and a short one.', () => bridgetTeachStage());
-  } else if (b.method && b.literacy < 100 && !inCrisis(b)) {
-    act('K', `Another lesson with your sister. (${Math.round(b.literacy)} of 100.)`,
-      METHOD[b.method].label, () => bridgetLesson(b.method));
-  } else if (inCrisis(b)) {
-    act('K', 'Go to your sister. She has not slept in nine days.',
-      'The nights have become constant. This will not keep.', () => bridgetNightStage());
+  memoryEcho('orleans-art');
+  for (const id of PLACE_IDS) {
+    const place = PLACES[id];
+    act(place.key, place.label + '.', place.line, () => enterPlace(stage, id));
   }
   act('B', 'Let the hour pass in choir and garden.', 'Nothing gained, nothing risked.', leaveDaylight);
+}
+
+/** What each room affords, once he is standing in it. */
+function enterPlace(stage, placeId) {
+  const place = PLACES[placeId];
+  clearActs();
+  currentPlace = placeId;
+  $('rubric').textContent = '¶ ' + place.label + '.';
+  ui.body(passage({ sources: place.sources, status: place.status }, place.line, 'narrator'));
+  for (const a of (PLACE_ACTIONS[placeId] ?? [])) {
+    if (a.when && !a.when()) continue;
+    act(a.key, a.label, a.why(), () => a.go(stage));
+  }
+  act('B', 'Somewhere else, then.', '', () => daylight(stage));
+}
+
+/**
+ * Actions by room. Each keeps its own gate, so the menu never offers
+ * something the state cannot honour.
+ */
+const PLACE_ACTIONS = {
+  scriptorium: [
+    { key: 'S', label: 'Scribe: the assigned leaf.',
+      why: () => 'Obedience is a wall, and walls also shelter.',
+      go: stage => beginCopy(stage, exemplarById('armarium-lectionary'), true) },
+    { key: 'I', label: 'Illuminate: steal the hour for the Work.',
+      why: () => 'The light is where you are watched.',
+      go: stage => maybeMemory('first-work-hour', () => chooseWorkExemplar(stage)) },
+    { key: 'U', label: 'Use the knife: scrape an old leaf.',
+      when: () => !!pendingUndertext,
+      why: () => 'The ghost of an old fault will ride along, and cost a little pressure to face.',
+      go: stage => {
+        const ghost = exemplarById(pendingUndertext.exemplarId) ?? exemplarById('armarium-lectionary');
+        beginCopy(stage, ghost, ghost.id === 'armarium-lectionary', pendingUndertext);
+      } },
+  ],
+  armarium: [
+    { key: 'L', label: 'Lectio: give the hour to study.',
+      why: () => 'Slow coin — a faculty advanced, and nothing the desk can show tonight.',
+      go: () => {
+        const keys = {};
+        let promptText = 'Study what?';
+        const letters = { learning: 'G', discretio: 'D', craft: 'C', worldliness: 'W' };
+        for (const [id, meta] of Object.entries(FACULTIES)) {
+          promptText += ' ' + letters[id] + ' ' + meta.label + ' ·';
+          keys[letters[id]] = () => maybeMemory('first-study', () => studyHour(id));
+        }
+        subPrompt(promptText.replace(/·$/, '?'), keys);
+      } },
+    { key: 'R', label: 'The shelf that is not read from at table.',
+      why: () => 'To know the exceptive arts is licit, and John says so himself. Keeping the books is what costs. (+1 suspicion.)',
+      go: () => studyRestricted() },
+  ],
+  cell: [
+    { key: 'P', label: 'The Work, behind a closed door.',
+      why: () => 'The one hour nobody can account for. The house sees nothing.',
+      go: stage => maybeMemory('first-work-hour', () => chooseWorkExemplar(stage)) },
+  ],
+  infirmary: [
+    { key: 'N', label: 'Sit with the sick.',
+      why: () => 'Nothing is gained and something is done. (Fatigue +1, despair −1.)',
+      go: () => tendSick() },
+  ],
+  workshop: [
+    { key: 'M', label: 'Cast and seal: give a figure a body.',
+      why: () => 'Lead, solder, the press. A drawing becomes an object, and objects can be found. (+1 suspicion.)',
+      go: () => workshopHour() },
+  ],
+  garden: [
+    { key: 'Q', label: 'The beds, and an hour of quiet.',
+      why: () => 'Restores what the Rule and the Work have both been spending. (Fatigue −2.)',
+      go: () => gardenHour() },
+  ],
+  gate: [
+    { key: 'T', label: 'Speak with whoever the day has brought.',
+      why: () => (chronicle.custody.some(c => !c.given)
+        ? 'Requisitions, warnings — or a copy, if you trust someone with it.'
+        : 'Requisitions, and warnings.'),
+      go: () => {
+        const canGive = chronicle.custody.some(c => !c.given);
+        const keys = {
+          A: () => openTalk(CLOISTER_NPCS.find(n => n.id === 'denis')),
+          S: () => openTalk(CLOISTER_NPCS.find(n => n.id === 'maur')),
+        };
+        let prompt = 'Speak with: the armarius (A), or the sacrist (S)';
+        if (canGive) {
+          keys.K = () => openTalk(KIN_NPCS.find(n => n.id === 'bridget'));
+          keys.N = () => openTalk(CLOISTER_NPCS.find(n => n.id === 'anseau'));
+          prompt += ', Bridget (K), or Brother Anseau (N)';
+        }
+        subPrompt(prompt + '?', keys);
+      } },
+    { key: 'K', label: 'Your sister has asked again to be taught her letters.',
+      when: () => chronicle.bridget.asked && !chronicle.bridget.method && chronicle.bridget.literacy < 100,
+      why: () => 'Fifteen, and late for it. There is a slow road and a short one.',
+      go: () => bridgetTeachStage() },
+    { key: 'J', label: 'Another lesson with your sister.',
+      when: () => chronicle.bridget.method && chronicle.bridget.literacy < 100 && !inCrisis(chronicle.bridget),
+      why: () => Math.round(chronicle.bridget.literacy) + ' of 100. ' + METHOD[chronicle.bridget.method].label,
+      go: () => bridgetLesson(chronicle.bridget.method) },
+    { key: 'K', label: 'Go to your sister. She has not slept in nine days.',
+      when: () => inCrisis(chronicle.bridget),
+      why: () => 'The nights have become constant. This will not keep.',
+      go: () => bridgetNightStage() },
+  ],
+};
+
+/** Knowing the forbidden arts is licit; keeping the books is what costs. */
+function studyRestricted() {
+  clearActs();
+  const applied = invest(chronicle.practice, 'exceptive');
+  addSuspicion(john, applied.suspicionPerDay ?? 1);
+  reactTo(chronicle.factions, { address: 0, exposure: 1, purity: !john.purity.polluted });
+  saveChronicle(storage(), chronicle);
+  ui.body(deliberation(RESTRICTED_SHELF));
+  const gs = el('div', 'gamestate');
+  const line = 'The exceptive arts, known and not performed: ' + chronicle.practice.exceptive + '. Suspicion +1.';
+  gs.appendChild(el('div', null, line));
+  beatlog.line('gamestate', line);
+  ui.body(gs);
+  renderStatus();
+  act('B', 'To Vespers.', '', leaveDaylight);
+}
+
+function tendSick() {
+  clearActs();
+  addFatigue(john, 1);
+  addDespair(john, -1);
+  saveChronicle(storage(), chronicle);
+  ui.body(deliberation(INFIRMARY_HOUR));
+  renderStatus();
+  act('B', 'To Vespers.', '', leaveDaylight);
+}
+
+function workshopHour() {
+  clearActs();
+  addSuspicion(john, 1);
+  addFatigue(john, 1);
+  reactTo(chronicle.factions, { address: 1, exposure: 1, purity: !john.purity.polluted });
+  saveChronicle(storage(), chronicle);
+  ui.body(deliberation(WORKSHOP_HOUR));
+  renderStatus();
+  act('B', 'To Vespers.', '', leaveDaylight);
+}
+
+function gardenHour() {
+  clearActs();
+  addFatigue(john, -2);
+  saveChronicle(storage(), chronicle);
+  ui.body(deliberation(GARDEN_HOUR));
+  renderStatus();
+  act('B', 'To Vespers.', '', leaveDaylight);
 }
 
 // ── Bridget (decided 2026-09-01: a person with her own arc) ────────────

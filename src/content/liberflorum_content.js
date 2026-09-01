@@ -457,3 +457,77 @@ export const MILK_AND_MEAT = {
     text: 'I was given milk and I have been given meat, and the meat is harder, and I asked for it. Somewhere in that sentence is my whole life, and I do not entirely like the look of it.',
   },
 };
+
+// ── The rooms of the abbey (docs/LOOP_SYNTHESIS.md §5) ─────────────────
+
+const PAGE_INFRA = [{ work: 'Page, Magic in the Cloister', locus: 'the monastic material infrastructure of occult practice (frame; verify)' }];
+
+export const RESTRICTED_SHELF = {
+  narrator: {
+    text:
+      'The shelf behind the armarium door. Sophie Page\'s Canterbury monks owned more than ' +
+      'thirty magical texts and were not obviously ashamed of it: they shelved them beside ' +
+      'orthodox works, bound condemnations of illicit magic into the same volumes, and ' +
+      'occasionally coded a passage. That is not a conspiracy. It is a reading community ' +
+      'making a claim about what kind of knowledge this is. John reads here on his own ' +
+      'principle, which he states plainly in his own book: he may know the exceptive arts, ' +
+      'and he may not perform them. The knowing is licit. What costs him is that the books ' +
+      'are physically in his keeping, and an inventory does not record intentions.',
+    sources: PAGE_INFRA, status: 'adapted', verify: true,
+  },
+  monologue: {
+    sources: [], status: 'invented',
+    text: 'To know a thing is not to do it. I have written that down and I believe it, and I notice that I check the door before I believe it.',
+  },
+};
+
+export const INFIRMARY_HOUR = {
+  narrator: {
+    text:
+      'The infirmary is the one room in the abbey where a man may handle strange substances ' +
+      'and be thanked for it. It is also where the house keeps its dying. Both facts are ' +
+      'true at once, and a monk who spends his hours here is simultaneously doing the most ' +
+      'ordinary charity the Rule asks for and standing next to the herbal, the still, and ' +
+      'the cupboard nobody questions him for opening.',
+    sources: [...PAGE_INFRA, { work: 'RB 1980 (Rule of St Benedict)', locus: 'RB 36, the care of the sick (frame)' }],
+    status: 'adapted', verify: true,
+  },
+  monologue: {
+    sources: [], status: 'invented',
+    text: 'I sat with him and said the psalms and did not once think about the cupboard. That is not true. I thought about it twice.',
+  },
+};
+
+export const WORKSHOP_HOUR = {
+  narrator: {
+    text:
+      'Lead, solder, casting sand, and a press for seals. Page found all of it at St ' +
+      'Augustine\'s — a plumber\'s workshop, metal casting, connections to Canterbury ' +
+      'craftsmen — and it is exactly what separates a figure drawn on parchment from a ' +
+      'figure that exists as an object in the world. The difference matters more than it ' +
+      'sounds. A drawing can be a meditation. A cast and sealed thing has been MADE, on a ' +
+      'chosen day, by somebody, for a purpose, and it can be picked up and shown to a ' +
+      'bishop.',
+    sources: PAGE_INFRA, status: 'adapted', verify: true,
+  },
+  monologue: {
+    sources: [], status: 'invented',
+    text: 'It has a weight now. I did not expect the weight to change anything and it changes everything: a thing you can drop is a thing you can be found holding.',
+  },
+};
+
+export const GARDEN_HOUR = {
+  narrator: {
+    text:
+      'Beds of physic and pot-herbs, and an hour the horarium does not account for closely. ' +
+      'The most underrated resource in a monastery is unwatched time in a permitted place. ' +
+      'Nothing happens here, which is the whole of its value: he comes back to the Office ' +
+      'with something restored that neither the Rule nor the Work has any way of giving him.',
+    sources: [{ work: 'RB 1980 (Rule of St Benedict)', locus: 'RB 48, the ordering of labour (frame)' }],
+    status: 'adapted', verify: true,
+  },
+  monologue: {
+    sources: [], status: 'invented',
+    text: 'An hour among the beans. I thought about nothing whatever and came back able to think again, which I will not be putting in the book.',
+  },
+};
