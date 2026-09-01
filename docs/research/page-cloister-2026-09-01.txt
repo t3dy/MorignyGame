@@ -1,0 +1,1482 @@
+Sophie Page Magic in the Cloister Pious Motives Illicit Interests and Occult Approaches to the Medieval Universe(2).pdf
+PDF
+Fanger Claire Rewriting Magic_ An Exegesis of the Visionary Autobiography of a Fourteenth Century French Monk Pennsylvania State University Press(2).pdf
+PDF
+[The Routledge Histories] Sophie Page (Editor), Catherine Rider (Editor) - The Routledge History of Medieval Magic (2019, Routledge) - libgen.li.pdf
+PDF
+Claire Fanger Invoking Angels_ Theurgic Ideas and Practices Thirteenth to Sixteenth Centuries Penn State Press(2).pdf
+PDF
+summarize these documents as sources for worldbuilding in a project simulating the monastic lives of participants in the clerical necromantic underworld on a spectrum from the pious john of morigny who saw magic as a devotional practice, to the dirtier or more heretical or selfish and demonic users of magic
+
+The four books collectively support a very strong premise for this game: the “clerical necromantic underworld” should not be represented as a secret society of uniformly evil black magicians. It is better understood as a porous intellectual and religious milieu in which monks, priests, university men, physicians, friars, and other literate clerics could move between natural philosophy, medicine, astrology, devotional practice, visionary mysticism, ritual magic, and explicit spirit conjuration. The same manuscript, person, ritual, or institution could sit at very different points on that spectrum.
+
+That is particularly useful for a game because the central question becomes not “Are you a wizard or a monk?” but “What do you think magic is for, what kinds of beings are you willing to address, what do you believe makes an operation legitimate, and what are you willing to sacrifice to get results?”
+
+1. Sophie Page, Magic in the Cloister: the monastery as occult ecosystem
+
+Page is probably the most important source for constructing the institutional setting.
+
+Her St. Augustine’s Abbey is almost an ideal model for your game. A group of educated Benedictine monks accumulated more than thirty magical texts, and their occult interests were apparently stimulated rather than suppressed by their religious vocation. The monastery could provide privacy, books, workshops, medical facilities, metalworking, manuscript production, and a degree of protection from outside scrutiny.
+
+This gives you a monastery that is not simply “a place where magic happens.” It is an entire production environment for magic.
+
+The player could have access to:
+
+the library and restricted books;
+the scriptorium;
+private cells for experimentation;
+the infirmary;
+gardens and medicinal plants;
+metalworking and leadworking;
+pigments, inks, wax, parchment and seals;
+astronomical instruments;
+liturgical objects;
+relics;
+the chapter house;
+contacts with townspeople;
+university contacts;
+physicians, goldsmiths and craftsmen;
+travelers carrying foreign books;
+other monks with specialized expertise.
+
+Page gives unusually good evidence for this material infrastructure. St. Augustine’s possessed an infirmary, metal-casting facilities, a plumber's workshop for lead, probably a sealing press, and connections with Canterbury craftsmen. Its manuscripts included metallurgical, pigment, medical, alchemical, craft, and experimental recipes.
+
+That translates almost directly into game mechanics: magic is partly an economy of materials, skills, books, workshop access, secrecy, and institutional relationships.
+
+The monastery should have competing cultures
+
+One of Page's most useful observations is that St. Augustine's was neither a perfectly disciplined monastery nor a libertine occult laboratory. Rules were relaxed, monks drank illicit wine, women sometimes entered prohibited spaces, and eventually a rule had to insist that reading in the cloister should consist of divine or soul-edifying books. Yet the same environment contained senior monks collecting magical manuscripts.
+
+That suggests several factions:
+
+The reformer:
+“Magic is corrupting our discipline. Burn the books.”
+
+The conservative occultist:
+“These books are dangerous, therefore only a disciplined monk should study them.”
+
+The intellectual:
+“Some of this is really natural philosophy. The terminology is misleading.”
+
+The devotional magician:
+“The technique is acceptable if directed toward God.”
+
+The pragmatist:
+“It works. That is sufficient.”
+
+The administrator:
+“I don't care what you study as long as nobody finds out and the abbey benefits.”
+
+The ascetic:
+“You cannot safely invoke spirits unless your soul has been purified.”
+
+This is much richer than a simple Church-versus-magic conflict.
+
+Page explicitly notes that magical texts themselves could prescribe ascetic discipline as a prerequisite for safely invoking spirits.
+
+So piety can actually be a prerequisite for dangerous magic rather than its opposite.
+
+That is an excellent game mechanic.
+
+2. The most important design principle: magic has multiple moral axes
+
+The sources strongly argue against a single “good magic → evil magic” meter.
+
+There are at least six distinct variables.
+
+Axis	Pious end	Dangerous end
+Purpose	salvation, wisdom, healing	lust, wealth, status, revenge
+Ontology	natural powers	spirits/demons
+Address	petitioning God	commanding spirits
+Epistemology	accepted knowledge	forbidden/secret knowledge
+Discipline	fasting, confession, purity	indulgence, coercion, shortcuts
+Theology	divine dependence	independent magical power
+
+And there is a seventh:
+
+Self-understanding.
+
+A character might perform something objectively outrageous while sincerely believing it is Christian. Conversely, someone might know perfectly well that something is illicit and simply not care.
+
+That distinction is central to the historical material.
+
+The Routledge volume describes learned magic as overwhelmingly associated with a literate male clerical milieu—the “clerical underground”—including monks, friars, university students in minor orders, priests without stable benefices, and other educated men.
+
+The important thing is that their goals varied enormously. Rituals sought knowledge and intellectual abilities, but also wealth, horses, status, powerful patrons, love, sexual favors, invisibility, treasure, and wonders.
+
+So the game should allow a monk to say:
+
+“I want perfect knowledge so that I may better understand God's creation.”
+
+and another to say:
+
+“I want perfect knowledge because I want to be the smartest man in Paris.”
+
+Both are plausible participants in the same magical culture.
+
+3. The “clerical underworld” is especially useful as your game's social network
+
+Klaassen's chapter in The Routledge History of Medieval Magic is almost a blueprint for the social class of characters you are imagining.
+
+Necromancy was particularly associated with what Kieckhefer called the clerical underground: monks, clerics, university men, and marginally educated people who possessed enough Latin and liturgical knowledge to operate learned magic.
+
+That creates a fantastic roguelike structure.
+
+Instead of one protagonist being isolated, the player could encounter a network:
+
+Benedictine monk
+Cistercian
+Franciscan
+secular priest
+university student
+canon-law student
+physician
+astrologer
+manuscript dealer
+goldsmith
+scribe
+wandering cleric
+disgraced monk
+wealthy patron
+court astrologer
+heretical intellectual
+village cunning practitioner
+professional necromancer
+
+The important social distinction isn't simply “religious vs secular.”
+
+It is access to education, books, ritual knowledge, institutional protection, and patrons.
+
+The game could therefore have a reputation/network graph rather than merely a morality meter.
+
+4. The darkest characters are not necessarily Satanists
+
+This is one of the most important historical corrections to the game's possible fantasy assumptions.
+
+Klaassen explicitly argues that medieval necromancy was fundamentally Christian in conception. Its operators commonly positioned themselves as virtuous Christians working through God's power. Necromantic rituals used Christian prayers, consecrated objects, liturgical forms, exorcistic language, liturgical calendars and specially prepared sacred spaces.
+
+That makes your “dirty magician” much more interesting.
+
+The genuinely transgressive character might still:
+
+cross himself before an operation;
+confess beforehand;
+fast;
+invoke Christ's name;
+use consecrated candles;
+construct a magic circle;
+cite Solomon;
+insist that demons are creatures under God's ultimate sovereignty.
+
+Then he uses the summoned spirit to find treasure.
+
+Or seduce someone.
+
+Or acquire political influence.
+
+Or become invisible.
+
+Or obtain revenge.
+
+The Routledge chapter explicitly characterizes necromantic literature as combining conservative dedication to liturgical form with radically inappropriate appropriation, including the insistence on being in a state of grace before performing magic intended to satisfy greed or lust.
+
+That contradiction should be one of the game's defining aesthetics.
+
+The dirtier magician is not necessarily the one who has abandoned Christianity. He may be the one who has retained Christianity while bending it furthest toward his own purposes.
+
+5. John of Morigny is the ideal center of the spectrum
+
+Fanger's Rewriting Magic makes John extraordinarily useful as the game's “pious magician” archetype—but with a major complication.
+
+John did not simply begin as a pure Christian mystic. His story includes necromancy, the Ars notoria, visionary experiences, demonic encounters, repentance, theological reconstruction, and eventually his Liber florum.
+
+Fanger emphasizes that John understood nigromancia in a double sense: there could be a benign or philosophical meaning of the term, while the ordinary meaning remained dark, demonic magic.
+
+More importantly, John did not simply collapse everything magical into one category.
+
+He distinguished:
+
+explicit demon conjuration;
+ambiguous magical signs and figures;
+non-addressative/natural forms of magic;
+the Ars notoria as something distinct again.
+
+Fanger emphasizes that John separates his periods of engagement with the Ars notoria and necromancy rather than treating them as the same activity.
+
+This is extremely valuable for the game.
+
+A player should be able to move between magical traditions without believing that they have crossed one simple threshold.
+
+6. The most interesting “morality meter” is actually the question of address
+
+Fanger's analysis of Aquinas, the Speculum astronomie, the Ars notoria, and John gives you an especially good underlying game rule.
+
+Magic can become dangerous when it changes from understanding or manipulating natural powers into addressing an intelligence.
+
+And even that has gradations.
+
+There can be:
+
+Natural operation
+
+“This stone has a hidden virtue.”
+
+Then:
+
+Symbolic operation
+
+“This figure corresponds to the celestial order.”
+
+Then:
+
+Ambiguous address
+
+“I use this name or character, but I don't know precisely whom it addresses.”
+
+Then:
+
+Tacit pact
+
+“Something intelligent seems to respond.”
+
+Then:
+
+Explicit invocation
+
+“I knowingly call a spirit.”
+
+Then:
+
+Command
+
+“I compel this spirit to perform an action.”
+
+Then:
+
+Pact
+
+“I exchange something for its service.”
+
+Fanger's discussion of “tacit” versus explicit demonic pacts is particularly useful here: ambiguous characters and figures could constitute a problematic form of demonic commerce even without consciously summoning demons.
+
+That is almost tailor-made for a game.
+
+A player should sometimes be asking:
+
+“Did I actually summon something?”
+
+rather than receiving a binary popup saying:
+
+DEMONIC MAGIC +10.
+
+7. John turns magic into a system of spiritual discipline
+
+The Liber florum provides the opposite pole from selfish necromancy.
+
+John's ritual involves:
+
+writing;
+drawing;
+correct timing;
+personalization;
+prayer;
+Benedictine profession;
+the Virgin;
+visionary confirmation;
+repeated devotional work;
+Offices of the Virgin and angels;
+discernment of spirits;
+penance after failure.
+
+The practitioner enters into a personal covenant with the Virgin, and the efficacy of the work depends on divine grace and the moral state of the operator.
+
+This produces an elegant game loop:
+
+sin → diminished spiritual capacity → failed/ambiguous visions → confession/penance → restored capacity → deeper visionary access.
+
+And the inverse:
+
+successful magic → temptation → pride → spiritual deterioration → increasingly unreliable visions.
+
+John's system even allows the operator to recover lost visions through appropriate penance.
+
+That means moral development can directly affect the information system of the game.
+
+A sinful magician doesn't merely lose “morality points.” He may start receiving bad information.
+
+8. The Virgin creates a very different kind of magic relationship
+
+The Liber florum isn't simply a spellbook.
+
+Its rituals establish a relationship with the Virgin. John creates an ascent through the angelic orders and asks for gifts such as memory, eloquence, understanding and perseverance.
+
+This suggests a beautiful distinction between two kinds of magical progression.
+
+Necromantic progression
+
+learn → prepare → summon → constrain → extract result
+
+Morignian progression
+
+purify → petition → contemplate → receive permission → ascend → receive gift → interpret vision
+
+The first treats spirits increasingly as resources.
+
+The second treats supernatural beings increasingly as persons whose cooperation must be received.
+
+That distinction could drive the entire game's theology.
+
+9. But John is not safely outside the danger zone
+
+This is crucial.
+
+The Liber florum itself was controversial. Critics accused John's figures and prayers of idolatry and demonic pact. John responded that he had made no demonic pact; rather, a divine covenant operated in the work.
+
+The “barking dogs” criticized the old figures as necromantic and questioned John's ability to distinguish genuine divine dreams from phantasms. The subsequent New Compilation contains substantial defenses of dreams as divine communication.
+
+This gives you an excellent game situation:
+
+The player can sincerely believe they are a holy visionary while other intelligent people sincerely believe they are a necromancer.
+
+And neither side necessarily has an objective UI indicator saying who is correct.
+
+That ambiguity is much more historically interesting than “holy spell” versus “evil spell.”
+
+10. The Ars notoria gives you the game's most tempting “good” magic
+
+The Ars notoria is almost perfect for the intellectual progression system.
+
+It promises knowledge of:
+
+grammar;
+rhetoric;
+logic;
+arithmetic;
+geometry;
+music;
+astronomy;
+philosophy;
+theology.
+
+The operator uses prayers and visual figures to petition angels for knowledge. Fanger's introduction emphasizes that this was not fringe occultism in appearance: its prayers could look almost indistinguishable from Catholic prayer.
+
+This produces one of the game's best temptations:
+
+Why spend ten years studying astronomy when an angel might give you the knowledge tonight?
+
+The game can make this mechanically meaningful.
+
+A monk might have:
+
+Study Astronomy
+
+costs 200 days
+increases genuine understanding
+improves reputation with scholars
+strengthens natural-philosophical magic
+
+versus:
+
+Invoke the Ars Notoria
+
+costs nine weeks of ritual preparation
+requires purity and discipline
+may produce extraordinary knowledge
+risks visionary deception
+may attract suspicion
+may tempt the practitioner toward more ambitious magic.
+11. And the Ars notoria itself contains a wonderfully ambiguous middle ground
+
+Fanger finds that the prayers for the “exceptive arts” request theoretical knowledge but explicitly exclude actually performing the arts.
+
+The necromancy prayer essentially asks:
+
+know necromancy, but do not perform it.
+
+That is a fantastic mechanic because knowledge itself becomes morally ambiguous.
+
+John places necromancy among the artes exceptivae, alongside other magical/divinatory arts such as aeromancy, pyromancy, chiromancy, geomancy, geonegia and hydromancy.
+
+So a character can have:
+
+Knowledge of Necromancy: 87
+
+while having:
+
+Practice of Necromancy: 0
+
+That character is not equivalent to a necromancer who has actually performed the rites.
+
+But the knowledge may itself create temptation.
+
+This is an ideal roguelike resource:
+
+Forbidden Knowledge.
+
+12. Invoking Angels: the spiritual end of the spectrum is not passive
+
+Fanger's Invoking Angels provides the conceptual architecture for the “high” end of the game.
+
+Theurgy in these texts involves unconventional attempts to answer two questions:
+
+How can the divine become manifest in things humans can know?
+How can human beings engage with divine things in order to achieve salvation?
+
+The texts blend theology, liturgy, spirituality, natural philosophy, magic and sometimes Jewish, Christian and Islamic materials.
+
+That gives the game a crucial principle:
+
+The pious magician is not merely praying harder. He is experimenting with the boundary between theology, ritual, epistemology and revelation.
+
+This is why John can be simultaneously:
+
+a monk;
+a visionary;
+a liturgist;
+a student of magic;
+an author;
+a theorist of knowledge;
+an accused heretic;
+and someone claiming to have constructed a safer alternative to dangerous magic.
+13. The Liber de essentia spirituum provides another playable archetype
+
+Page's discussion of the Liber de essentia spirituum is especially useful for a character who isn't primarily interested in practical magic.
+
+The text presents a contemporary prophet who claims revelation obtained through fellowship with spirits. It combines Neoplatonic cosmology with Arabic image magic and presents knowledge of the cosmos and soul's relationship with God as the result.
+
+The practitioner isn't simply saying:
+
+“Give me money.”
+
+He is saying:
+
+“Teach me how the cosmos actually works.”
+
+And the spirits themselves occupy a hierarchy:
+
+highest incorruptible divine beings;
+planetary rulers;
+lower spirits interacting with humanity.
+
+That provides a whole spirit ecology for the game.
+
+Different spirits could have:
+
+different ontological status;
+different intelligence;
+different moral character;
+different celestial affiliations;
+different areas of knowledge;
+different attitudes toward humans;
+different willingness to teach;
+different dangers.
+
+The player therefore doesn't merely unlock “summon demon.”
+
+They progressively discover that the supernatural world is populated.
+
+14. The really interesting spirits occupy ambiguous territory
+
+The Liber de essentia spirituum describes spirits that can appear as celestial or terrestrial, benevolent or malevolent, and whose relationship with humanity is not always clear. Page notes the image of Saturnine spirits around dead things, a Saturn spirit descending when adjured, and numerous invisible beings mingling with humans.
+
+That suggests a very strong game mechanic:
+
+Spirit identification should itself be a skill.
+
+A novice sees:
+
+“An angel.”
+
+A suspicious theologian sees:
+
+“A demon pretending to be an angel.”
+
+A Neoplatonist sees:
+
+“A planetary intelligence.”
+
+A necromancer sees:
+
+“A useful spirit.”
+
+John sees:
+
+“I must determine whether this vision comes from God.”
+
+The same encounter could support all four interpretations.
+
+15. Page's Liber vaccae supplies the “mad science” branch
+
+This is where the game can move away from purely spiritual magic.
+
+The Liber vaccae offers roughly eighty-five experiments involving:
+
+transformations;
+illusions;
+animal manipulation;
+altered perception;
+unusual births;
+hybrid creatures;
+manipulation of souls;
+extraordinary powers;
+theatrical effects;
+curiosity and entertainment.
+
+Page notes that the text could be read in two ways: as the work of a prophet performing spectacular transformations, or as a domestic magician producing marvelous effects for an intimate audience.
+
+This gives you another branch:
+
+Occult natural experimentation.
+
+It can begin innocently:
+
+“Can I make this plant grow faster?”
+
+then become:
+
+“Can I alter an animal?”
+
+then:
+
+“Can I alter a human body?”
+
+then:
+
+“Can I create life?”
+
+The Liber vaccae becomes increasingly transgressive because it undermines boundaries between:
+
+human and animal;
+natural and artificial;
+creator and creature;
+life and death;
+medicine and sorcery.
+
+The experiments explicitly manipulate animal souls and create artificial beings, sometimes granting the magician extraordinary powers.
+
+That could be the game's hubris path.
+
+16. And this path does not require demons
+
+This is important for the overall design.
+
+You could have a character who never summons a demon and nevertheless becomes profoundly transgressive.
+
+For example:
+
+The natural philosopher
+
+“I have never invoked a spirit. I simply discovered how to extract the soul-force of an animal and manipulate it.”
+
+That character might actually be more disturbing than a conventional necromancer.
+
+Page describes the Liber vaccae magician as acquiring something approaching godlike power by extracting virtues from artificial monstrous creations.
+
+So the game should have at least three independent routes to transgression:
+
+Demonic transgression
+“I command spirits.”
+
+Theological transgression
+“I claim revelations or powers that should belong to God.”
+
+Natural-philosophical transgression
+“I manipulate creation beyond the boundaries of nature.”
+
+17. The selfish magician should actually be quite competent
+
+The necromantic corpus supplies the game's “dirty” incentives.
+
+Klaassen lists:
+
+sex;
+love;
+treasure;
+status;
+secret knowledge;
+invisibility;
+wonders.
+
+Page adds magical horses, spectacular illusions of castles and armies, political influence and recognition from secular peers.
+
+So the selfish path shouldn't merely be “evil mode.”
+
+It should be temptingly effective.
+
+For example:
+
+Want a benefice?
+
+Study theology for ten years.
+
+Or:
+
+Summon a spirit that knows which bishop to influence.
+
+Want to win an argument?
+
+Study rhetoric.
+
+Or:
+
+Ask an intelligence to give you perfect eloquence.
+
+Want to find treasure?
+
+Travel and excavate.
+
+Or:
+
+perform divination.
+
+Want someone to love you?
+
+Practice patience and courtship.
+
+Or:
+
+use magic.
+
+The game becomes about the moral economics of shortcuts.
+
+18. The most historically interesting character is someone who slides
+
+The sources strongly support a character trajectory like:
+
+Monastic devotion
+→ natural philosophy
+→ occult properties
+→ astrology
+→ image magic
+→ Ars notoria
+→ visions
+→ spirit fellowship
+→ experimental magic
+→ necromancy
+→ explicit invocation
+→ pact
+→ heretical interpretation
+
+But another character could go:
+
+Monastic devotion
+→ liberal arts
+→ Ars notoria
+→ terrifying demonic visions
+→ repentance
+→ Marian devotion
+→ visionary mysticism
+→ theological reformulation.
+
+That second trajectory is essentially John.
+
+And the key is that the player should not necessarily know where the first trajectory ends when they make the first choice.
+
+19. “Heretic” should be a separate axis from “demonic”
+
+This is one place where I would deliberately resist making the game too simple.
+
+The sources don't support a clean equation:
+
+demonic = heretical
+
+John's case demonstrates why.
+
+John's problem is partly interpretive authority.
+
+He believes his visions are genuine.
+
+He believes the Virgin authorizes his work.
+
+He constructs a theology explaining why his figures are legitimate.
+
+His opponents think the same phenomena may represent idolatry, demonic pact, or unreliable visions.
+
+The later history includes accusations and the burning of the Liber florum, but Fanger and Watson emphasize that the precise circumstances remain unclear and that the surviving evidence does not establish a simple formal heresy trial.
+
+So your game should have separate meters such as:
+
+Demonic Entanglement
+How much contact with questionable spirits?
+
+Moral Corruption
+How much selfishness, lust, greed, pride, cruelty?
+
+Doctrinal Deviation
+How far from accepted theology?
+
+Ecclesiastical Suspicion
+How suspicious are authorities?
+
+Visionary Reliability
+How trustworthy are your supernatural experiences?
+
+Spiritual Discipline
+How successfully do prayer, fasting, confession and penance structure your practice?
+
+These variables can interact without being identical.
+
+20. The central game resource should perhaps be “legitimacy”
+
+The sources suggest that medieval magic was continually engaged in a struggle to explain why an operation should count as legitimate.
+
+A magician can attempt to legitimate an operation through:
+
+Scripture;
+saints;
+liturgy;
+angels;
+divine names;
+natural philosophy;
+astrology;
+medicine;
+ancient authorities;
+university learning;
+monastic discipline;
+personal revelation.
+
+The more orthodox-looking the operation, the easier it is to conceal.
+
+Page gives an especially useful example: St. Augustine's monks sometimes placed occult texts beside more orthodox works, included condemnations of illicit magic, used secrecy, and even coded portions of texts.
+
+So the player could actually manage the presentation of magic.
+
+A dangerous manuscript might be disguised as:
+
+medicine
+
+or:
+
+astronomy
+
+or:
+
+devotional prayer
+
+or:
+
+natural philosophy.
+
+This isn't necessarily deception by cynical practitioners. Sometimes the practitioner genuinely believes the classification.
+
+21. “Hidden in plain sight” should be a core mechanic
+
+Page's discussion of the Ars notoria is particularly good here.
+
+Its prayers, meditations and purification rituals could resemble ordinary monastic devotional practices. Its visionary ambitions were compatible with the broader medieval aspiration toward visionary experience. Consequently, magical practice could effectively be hidden in plain sight.
+
+That gives you an excellent stealth system:
+
+Suspicion depends not simply on what you do, but on how recognizable your practice is as magic.
+
+A nine-week devotional ritual:
+
+low suspicion.
+
+A circle containing unknown characters:
+
+medium suspicion.
+
+A nocturnal operation with a spirit:
+
+high suspicion.
+
+A sacrifice and explicit demon pact:
+
+catastrophic suspicion.
+
+But clever players can disguise some operations inside legitimate activities.
+
+22. Manuscripts themselves should be gameplay objects
+
+These books are not generic spellbooks.
+
+They are personalized, compiled, annotated, censored, rearranged and transmitted.
+
+Page shows monks collecting texts according to their particular interests, with personal collections reflecting individual intellectual projects.
+
+John's manuscripts are even more personal: later operators insert their own names into prayers and figures and personalize the book for ritual use.
+
+That suggests a fantastic game system:
+
+Every character can have a unique magical commonplace book.
+
+Its contents evolve through:
+
+copying;
+theft;
+purchases;
+gifts;
+marginalia;
+translations;
+censorship;
+corrections;
+revelations;
+experiments;
+forbidden additions.
+
+Two monks may possess “the same book” but actually have radically different magical technologies because their copies contain different notes and interpolations.
+
+23. The game's “tech tree” should therefore be intellectual rather than simply magical
+
+Something like:
+
+Trivium
+→ grammar
+→ rhetoric
+→ logic
+
+Quadrivium
+→ arithmetic
+→ geometry
+→ music
+→ astronomy
+
+Natural philosophy
+→ herbs
+→ stones
+→ animals
+→ occult properties
+→ medicine
+→ alchemy
+
+Celestial
+→ astrology
+→ planetary correspondences
+→ image magic
+→ astral figures
+
+Visionary
+→ meditation
+→ Ars notoria
+→ angelic ascent
+→ dream interpretation
+→ prophetic vision
+
+Theurgic
+→ divine names
+→ angels
+→ celestial spirits
+→ covenant
+→ revelation
+
+Necromantic
+→ spirit catalogues
+→ circles
+→ consecrations
+→ conjuration
+→ command
+→ pact
+
+Transgressive experimental
+→ illusions
+→ vivification
+→ soul manipulation
+→ artificial beings
+→ bodily transformation.
+
+The important point is that these aren't separate fantasy schools. The sources show them overlapping.
+
+24. The game can make education itself a resource
+
+This is particularly strongly supported by the Ars notoria.
+
+It promises knowledge of the liberal arts and university subjects. The prayers can even name particular authorities and texts; Fanger notes that the astronomical prayer invokes works such as the Treatise on the Sphere, Alfraganus, the Toledan Tables and the astrolabe.
+
+So a monk's daily schedule could involve a genuine strategic choice:
+
+Study
+
+grammar
+rhetoric
+logic
+astronomy
+music
+theology
+canon law
+medicine
+natural philosophy
+
+versus
+
+Occult shortcuts
+
+Ars notoria
+image magic
+divination
+spirit invocation.
+
+The player is constantly deciding between:
+
+slow legitimate mastery
+
+and
+
+fast dangerous mastery.
+
+25. The pious path should not simply be “boring good magic”
+
+The Invoking Angels material prevents this.
+
+The theurgic texts pursue extraordinary goals: access to divine knowledge, celestial experience, revelation, spiritual transformation and salvation.
+
+And the Liber de essentia spirituum presents an especially exciting possibility: fellowship with celestial beings produces knowledge about the cosmos that can then be communicated to a chosen community.
+
+So the pious route should actually unlock some of the game's most spectacular content.
+
+The difference is not:
+
+boring holy magic vs cool evil magic.
+
+It is:
+
+relationship vs exploitation.
+
+26. A particularly good endgame choice: what do you think the spirits are?
+
+At high levels, the game should force the player to develop an ontology.
+
+Possible beliefs include:
+
+Orthodox Christian:
+Angels serve God; demons deceive humanity.
+
+Morignian:
+Visionary contact can be legitimate if properly disciplined, divinely authorized and interpreted.
+
+Neoplatonic:
+The cosmos is a hierarchy of intelligences through which divine power descends.
+
+Natural philosophical:
+Many magical effects are occult properties of nature.
+
+Necromantic pragmatist:
+Whatever these beings are, they can be compelled to act.
+
+Demonic pactarian:
+The spirits possess real independent power worth bargaining with.
+
+Radical visionary:
+My revelations supersede conventional authorities.
+
+Skeptic:
+The visions are psychological, natural or fraudulent.
+
+And importantly, the game need not tell the player which ontology is objectively correct.
+
+27. A useful five-stage spectrum for the actual game
+
+I would therefore construct the broad spectrum roughly like this:
+
+I. The Devotional Natural Philosopher
+
+Magic means discovering God's hidden creation.
+
+Activities:
+
+medicine
+herbs
+stones
+astrology
+astronomy
+natural philosophy
+alchemy
+marvels.
+
+Primary danger: pride.
+
+II. The Devotional Visionary
+
+Magic becomes a method of approaching divine knowledge.
+
+Activities:
+
+Ars notoria
+meditation
+visionary prayer
+angels
+divine names
+Marian devotion
+prophetic dreams.
+
+Primary danger: mistaking demons or fantasy for revelation.
+
+This is John's territory.
+
+III. The Experimental Occultist
+
+The practitioner wants to know whether hidden powers really work.
+
+Activities:
+
+magical images
+planetary figures
+divination
+spirit cosmology
+Liber vaccae-style experiments
+particular experiments.
+
+Primary danger: curiosity outrunning theology.
+
+IV. The Clerical Necromancer
+
+The practitioner deliberately invokes spirits.
+
+Activities:
+
+circles
+consecrations
+spirit catalogues
+conjuration
+divination
+treasure hunting
+invisibility
+love magic
+political magic.
+
+Primary dangers:
+
+demonic pact;
+ecclesiastical prosecution;
+obsession;
+exploitation;
+spiritual corruption.
+
+This is the classic “clerical underground.”
+
+V. The Transgressive Magician
+
+The practitioner no longer cares whether an operation can be justified.
+
+Activities:
+
+coercion;
+pacts;
+sacrifice;
+manipulation;
+sexual magic;
+revenge;
+political domination;
+creation of artificial beings;
+radical theological claims.
+
+Primary danger:
+
+the magician begins to believe that his own will is itself a source of authority.
+
+That is a much more interesting final boss than “Satan.”
+
+28. The crucial insight: don't make the spectrum linear
+
+The sources actually support a multidimensional map.
+
+A character could be:
+
+highly pious + highly magical
+
+like John.
+
+Or:
+
+highly learned + low piety + low demon involvement
+
+like an ambitious natural philosopher.
+
+Or:
+
+highly pious + explicit spirit interaction
+
+like some of the more daring theurgic traditions.
+
+Or:
+
+low piety + highly disciplined necromancer
+
+who knows perfectly well what he is doing.
+
+Or:
+
+low piety + low learning + folk magic
+
+who performs relatively simple charms.
+
+Or:
+
+high learning + radical theology + visionary experiences
+
+who becomes a doctrinal threat without ever being a conventional necromancer.
+
+That multidimensionality is supported by the scholarship's insistence that “magic” itself was a contested and unstable category rather than a coherent medieval equivalent of our modern concept. The Routledge History explicitly frames its contributors' problem as one involving changing categories, competing definitions and overlaps between magic, religion, science and natural philosophy.
+
+The resulting game world
+
+The strongest synthesis of these four sources is therefore a monastic occult simulation in which magic is not a school but a contested way of knowing and acting in the world.
+
+Your monastery becomes a machine that converts:
+
+time + discipline + literacy + books + relationships + materials + theological beliefs
+
+into:
+
+knowledge + visions + miracles + magical effects + reputation + temptation + danger.
+
+John of Morigny sits near the center because he demonstrates how someone can enter the clerical magical underground, become entangled with necromancy and visionary magic, experience terrifying supernatural consequences, repent, and then attempt to rebuild magic as a legitimate devotional technology. Fanger's account specifically describes the Liber florum as a response to sinners caught in the opaque prayers of the Ars notoria, offering instead a transparently sacred alternative structured around covenant, grace, vision and knowledge.
+
+At the other extreme, the necromantic corpus gives you practitioners who use the same Christian ritual vocabulary for radically worldly ends—sex, treasure, status, influence, invisibility and spectacle.
+
+And between them lies the richest territory: the person who isn't sure whether what he is doing is magic, science, prayer, philosophy, mysticism, necromancy, or heresy.
+
+That should probably be the game's central psychological condition.
+
+The player isn't merely choosing good magic or evil magic.
+
+They are continually choosing what kind of universe they believe they inhabit—and what kind of person they are willing to become in order to make that universe answer them.
+
+what did sophie page mean by the harmonious world of medieval image magic and what use does fanger use of it in her description of John of Morigny. how did image magic work according to Sophie Page and for John acc to Fanger?
+
+Page's “harmonious universe” is a very specific way of describing the cosmology underlying medieval image magic. Fanger then borrows the phrase because it gives her a way to explain what John of Morigny is doing with images without reducing them either to ordinary Christian devotion or to straightforward demon magic.
+
+What Page means by the “harmonious universe”
+
+Page does not mean that medieval image magic possessed one neat, universally agreed cosmological system. In fact, she explicitly says almost the opposite: the image-magic texts present a “unified but inscrutable richness,” drawing together diverse sources of power into an overarching conception of a harmonious universe.
+
+Her phrase refers principally to two interconnected principles:
+
+Correspondence: different levels and components of the cosmos correspond to one another.
+Transmission: power descends from superior things into inferior things.
+
+So you have a cosmos conceived roughly as:
+
+God / divine order
+↓
+heavens / planets / stars / celestial intelligences
+↓
+terrestrial nature
+↓
+stones, plants, metals, animals
+↓
+humanly constructed objects
+↓
+the magical image
+
+The image is powerful because it is positioned at the intersection of these levels.
+
+This is why the apparently mundane details of making a talisman matter so much. The practitioner has to bring the right things together: the appropriate celestial mansion, metal, angelic names, characters, suffumigation, prayer, intention, day and hour. Page quotes the Glossulae describing the operator as arranging all these components so that they “come together in a harmony of quality.”
+
+The magic is therefore not primarily “say a spell and a supernatural creature appears.”
+
+It is closer to:
+
+construct a miniature material configuration that reproduces, concentrates, and channels a larger cosmic configuration.
+
+How does the power get into the image?
+
+This is where Page's “transfer of power” principle becomes important.
+
+In the Liber de quindecim stellis, for example, a star, plant, stone and magical character have powers individually, but their powers become greater when appropriately combined. A stone's virtue can be dramatically increased when it is shaped at the astrologically appropriate moment.
+
+Names and characters are especially important because they establish a connection between the higher celestial form and the terrestrial object. Page describes this as a transfer of power from superior forms to inferior forms.
+
+The De radiis offers a more theoretical explanation: celestial and terrestrial things influence one another through rays, while forms impressed into matter themselves produce further rays and motions.
+
+So an image can function as a kind of cosmic receptor/transmitter.
+
+The operator is trying to make matter participate in a superior celestial form.
+
+That is why the astrology matters. It isn't merely decorative correspondence. The timing determines which celestial configuration is actually available to be impressed into the material object.
+
+Page gives the Liber imaginum lunae as a particularly clear example: the operator must know the moon's movements, inscribe and recite angelic names, and rely upon God's agreement. The moon's power is channeled through its celestial position; the named spirits are subordinate to the moon; and the magician remains subordinate to God.
+
+So there is a hierarchy of agency:
+
+God → celestial order → spirits/planets → magician → material image → desired effect.
+
+That hierarchy is extremely important.
+
+Why this could look almost “scientific”
+
+This is one of the reasons image magic could coexist with natural philosophy.
+
+Page describes the medieval reception of Arabic image magic as involving two major questions:
+
+How do celestial influences empower the talisman?
+
+and
+
+Is anything superstitious happening in its construction?
+
+The first question belongs to natural philosophy. The second belongs to theology.
+
+A sufficiently naturalized version could say:
+
+The image doesn't summon anything. It concentrates a natural celestial influence.
+
+That was the attractive “safe” version of astrological image magic. Page notes that some works explicitly emphasized celestial virtue rather than rituals directed toward spirits, and consequently escaped condemnation more easily.
+
+But this is where the system becomes unstable.
+
+Other texts have:
+
+angelic names;
+prayers;
+suffumigations;
+characters;
+spirits;
+divine names.
+
+And sometimes it isn't clear whether a “spirit” is an angel, a planetary intelligence, a neutral celestial being, or—according to a hostile theologian—a demon.
+
+Page explicitly says that the texts combine celestial bodies, spirits, divine names and occult powers in ways that produce an overarching but poorly defined harmonious universe.
+
+That ambiguity is essential.
+
+What Fanger does with Page's concept for John
+
+This is where the connection becomes especially interesting.
+
+Fanger introduces Page's “harmonious universe” precisely while trying to understand John's geonegia.
+
+John divides the artes exceptivae into categories of knowledge that he will allow himself to know but not practice. For necromancy, he explicitly asks to know it “but not perform” it.
+
+Then he gives geonegia a different collection of books:
+
+On Images attributed to Ptolemy;
+Book of Talismans of Abel;
+Book of Seven Senators;
+Book of Twelve Firmaments;
+Book of the Semhemforas.
+
+Fanger identifies several of these with image-magic and divine-name traditions. She concludes that geonegia is John's category for a broad family of magical images, talismans and figures designed to capture or make practical use of divine and stellar powers.
+
+And immediately after making that identification, she invokes Page:
+
+these works operate within a system of “divinely governed cosmological correspondences”—Page's “harmonious universe.”
+
+So Fanger is using Page to explain what kind of intellectual world John's figures belong to.
+
+John's images aren't arbitrary magical doodles. They participate in a preexisting magical language in which:
+
+planets have powers;
+celestial beings have names;
+earthly things correspond to celestial things;
+images can mediate those relationships;
+names and characters can establish connections;
+ritual timing matters;
+divine power ultimately governs the system.
+But John does something radical with that visual language
+
+This is probably the most important point for understanding John.
+
+Fanger doesn't think John simply copied ordinary image magic.
+
+She finds seven unusual planetary figures in the Old Compilation of Figures. They include things like:
+
+a cherub;
+a crowned woman;
+Christ as a tonsured master;
+two forms of the Virgin, old and young;
+God as an old bearded man;
+Christ as a crowned king;
+Christ as an armed soldier.
+
+These aren't conventional representations of the planets.
+
+Fanger compares them with the extraordinarily variable anthropomorphic planetary figures found in Picatrix. Image magic had a tradition in which a planet could be represented through an invented human figure assembled from disparate symbolic attributes.
+
+But John's innovation is to Christianize the visual language.
+
+Fanger stresses that John's figures are unmistakably Christian: monks, Mary, Christ, God the Father, and imagery carrying penitential and sacramental associations.
+
+Her crucial formulation is that we should understand them as John's adaptation and development of the “visual lexicon of image magic.”
+
+That is a much subtler claim than:
+
+John secretly practiced image magic.
+
+It is:
+
+John inherited a visual technology for representing and organizing cosmic powers, then rewrote that technology in a Christian devotional and visionary language.
+
+And the figures aren't simply talismans
+
+This is where I would distinguish Page's image magic from John's use of images.
+
+For Page, the paradigmatic image is a magically empowered material object. You construct it under appropriate celestial conditions, using the appropriate materials, signs, names and ritual actions, so that it becomes a vehicle for celestial power. The object then does something: heals, protects, harms, attracts, repels, etc.
+
+John's figures have a different emphasis.
+
+They are integrated into:
+
+prayers;
+contemplation;
+visualization;
+visionary experience;
+penitence;
+the acquisition of knowledge;
+prophecy;
+Mary's guidance.
+
+Fanger notes that John instructs operators to contemplate the figures with prayers, and that his prayers for the arts ask for knowledge of particular disciplines and skills.
+
+In other words, John's figure is less obviously:
+
+“a talisman that contains planetary power”
+
+and more:
+
+“a structured visual object through which the practitioner thinks, prays, contemplates, remembers, receives knowledge, and potentially encounters revelation.”
+
+That is why Fanger connects it to both image magic and the theurgic tradition of the Ars notoria.
+
+The key transformation: from talisman to contemplative interface
+
+This is probably the best way to conceptualize Fanger's argument.
+
+Page's image magic:
+
+cosmic correspondence → properly constructed image → celestial power → material effect
+
+John's transformed system:
+
+cosmic correspondence → Christian figure → prayer/contemplation → visionary knowledge → spiritual transformation
+
+The underlying visual technology survives.
+
+The purpose changes.
+
+And the source of authority changes.
+
+For the image-magic operator, the question is:
+
+Have I assembled the correct celestial and material correspondences?
+
+For John, the increasingly important question becomes:
+
+Has God/Christ/Mary authorized what I am seeing and doing?
+
+That difference is exactly why John's experience of error is so important.
+
+John's problem is not that images “don't work”
+
+Fanger makes a very subtle point here.
+
+When John later repents, his problem with the Old Figures isn't simply:
+
+“I used magic images, and magic images are evil.”
+
+His penitential interpretation focuses on his failure to obey divine guidance.
+
+Mary had told him not to move or change the figures yet. He acted before the promised time. Fanger says explicitly that his contrition concerns his failure to attend to the prophetic guidance he had received, rather than simply shame over having borrowed magical imagery.
+
+This matters enormously.
+
+John's fundamental epistemological problem becomes:
+
+How do I know that my image-making is actually authorized by God?
+
+Not merely:
+
+Is image magic permitted?
+
+That is a much harder problem.
+
+The Tetragrammaton illustrates the transformation beautifully
+
+John's figures were to incorporate the four Hebrew letters of the divine name, one in each corner.
+
+That has obvious affinities with the magical tradition of divine names and figures.
+
+But John integrates it into a specifically Christian devotional system.
+
+Fanger finds related magical precedents in the Liber Razielis and other Hebrew/Arabic-derived magical traditions, but John's particular configuration appears to be innovative.
+
+So John is doing something like:
+
+magical technology + Christian theology + monastic contemplation + personal visionary revelation.
+
+That is the distinctive Morignian synthesis.
+
+The really important distinction from conventional image magic
+
+Page's system is fundamentally about correspondence and transmission.
+
+John takes that same conceptual structure and applies it to knowledge and revelation.
+
+Fanger explicitly observes that the image-magic tradition contains a “lofty and divine idea of curricular knowledge”: even practical operations such as healing, love or enmity are situated within a hierarchy of knowledge ultimately originating in divine Wisdom.
+
+That dovetails perfectly with John's project.
+
+John's great concern is knowledge of all the arts.
+
+His figures organize:
+
+liberal arts;
+mechanical arts;
+magical arts;
+celestial knowledge;
+angelology;
+divine names;
+Marian devotion.
+
+So the harmonious universe isn't merely a physics of talismans.
+
+It can become a theory of the unity of knowledge.
+
+Everything belongs somewhere in the divine order.
+
+That is why Fanger says John has difficulty simply eliminating his magical knowledge: the categories of the “exceptive” arts are embedded in his attempt to understand self, world, and divine reality as one integrated system.
+
+The difference in one diagram
+
+I'd put the two systems like this:
+
+Sophie Page's image magic
+
+God
+↓
+celestial hierarchy
+↓
+planets / stars / intelligences
+↓
+occult natural powers
+↓
+correspondences
+↓
+names + characters + materials + timing
+↓
+image / talisman
+↓
+practical effect
+
+The operator is harnessing a cosmic network.
+
+John as Fanger reconstructs him
+
+God
+↓
+Christ / Virgin / angels
+↓
+revelation / divine wisdom
+↓
+liberal + mechanical + magical knowledge
+↓
+monastic reading + prayer + contemplation
+↓
+Christianized figures
+↓
+visualization + prayer
+↓
+vision / understanding / self-formation / prophecy
+
+The operator is trying to enter into and correctly understand the cosmic network.
+
+And that is why John's version is so fascinating. He doesn't simply reject the harmonious universe of image magic. He absorbs its conceptual architecture and tries to subordinate it to a devotional epistemology.
+
+The danger is that the boundary is extremely thin. The same planetary figure, divine name, character, circle, astrological timing or visualization can be interpreted as:
+
+natural philosophy → image magic → theurgy → angel magic → tacit demonic commerce → necromancy.
+
+Fanger's point is that John's figures sit precisely in that unstable middle ground. They are a hybrid of Christian devotional imagery, visionary exegesis, image-magic symbolism, and Ars notoria theurgy.
+
+That makes “image magic” particularly valuable for your game world: it is the bridge technology between the respectable occult natural philosopher and the clerical necromancer. The exact same visual vocabulary can lead a monk toward either a Christianized contemplative practice or increasingly explicit dealings with spirits, depending on what he thinks the images are doing and whom he believes is operating through them.
+

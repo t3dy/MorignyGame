@@ -15,7 +15,7 @@ import {
   STANCE_CHOICE, STANCE_OPTIONS, STUDY_SCENE, STUDY_TEXT, STUDY_LEVELED,
 } from './content/stance_content.js';
 import { createBeatLog } from './engine/beatlog.js';
-import { FACULTIES, loadFaculties, study, reach } from './engine/faculties.js';
+import { FACULTIES, loadFaculties, study, reach, dispositionOf } from './engine/faculties.js';
 import { loadMemories, memoryDue, fireMemory, echoFor } from './engine/memory.js';
 import { MEMORIES } from './content/memories.js';
 import {
@@ -31,12 +31,17 @@ import {
   COMPOSE_SCENE, COMPOSE_OPTIONS, INCIPITS, INCIPITS_ENVELOPE, COMPOSE_OUTCOME,
   INTERVAL_TEXT, INTERVAL_ENVELOPE, BEAT_ARRIVALS,
   BOOK_READING, BOOK_CHARACTER_NOTES, GLOSS_SCENE, GLOSS_OPTIONS, GLOSS_OUTCOME,
+  COMPOSE_ADDRESS, ADDRESS_OPTIONS, LEGITIMATION_OPTIONS, ADDRESS_ENVELOPE, SLIPPED,
 } from './content/liberflorum_content.js';
 import { SeededRandom } from './engine/random.js';
 import {
   loadCalendar, stride, advance as advanceTime, format as formatDate, weeks as toWeeks,
 } from './engine/calendar.js';
 import { loadPractice, bookCharacter } from './engine/practice.js';
+import {
+  ADDRESSES, LEGITIMATIONS, resolveAddress, suspicionFor, operatorPerceives,
+  loadLedger, record as recordAddress, addressByLevel, addressById,
+} from './engine/address.js';
 import {
   loadBridget, METHOD, teach, inCrisis, renunciationAvailable,
   renounce as bridgetRenounce, analyse as bridgetAnalyse, literate,
@@ -396,6 +401,7 @@ function start(seed, opts = {}) {
   chronicle.calendar = loadCalendar(chronicle.calendar);
   chronicle.practice = loadPractice(chronicle.practice);
   chronicle.bridget = loadBridget(chronicle.bridget);
+  chronicle.addresses = loadLedger(chronicle.addresses);
   // Sim-time: a played day is a day the record remembers, and the
   // calendar moves weeks or a season between them (engine/calendar.js).
   if (chronicle.days > 0) {
@@ -1409,7 +1415,11 @@ function dream(stage) {
     return;
   }
   const rng = stageRng(day, stage.id);
-  const vision = createVision(rng);
+  // Bad information (docs/LOOP_SYNTHESIS.md §4): disposition governs
+  // how legible the vision is, not merely whether it comes.
+  const vision = createVision(rng, {
+    disposition: dispositionOf(john, { book: bookDisposition(chronicle.liberFlorum) }),
+  });
   ui.scene({ rubric: VISION_SCENE.rubric, verso: '' });
   ui.body(passage(VISION_SCENE));
   ui.leaf(LEAVES.vision);
@@ -1456,34 +1466,86 @@ function composeStage(vision, judgement) {
   clearActs();
 
   const book = chronicle.liberFlorum;
-  act('W', COMPOSE_OPTIONS.compose.label, COMPOSE_OPTIONS.compose.why, () => {
-    const rng = stageRng(day, `${day.seed}-compose-${book.prayers.length}`);
-    const pool = INCIPITS[judgement] ?? INCIPITS.mastery;
-    const incipit = pool[Math.floor(rng.next() * pool.length) % pool.length];
-    const prayer = composePrayer(book, {
-      vision, judgement, mode: 'adjuring', incipit, day: chronicle.days,
-    });
-    addFatigue(john, 1);
-    saveChronicle(storage(), chronicle);
-    clearActs();
-    ui.body(deliberation(COMPOSE_OUTCOME[judgement] ?? COMPOSE_OUTCOME.mastery));
-    ui.body(passage(INCIPITS_ENVELOPE, `${prayer.ordinal}. ${incipit}…`, 'incipit'));
-    const gs = el('div', 'gamestate');
-    // Never discloses corruption — a defective prayer looks like any
-    // other on the night it is written (narration.js's standing rule).
-    const line = `Liber florum: prayer ${prayer.ordinal} written (${book.compilation} compilation). ` +
-      `The book now disposes you ${bookDisposition(book) >= 0 ? '+' : ''}${bookDisposition(book)}.`;
-    gs.appendChild(el('div', null, line));
-    beatlog.line('gamestate', line);
-    ui.body(gs);
-    renderStatus();
-    act('B', 'Toward Matins, and the reckoning.', '', next);
-  });
+  act('W', COMPOSE_OPTIONS.compose.label, COMPOSE_OPTIONS.compose.why,
+    () => chooseAddress(vision, judgement));
   act('N', COMPOSE_OPTIONS.withhold.label, COMPOSE_OPTIONS.withhold.why, () => {
     clearActs();
     log('It stays in you, and you will not have it long. Nothing that is not written is kept.', 'pencil-log');
     act('B', 'Toward Matins, and the reckoning.', '', next);
   });
+}
+
+/**
+ * The spine touching play (docs/LOOP_SYNTHESIS.md §2–3): at what address
+ * is the prayer written, and under what frame is it presented? The
+ * operator picks both; the operation does not always land where he
+ * aimed, and he only notices if his discernment is good enough.
+ */
+function chooseAddress(vision, judgement) {
+  clearActs();
+  $('rubric').textContent = COMPOSE_ADDRESS.rubric;
+  ui.body(deliberation(COMPOSE_ADDRESS));
+  const open = chronicle.practice.renounced
+    ? ['symbolic', 'ambiguous']              // renouncing means giving it up
+    : ['symbolic', 'ambiguous', 'invocation', 'command'];
+  for (const id of open) {
+    const o = ADDRESS_OPTIONS[id];
+    act(o.key, o.label, o.why, () => chooseLegitimation(vision, judgement, id));
+  }
+}
+
+function chooseLegitimation(vision, judgement, addressId) {
+  clearActs();
+  ui.body(passage(ADDRESS_ENVELOPE,
+    `${addressById(addressId).label}: ${addressById(addressId).line}`, 'narrator'));
+  for (const [id, o] of Object.entries(LEGITIMATION_OPTIONS)) {
+    const frame = LEGITIMATIONS[id];
+    act(o.key, o.label, `${frame.line} (Covers up to ${frame.label === 'nothing at all' ? 'nothing' : frame.cover}.)`,
+      () => writePrayer(vision, judgement, addressId, id));
+  }
+}
+
+function writePrayer(vision, judgement, addressId, legitimationId) {
+  const book = chronicle.liberFlorum;
+  const rng = stageRng(day, `${day.seed}-compose-${book.prayers.length}`);
+  const intended = ADDRESSES.find(a => a.id === addressId).level;
+  const resolved = resolveAddress(rng, intended, {
+    disposition: dispositionOf(john, { book: bookDisposition(book) }),
+    solomonic: chronicle.practice.solomonic,
+  });
+  const perceived = operatorPerceives(resolved, reach(john, 'discretio'));
+  const mode = resolved.actual >= 5 ? 'conjuring' : 'adjuring';
+
+  const pool = INCIPITS[judgement] ?? INCIPITS.mastery;
+  const incipit = pool[Math.floor(rng.next() * pool.length) % pool.length];
+  const prayer = composePrayer(book, {
+    vision, judgement, mode, incipit, day: chronicle.days,
+  });
+  prayer.address = resolved.actual;
+  prayer.legitimation = legitimationId;
+  recordAddress(chronicle.addresses, resolved, legitimationId);
+  addSuspicion(john, suspicionFor(resolved.actual, legitimationId));
+  addFatigue(john, 1);
+  saveChronicle(storage(), chronicle);
+
+  clearActs();
+  ui.body(deliberation(COMPOSE_OUTCOME[judgement] ?? COMPOSE_OUTCOME.mastery));
+  ui.body(passage(INCIPITS_ENVELOPE, `${prayer.ordinal}. ${incipit}…`, 'incipit'));
+  if (resolved.slipped) {
+    ui.body(passage(perceived === resolved.actual ? SLIPPED.caught : SLIPPED.unnoticed,
+      (perceived === resolved.actual ? SLIPPED.caught : SLIPPED.unnoticed).text, 'narrator'));
+  }
+  const gs = el('div', 'gamestate');
+  // Reports what the OPERATOR can tell, never the hidden truth — the
+  // standing rule (engine/narration.js).
+  const line = `Liber florum: prayer ${prayer.ordinal}, written as ` +
+    `${addressByLevel(perceived).label}, framed in ${LEGITIMATIONS[legitimationId].label}. ` +
+    `The book disposes you ${bookDisposition(book) >= 0 ? '+' : ''}${bookDisposition(book)}.`;
+  gs.appendChild(el('div', null, line));
+  beatlog.line('gamestate', line);
+  ui.body(gs);
+  renderStatus();
+  act('B', 'Toward Matins, and the reckoning.', '', next);
 }
 
 function reckoning() {

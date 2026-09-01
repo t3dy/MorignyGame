@@ -49,6 +49,87 @@ export const COMPOSE_OPTIONS = {
     why: 'Nothing added, nothing risked. What you saw stays yours, and dies with your memory of it.',
   },
 };
+
+/**
+ * How the prayer is to be framed (docs/LOOP_SYNTHESIS.md §2–3). This is
+ * the spine touching play: the same vision can be written up as a
+ * meditation on a figure, as a petition to a named intelligence, or as
+ * an instrument that binds one — and the operator does not always end
+ * up where he aimed.
+ */
+export const COMPOSE_ADDRESS = {
+  rubric: '¶ In what manner shall it be written?',
+  narrator: {
+    text:
+      'The question underneath every operation in this world is not whether it is holy but ' +
+      'whom it addresses — and the rungs are close together. A figure contemplated is not a ' +
+      'name invoked; a name invoked is not a spirit bound. What John has to decide, tonight ' +
+      'and every night, is which of those he is writing down. He will not always be right ' +
+      'about the answer. That is not a flaw in his method; it is the actual condition of the ' +
+      'work, and the reason his critics and his defenders could look at the same page and ' +
+      'see different things.',
+    sources: [{ work: 'Fanger (ed.), Invoking Angels', locus: 'adjuration against conjuration; the tacit pact (frame; verify)' }],
+    status: 'adapted', verify: true,
+  },
+  monologue: {
+    sources: [], status: 'invented',
+    text: 'Set it down as contemplation and it is safe and it is slow. Set it down as a petition and something may answer. Set it down as a binding and something will.',
+  },
+};
+
+/** Address options offered at composition, by rung. */
+export const ADDRESS_OPTIONS = {
+  symbolic: {
+    key: 'C',
+    label: 'As a figure to be contemplated.',
+    why: 'Nobody is addressed. Slow, safe, and the least likely to be answered. (Address: symbolic.)',
+  },
+  ambiguous: {
+    key: 'P',
+    label: 'As a petition, in the names the art gives.',
+    why: 'You use the names because the art gives them; whom they name, the art does not say. Where John actually worked. (Address: ambiguous.)',
+  },
+  invocation: {
+    key: 'I',
+    label: 'As a calling, knowing what you call.',
+    why: 'No confusion and no cover. Leans Radical, and the house notices what it cannot explain. (Address: invocation.)',
+  },
+  command: {
+    key: 'B',
+    label: 'As a binding, that it may not refuse.',
+    why: 'Efficacy moves into your own hands, which is the whole of the transgression. Leans Radical, hard. (Address: command.)',
+  },
+};
+
+/** How the prayer is presented — the frame that conceals or exposes it. */
+export const LEGITIMATION_OPTIONS = {
+  liturgy: { key: '1', label: 'Frame it in the liturgy.' },
+  devotion: { key: '2', label: 'Frame it as private devotion.' },
+  philosophy: { key: '3', label: 'Frame it as natural philosophy.' },
+  revelation: { key: '4', label: 'Frame it on her authority alone.' },
+  none: { key: '5', label: 'Frame it as nothing but itself.' },
+};
+
+export const ADDRESS_ENVELOPE = {
+  sources: [{ work: 'Fanger (ed.), Invoking Angels', locus: 'the ladder of address; legitimation and concealment (frame; verify)' }],
+  status: 'adapted', verify: true,
+};
+
+/** What he notices afterwards, when the operation slipped past him. */
+export const SLIPPED = {
+  caught: {
+    sources: [], status: 'invented',
+    text:
+      'And he catches it, which is the whole use of a trained eye: he meant to set down a ' +
+      'figure and finds he has written a petition. The names did more than name. He knows ' +
+      'because he has learned to know, and knowing is the only defence there is.',
+  },
+  unnoticed: {
+    sources: [], status: 'invented',
+    text:
+      'He sets down what he meant to set down, and is satisfied with it, and closes the book.',
+  },
+};
 export const COMPOSE_OPTIONS_ENVELOPE = { sources: FANGER, status: 'adapted', verify: true };
 
 /**
