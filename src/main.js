@@ -33,6 +33,7 @@ import {
   BOOK_READING, BOOK_CHARACTER_NOTES, GLOSS_SCENE, GLOSS_OPTIONS, GLOSS_OUTCOME,
   COMPOSE_ADDRESS, ADDRESS_OPTIONS, LEGITIMATION_OPTIONS, ADDRESS_ENVELOPE, SLIPPED,
   RESTRICTED_SHELF, INFIRMARY_HOUR, WORKSHOP_HOUR, GARDEN_HOUR,
+  ASCENT_SCENE, ASCENT_OUTCOME,
 } from './content/liberflorum_content.js';
 import { SeededRandom } from './engine/random.js';
 import {
@@ -48,6 +49,10 @@ import {
   loadLifepath, currentScene, chooseLifepath, asMemories, lifepathCatalog,
 } from './engine/lifepath.js';
 import { LIFEPATH_CODA } from './content/lifepath.js';
+import {
+  GIFTS, GIFT_IDS, loadAscent, ascentOpen, currentOrder, complete as ascentComplete,
+  petition, giftBonus,
+} from './engine/ascent.js';
 import {
   FACTIONS, loadFactions, reactTo, ecclesiasticalPressure, poles,
 } from './engine/factions.js';
@@ -310,8 +315,8 @@ function renderStatus() {
     const bookD = chronicle?.liberFlorum ? bookDisposition(chronicle.liberFlorum) : 0;
     row.appendChild(el('span', 'pips',
       trained.map(id => {
-        const have = john.faculties[id];
-        const can = reach(john, id, { book: bookD });
+        const have = john.faculties[id] + giftBonus(chronicle.ascent, id);
+        const can = Math.min(have, reach(john, id, { book: bookD }) + giftBonus(chronicle.ascent, id));
         // Trained but out of reach shows as hollow: the knowledge is
         // his, and tonight he cannot get at it (NEWDIRECTIONS §2).
         return `${FACULTIES[id].label} ${'●'.repeat(can)}${'○'.repeat(have - can)}`;
@@ -426,6 +431,7 @@ function start(seed, opts = {}) {
   chronicle.addresses = loadLedger(chronicle.addresses);
   chronicle.factions = loadFactions(chronicle.factions);
   chronicle.lifepath = loadLifepath(chronicle.lifepath);
+  chronicle.ascent = loadAscent(chronicle.ascent);
   // Sim-time: a played day is a day the record remembers, and the
   // calendar moves weeks or a season between them (engine/calendar.js).
   if (chronicle.days > 0) {
@@ -787,6 +793,11 @@ const PLACE_ACTIONS = {
     { key: 'P', label: 'The Work, behind a closed door.',
       why: () => 'The one hour nobody can account for. The house sees nothing.',
       go: stage => maybeMemory('first-work-hour', () => chooseWorkExemplar(stage)) },
+    { key: 'V', label: 'The ascent: petition the next degree.',
+      when: () => ascentOpen(chronicle.practice) && !ascentComplete(chronicle.ascent),
+      why: () => 'Ask at the order of ' + currentOrder(chronicle.ascent) +
+        '. Nothing here is compelled; you may be refused, and being refused is part of it.',
+      go: () => ascentStage() },
   ],
   infirmary: [
     { key: 'N', label: 'Sit with the sick.',
@@ -836,6 +847,47 @@ const PLACE_ACTIONS = {
       go: () => bridgetNightStage() },
   ],
 };
+
+/**
+ * The angelic ascent (docs/LOOP_SYNTHESIS.md §7): what the rebuilt Work
+ * is actually for. He petitions a degree for one of the four gifts his
+ * own figures name; nothing is compelled, and a gift received in poor
+ * disposition may be counterfeit — silently, like everything else
+ * silent in this game.
+ */
+function ascentStage() {
+  clearActs();
+  const ascent = chronicle.ascent;
+  $('rubric').textContent = ASCENT_SCENE.rubric;
+  ui.body(deliberation(ASCENT_SCENE));
+  const held = new Set(ascent.granted.map(g => g.gift));
+  const keys = { memory: 'M', eloquence: 'E', understanding: 'U', perseverance: 'P' };
+  for (const id of GIFT_IDS) {
+    if (held.has(id)) continue;
+    act(keys[id], 'Ask for ' + GIFTS[id].label + '.', GIFTS[id].line, () => {
+      const rng = stageRng(day, `${day.seed}-ascent-${ascent.stage}`);
+      const disposition = dispositionOf(john, { book: bookDisposition(chronicle.liberFlorum) });
+      const r = petition(rng, ascent, id, { disposition });
+      // Petition, never command: the ascent stays low on the ladder.
+      recordAddress(chronicle.addresses, resolveAddress(rng, 2, { disposition }), 'devotion');
+      addFatigue(john, 1);
+      saveChronicle(storage(), chronicle);
+      clearActs();
+      ui.body(deliberation(ASCENT_OUTCOME[r.outcome]));
+      const gs = el('div', 'gamestate');
+      // Never discloses a counterfeit — he believes he has it.
+      const line = r.outcome === 'granted'
+        ? 'The ascent: ' + GIFTS[id].label + ' received at the order of ' + r.order + '.'
+        : 'The ascent: no answer at the order of ' + r.order + '. You may ask again.';
+      gs.appendChild(el('div', null, line));
+      beatlog.line('gamestate', line);
+      ui.body(gs);
+      renderStatus();
+      act('B', 'To Vespers.', '', leaveDaylight);
+    });
+  }
+  act('B', 'Not tonight.', '', () => enterPlace(null, 'cell'));
+}
 
 /** Knowing the forbidden arts is licit; keeping the books is what costs. */
 function studyRestricted() {

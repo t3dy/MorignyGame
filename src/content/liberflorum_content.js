@@ -531,3 +531,62 @@ export const GARDEN_HOUR = {
     text: 'An hour among the beans. I thought about nothing whatever and came back able to think again, which I will not be putting in the book.',
   },
 };
+
+// ── The angelic ascent (docs/LOOP_SYNTHESIS.md §7) ─────────────────────
+
+const INVOKING = [{ work: 'Fanger (ed.), Invoking Angels', locus: 'theurgic ascent; divine knowledge as the goal of the pious road (frame; verify)' }];
+
+export const ASCENT_SCENE = {
+  rubric: '¶ Of the ascent, and what may be asked at each degree.',
+  narrator: {
+    text:
+      'This is what the rebuilt Work is FOR, and it is worth saying plainly because the ' +
+      'shape of the game could mislead: the pious road is not the cautious one. John\'s ' +
+      'figures organise an ascent through the angelic orders, and what he asks for at each ' +
+      'degree are the four gifts his own diagrams name — memory, eloquence, understanding, ' +
+      'perseverance. The theurgic texts in this tradition are not asking for small things. ' +
+      'They are asking for access to divine knowledge and the transformation of the person ' +
+      'who receives it. The difference between this road and the other one was never ' +
+      'ambition. It is that here nothing is compelled: he petitions, and he may be refused, ' +
+      'and being refused is part of the practice rather than a failure of it.',
+    sources: INVOKING, status: 'adapted', verify: true,
+  },
+  monologue: {
+    sources: [], status: 'invented',
+    text: 'Not upward like a ladder — inward, like a house with rooms behind rooms. And at each door the same question, which is whether I may come in, and the answer is not mine to give.',
+  },
+};
+
+export const ASCENT_OUTCOME = {
+  granted: {
+    narrator: {
+      text:
+        'It is given. Not seized, not extracted, not compelled — given, at a degree he was ' +
+        'admitted to, in answer to a petition he was permitted to make. That is the entire ' +
+        'theological claim of the Liber florum in one transaction, and it is why John could ' +
+        'hold that his work was categorically unlike the art he renounced while looking, to ' +
+        'a hostile eye, very much like it.',
+      sources: INVOKING, status: 'adapted', verify: true,
+    },
+    monologue: {
+      sources: [], status: 'invented',
+      text: 'I asked and it was given and I have nothing to show for it that anyone could weigh. I know what I know now. That is all, and it is everything.',
+    },
+  },
+  delayed: {
+    narrator: {
+      text:
+        'Nothing comes. This is not a mechanism failing — it is the mechanism working as its ' +
+        'author described it: a solicited vision remains genuinely free to refuse. A man may ' +
+        'establish a long habit of praying and waiting, and God retains the freedom to ' +
+        'answer, to delay, or to say no. The practice that could compel would be a different ' +
+        'practice, and John spent his life insisting his was not that one.',
+      sources: [{ work: 'Fanger, "Divine Dreamwork" (2018)', locus: 'solicited visions that remain free to refuse (frame; verify)' }],
+      status: 'adapted', verify: true,
+    },
+    monologue: {
+      sources: [], status: 'invented',
+      text: 'Nothing. Not a refusal — a silence, which is harder. I will ask again at the next season and I will not sulk about it, and I notice how much effort the not-sulking takes.',
+    },
+  },
+};
