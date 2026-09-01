@@ -55,6 +55,10 @@ import {
   RECKONING_SCENE, RECKONING_OPTIONS, PLACE_MONOLOGUE,
 } from './content/day_content.js';
 import {
+  SUMMONS_SCENE, EXAMINATION_SCENE, STANCE_FRAMING, STANCE_FRAMING_ENVELOPE,
+  VERDICT_SCENE, STEMMA_SCENE,
+} from './content/examination_content.js';
+import {
   GIFTS, GIFT_IDS, loadAscent, ascentOpen, currentOrder, complete as ascentComplete,
   petition, giftBonus,
 } from './engine/ascent.js';
@@ -1965,6 +1969,9 @@ function summons() {
   ui.setHour('The Letter');
   ui.scene({ rubric: SUMMONS.rubric, verso: '' });
   ui.body(passage(SUMMONS));
+  ui.body(passage(SUMMONS_SCENE.narrator, SUMMONS_SCENE.narrator.text, 'narrator'));
+  ui.body(passage(SUMMONS_SCENE.monologue, SUMMONS_SCENE.monologue.text, 'monologue'));
+  ui.body(howToPlay(SUMMONS_SCENE.interaction));
   act('B', 'Take the road to Paris.', 'Three days, with the Work against your ribs.', () => {
     ui.body(passage(ROAD_TO_PARIS, ROAD_TO_PARIS.text));
     clearActs();
@@ -1975,7 +1982,12 @@ function summons() {
 function examination() {
   exam = createExamination(chronicle);
   ui.setHour('The Examination');
-  askQuestion();
+  ui.scene({ rubric: EXAMINATION_SCENE.rubric, verso: '' });
+  ui.body(passage(EXAMINATION_SCENE.narrator, EXAMINATION_SCENE.narrator.text, 'narrator'));
+  ui.body(passage(EXAMINATION_SCENE.monologue, EXAMINATION_SCENE.monologue.text, 'monologue'));
+  ui.body(howToPlay(EXAMINATION_SCENE.interaction));
+  clearActs();
+  act('B', 'They begin.', '', askQuestion);
 }
 
 function askQuestion() {
@@ -1996,12 +2008,12 @@ function askQuestion() {
     }
   };
 
-  act('O', 'Submit. Hold what the Church holds.', 'Obedience is not the opposite of the Work.',
-    () => answer('submit'));
-  act('D', 'Defend it. Reasonably, and to the point.', 'The fruits, the authorization, the asking.',
-    () => answer('defend'));
-  act('W', 'Answer them as they deserve.', 'This road, walked far enough, leaves the record.',
-    () => answer('scorn'));
+  // D-21: these are three claims about JURISDICTION, not three
+  // temperaments. Framed per question (content/examination_content.js).
+  const framing = STANCE_FRAMING[q.id];
+  for (const [stance, key] of [['submit', 'O'], ['defend', 'D'], ['scorn', 'W']]) {
+    act(key, framing[stance].label, framing[stance].why, () => answer(stance));
+  }
 }
 
 function verdictStage() {
@@ -2010,6 +2022,8 @@ function verdictStage() {
   ui.setHour('The Verdict');
   ui.scene({ rubric: v.rubric, verso: 'They burn it. Every road burns it.' });
   ui.body(passage(VERDICT_ENVELOPE[key], v.body));
+  ui.body(passage(VERDICT_SCENE.narrator, VERDICT_SCENE.narrator.text, 'narrator'));
+  ui.body(passage(VERDICT_SCENE.monologue, VERDICT_SCENE.monologue.text, 'monologue'));
 
   // 1323 destroys what is in the room — resolved once, mechanically real,
   // against the engine's own tested odds (SCRIPTORIUM.md §3.6-3.7).
@@ -2032,6 +2046,8 @@ function stemmaStage() {
   ui.setHour('The Stemma');
   ui.scene({ rubric: READING_ROOM.rubric, verso: '' });
   ui.body(passage(READING_ROOM));
+  ui.body(passage(STEMMA_SCENE.narrator, STEMMA_SCENE.narrator.text, 'narrator'));
+  ui.body(passage(STEMMA_SCENE.monologue, STEMMA_SCENE.monologue.text, 'monologue'));
   ui.leaf(LEAVES.readingRoom);
 
   const nodes = buildStemma(loadWitnesses(storage()));

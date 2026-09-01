@@ -35,6 +35,10 @@ import {
   RECKONING_SCENE, RECKONING_OPTIONS,
 } from './day_content.js';
 import { LEGITIMATION_OPTIONS as LEGIT_OPTS } from './liberflorum_content.js';
+import { EXAMINATION } from './content.js';
+import {
+  SUMMONS_SCENE, EXAMINATION_SCENE, STANCE_FRAMING,
+} from './examination_content.js';
 
 /** Shape an options object into the list the auditor reads. */
 const opts = (source, extra = {}) =>
@@ -259,6 +263,25 @@ export const BRANCHES = [
     cites: true,
     content: () => ({ ...RECKONING_SCENE, options: opts(RECKONING_OPTIONS) }),
   },
+
+  // ── 1323 (declared 2026-09-01) ─────────────────────────────────────
+  ...EXAMINATION.map(q => ({
+    id: `examination:${q.id}`,
+    where: `the examination at Paris — ${q.rubric.replace(/^¶ /, '')}`,
+    kind: 'decision',
+    cites: true,
+    content: () => ({
+      narrator: EXAMINATION_SCENE.narrator,
+      monologue: { text: q.question, sources: [], status: 'invented' },
+      pencil: EXAMINATION_SCENE.interaction,
+      options: ['submit', 'defend', 'scorn'].map(k => ({
+        id: k,
+        key: { submit: 'O', defend: 'D', scorn: 'W' }[k],
+        label: STANCE_FRAMING[q.id][k].label,
+        why: STANCE_FRAMING[q.id][k].why,
+      })),
+    }),
+  })),
 
   // ── Memories and encounters ────────────────────────────────────────
   ...Object.values(MEMORIES).map(v => ({
