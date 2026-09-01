@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>MORIGNY — Liber Florum</title>
+<meta name="description" content="A monastic life and practice simulator of John of Morigny (fl. c. 1300–1323), grounded in Claire Fanger's scholarship." />
 <style>
   :root {
     --paper: #e9e2d0;
@@ -11,6 +12,8 @@
     --ink: #3b3226;
     --ink-faded: #6b5f4d;
     --vermilion: #a63a22;
+    --ultramarine: #2b4c9b;
+    --gold: #8a6d1d;
     --graphite: #55565a;
     --gutter: rgba(59, 50, 38, 0.25);
   }
@@ -19,138 +22,274 @@
     background: #22201b;
     color: var(--ink);
     font-family: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
-    line-height: 1.6;
+    line-height: 1.62;
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    padding: 3rem 1.2rem;
+    padding: 2.5rem 1.1rem 4rem;
   }
   main {
-    width: min(680px, 100%);
+    width: min(860px, 100%);
     background: var(--paper);
     border-radius: 3px;
     box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
-    padding: 2.6rem 2.4rem 2.2rem;
+    padding: 2.8rem 2.6rem 2.4rem;
   }
   h1 {
     font-variant: small-caps;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.09em;
     color: var(--vermilion);
-    font-size: 1.7rem;
+    font-size: 2rem;
     font-weight: normal;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
   }
-  .subtitle {
-    font-style: italic;
-    color: var(--ink-faded);
-    margin-bottom: 1.6rem;
+  .subtitle { font-style: italic; color: var(--ink-faded); margin-bottom: 1.5rem; }
+  p.lede { max-width: 62ch; margin-bottom: 1rem; }
+  p.lede + p.lede { margin-bottom: 1.6rem; }
+
+  h2 {
+    font-variant: small-caps;
+    letter-spacing: 0.1em;
+    color: var(--vermilion);
+    font-size: 1.1rem;
+    font-weight: normal;
+    border-bottom: 1px solid var(--gutter);
+    padding-bottom: 0.25rem;
+    margin: 2.2rem 0 1rem;
   }
-  p.lede {
-    margin-bottom: 1.8rem;
-    max-width: 56ch;
-  }
-  .builds {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  a.build {
+
+  /* ── builds ── */
+  .builds { display: flex; flex-direction: column; gap: 0.9rem; }
+  .build {
     display: block;
     text-decoration: none;
     color: inherit;
     border: 1px solid var(--gutter);
     border-radius: 3px;
-    padding: 1.1rem 1.3rem;
+    padding: 1.05rem 1.25rem;
     transition: background 0.15s, border-color 0.15s;
   }
-  a.build:hover {
-    background: rgba(166, 58, 34, 0.06);
-    border-color: var(--vermilion);
-  }
-  a.build .tag {
+  a.build:hover { background: rgba(166, 58, 34, 0.06); border-color: var(--vermilion); }
+  .tag {
     display: inline-block;
     font-variant: small-caps;
     letter-spacing: 0.1em;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     color: var(--paper);
     background: var(--vermilion);
     border-radius: 2px;
-    padding: 0.12rem 0.5rem;
-    margin-bottom: 0.5rem;
+    padding: 0.1rem 0.5rem;
+    margin-bottom: 0.45rem;
   }
-  a.build.secondary .tag {
-    background: var(--graphite);
-  }
-  a.build h2 {
-    font-size: 1.15rem;
-    font-weight: normal;
-    margin-bottom: 0.35rem;
-  }
-  a.build p {
-    font-size: 0.9rem;
+  .build.secondary .tag { background: var(--graphite); }
+  .build h3 { font-size: 1.1rem; font-weight: normal; margin-bottom: 0.3rem; }
+  .build p { font-size: 0.9rem; color: var(--ink-faded); }
+
+  /* ── the four voices ── */
+  .voices { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.9rem; }
+  .voice { border-left: 3px solid var(--gutter); padding: 0.15rem 0 0.15rem 0.8rem; }
+  .voice.narrator { border-color: var(--ink); }
+  .voice.monologue { border-color: var(--gutter); font-style: italic; }
+  .voice.pencil { border-color: var(--graphite); }
+  .voice.ledger { border-color: var(--vermilion); }
+  .voice h4 { font-size: 0.95rem; font-weight: normal; font-variant: small-caps; letter-spacing: 0.06em; margin-bottom: 0.15rem; }
+  .voice p { font-size: 0.86rem; color: var(--ink-faded); font-style: normal; }
+
+  /* ── systems / research ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.75rem 1.4rem; }
+  .item { font-size: 0.9rem; }
+  .item strong { font-weight: normal; color: var(--ink); border-bottom: 1px dotted var(--gutter); }
+  .item span { color: var(--ink-faded); }
+
+  ul.plain { list-style: none; font-size: 0.9rem; }
+  ul.plain li { padding: 0.18rem 0; color: var(--ink-faded); }
+  ul.plain li strong { color: var(--ink); font-weight: normal; }
+
+  .stats { display: flex; flex-wrap: wrap; gap: 1.6rem; margin: 1rem 0 0; }
+  .stat { }
+  .stat b { display: block; font-size: 1.5rem; color: var(--vermilion); font-weight: normal; }
+  .stat span { font-size: 0.78rem; color: var(--ink-faded); font-variant: small-caps; letter-spacing: 0.07em; }
+
+  .note {
+    border: 1px solid var(--gutter);
+    border-left: 3px solid var(--graphite);
+    background: rgba(85, 86, 90, 0.05);
+    padding: 0.8rem 1rem;
+    font-size: 0.87rem;
     color: var(--ink-faded);
+    margin-top: 1rem;
   }
+  .pending { opacity: 0.62; }
+  .pending .tag { background: var(--ink-faded); }
+
   footer {
     border-top: 1px dotted var(--gutter);
+    margin-top: 2.4rem;
     padding-top: 1rem;
     font-size: 0.78rem;
     color: var(--ink-faded);
     font-family: 'Segoe Print', 'Comic Sans MS', cursive;
   }
   footer a { color: var(--graphite); }
+  a { color: var(--vermilion); }
 </style>
 </head>
 <body>
 <main>
   <h1>MORIGNY</h1>
   <p class="subtitle">Liber Florum Celestis Doctrine — a monastic life &amp; practice simulator</p>
+
   <p class="lede">
-    A simulation of the lived experience of John of Morigny (fl. c. 1300–1323),
-    grounded in Claire Fanger's scholarship: the Rule and the Work sharing one
-    body, one clock, and one attention — kept hour by hour toward a
-    condemnation history has already scheduled.
+    John of Morigny was a real man: a Benedictine of the abbey of Morigny near Étampes,
+    a priest, a canon lawyer trained at Orléans, and after 1308 his house's provost. He
+    was also, for years, a practitioner of forbidden arts — first a necromantic book he
+    copied from a cleric, then the <em>ars notoria</em>, which promised the whole of human
+    learning to anyone who could keep its prayers and fasts. He came to believe the art had
+    been contaminated by demons. He did not stop. He rewrote it, as the
+    <em>Liber florum celestis doctrine</em>, and claimed the Virgin herself had authorized
+    the rewriting.
+  </p>
+  <p class="lede">
+    In 1323 a chronicle records that a monk of Morigny's book was condemned and burned at
+    Paris. It survived anyway, in copies, in houses he never saw. This is a simulation of
+    that life, built on Claire Fanger's scholarship and answerable to it: every line of
+    writing carries a source and a status — <em>attested</em>, <em>adapted</em>, or
+    <em>invented</em> — and the game will show you which.
   </p>
 
+  <h2>Play</h2>
   <div class="builds">
     <a class="build" href="./v3/">
       <span class="tag">current</span>
-      <h2>v3 — the reading-forward redesign</h2>
+      <h3>v3 — the reading-forward redesign</h3>
       <p>
-        A day is now ten decisions and a great deal of reading. You choose a
-        stance — how much of himself John spends on an hour — and the whole
-        block plays out, narrated in five voices: a scholarly narrator who
-        explains the monastic and magical world, John's own confessional
-        monologue, the rubricator, the pencil hand, and a dry ledger of what
-        the machine actually did. Adds memories of his childhood and his
-        Orléans years, faculties trained by study, and a deck of
-        historically-grounded encounters larger than any single run.
+        Begins in childhood: Chartres at thirteen, the schools, the first forbidden book.
+        A day is ten decisions and a great deal of reading, spanning 1301 to the fire in
+        1323. Teach your sister to read by the slow road or the fast one; write your visions
+        into a book that remembers its own errors; and find out what the book becomes.
       </p>
     </a>
     <a class="build secondary" href="./v2/">
       <span class="tag">archived</span>
-      <h2>v2 — the full campaign</h2>
+      <h3>v2 — the full campaign</h3>
       <p>
-        The recitation-grammar era, kept exactly as it shipped: the monastic
-        day verse by verse, the Struggle, discernment of spirits, the world
-        beyond the walls, the scriptorium's copy loop, and the 1323
-        examination through to the stemma of witnesses.
+        The recitation-grammar era, kept exactly as it shipped: the monastic day verse by
+        verse, the Struggle, discernment of spirits, the scriptorium, and 1323 through to
+        the stemma of witnesses.
       </p>
     </a>
     <a class="build secondary" href="./v1/">
       <span class="tag">archived</span>
-      <h2>v1 — the original prototype</h2>
+      <h3>v1 — the original prototype</h3>
+      <p>The first playable slice, for the record: one day, one night, one sought vision.</p>
+    </a>
+  </div>
+
+  <h2>The four voices</h2>
+  <p class="lede" style="margin-bottom:1rem">
+    Every moment the game stops and waits for you, it owes you four things. This is checked
+    mechanically — a branch that fails to orient, voice, ground, or instruct fails the build.
+  </p>
+  <div class="voices">
+    <div class="voice narrator">
+      <h4>The narrator</h4>
+      <p>Third person, modern, analytical. Explains the monastic and magical world and expects no prior knowledge.</p>
+    </div>
+    <div class="voice monologue">
+      <h4>John's hand</h4>
+      <p>His own words, in the idiom of his century — never clinical, never modern, whatever the narrator just said plainly.</p>
+    </div>
+    <div class="voice pencil">
+      <h4>The pencil hand</h4>
+      <p>The designer-scholar: what is attested, what we invented, and where the uncertainty sits.</p>
+    </div>
+    <div class="voice ledger">
+      <h4>The ledger</h4>
+      <p>What the machine actually did. It never discloses a silent failure — that honesty lives at the reckoning.</p>
+    </div>
+  </div>
+
+  <h2>What is simulated</h2>
+  <div class="grid">
+    <div class="item"><strong>Address</strong> <span>— seven rungs from natural operation to pact, and you do not always land where you aimed</span></div>
+    <div class="item"><strong>Legitimacy</strong> <span>— suspicion tracks how recognisable an act was, not how wicked</span></div>
+    <div class="item"><strong>The Liber florum</strong> <span>— a book you write, which keeps its errors visible and glossed</span></div>
+    <div class="item"><strong>Bridget</strong> <span>— his sister, taught to read by the art or the slow road, with her own arc and her own power</span></div>
+    <div class="item"><strong>Discernment</strong> <span>— corruption is paid in unreliable visions, not in points</span></div>
+    <div class="item"><strong>The house</strong> <span>— seven factions holding seven positions at once, including an ascetic who thinks you are not pure enough</span></div>
+    <div class="item"><strong>Transmission</strong> <span>— the score is not what he kept but what got out, and how corrupt it was when it did</span></div>
+    <div class="item"><strong>1323</strong> <span>— always arrives. There is no winning; there is only what survives him</span></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>44</b><span>audited branches</span></div>
+    <div class="stat"><b>31</b><span>works cited</span></div>
+    <div class="stat"><b>19</b><span>scholar briefs</span></div>
+    <div class="stat"><b>20</b><span>test suites</span></div>
+  </div>
+
+  <h2>The research behind it</h2>
+  <p class="lede" style="margin-bottom:1rem">
+    Citations are machine-checked. Every source a line of writing claims must resolve to a
+    registry that records what kind of claim it is — a primary text, modern scholarship,
+    standard period practice not yet pinned to a page, or our own design reasoning. Summaries
+    of scholarship are finding aids and may never be cited as authorities.
+  </p>
+  <ul class="plain">
+    <li><strong>Claire Fanger</strong>, <em>Rewriting Magic</em> — the canonical interpretive source, and the model for the pencil hand</li>
+    <li><strong>Fanger &amp; Watson</strong>, the critical edition of the <em>Liber florum</em></li>
+    <li><strong>Sophie Page</strong>, <em>Magic in the Cloister</em> — the monastery as a production environment for magic</li>
+    <li><strong>Richard Kieckhefer</strong>, <em>Magic in the Middle Ages</em> — the "clerical underworld," credited on first use</li>
+    <li><strong>Julien Véronèse</strong> on the <em>ars notoria</em>; <strong>Michael Bailey</strong> on boundary-work; <strong>Edward Peters</strong> on accusation documents</li>
+    <li>…and fourteen more, each with a brief in the repository</li>
+  </ul>
+  <div class="note">
+    <strong>A correction worth naming.</strong> This project spent months simulating John's
+    central struggle as sexual temptation, citing Fanger for it. On reading her argument
+    carefully, that is close to the opposite of what she documents: the desire for forbidden
+    <em>knowledge</em> is the temptation, and John asks God for comprehensive knowledge
+    precisely so that he may resist sin. The system was retargeted, the citation was
+    corrected in place rather than quietly replaced, and a research pipeline now makes such
+    claims checkable. The account is kept in the repository.
+  </div>
+
+  <h2>Also in this project</h2>
+  <div class="builds">
+    <a class="build secondary" href="https://github.com/t3dy/MorignyGame">
+      <span class="tag">source</span>
+      <h3>The repository</h3>
       <p>
-        The first playable slice, kept exactly as it shipped, for the
-        record — one day, one night, one sought vision.
+        Engine, content, tests, and the whole documentary apparatus: the scholar briefs, the
+        design decision log, the loop synthesis, the research pipeline, and the branch-audit
+        method.
       </p>
     </a>
+    <div class="build secondary pending">
+      <span class="tag">in progress</span>
+      <h3>The knowledge portal</h3>
+      <p>
+        A browsable version of the research shelf — the nineteen scholar briefs, the works
+        registry with what each source grounds, and the open questions still marked
+        <em>verify</em>. Currently readable in the repository under <code>docs/</code>.
+      </p>
+    </div>
+    <div class="build secondary pending">
+      <span class="tag">in progress</span>
+      <h3>Playthrough logs</h3>
+      <p>
+        Each run already records itself in every voice — the game calls it the Book of
+        Visions, and you can read a day back at any reckoning. Publishing those as permanent,
+        editable pages, with a reader's own emendations shown as their own hand, is the next
+        piece of work.
+      </p>
+    </div>
   </div>
 
   <footer>
     Every content record in this project carries a source and a status —
-    <em>attested</em>, <em>adapted</em>, or <em>invented</em> — and nothing
-    ships without one. Source: <a href="https://github.com/t3dy/MorignyGame">github.com/t3dy/MorignyGame</a>.
+    <em>attested</em>, <em>adapted</em>, or <em>invented</em> — and nothing ships without one.
+    Nothing here puts words in the mouth of a living scholar, and nothing invents a quotation
+    from John. Source: <a href="https://github.com/t3dy/MorignyGame">github.com/t3dy/MorignyGame</a>.
   </footer>
 </main>
 </body>
