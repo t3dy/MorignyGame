@@ -62,8 +62,8 @@ export const STANCE_CHOICE = {
       ...INV,
       text:
         'The leaf is patient; it will receive whatever I am. A careful hand and the day is ' +
-        'gone into it. A quick hand and God knows what rides along. The flesh votes for ' +
-        'haste. The flesh always votes for haste.',
+        'gone into it. A quick hand and God knows what rides along. The appetite votes for ' +
+        'haste. It always votes for haste.',
     },
   },
 };
@@ -80,7 +80,7 @@ export const STANCE_OPTIONS = {
   },
   routine: {
     label: 'The common discipline.',
-    why: 'The flesh is fought at the same price; the lesser wanderings are let in, and cost only what they cost.',
+    why: 'The appetite is fought at the same price; the lesser wanderings are let in, and cost only what they cost.',
   },
   hasty: {
     label: 'By rote, sparing yourself.',

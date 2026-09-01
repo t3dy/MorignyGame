@@ -20,8 +20,10 @@
  * computus), which is why every date record carries `verify`.
  */
 
-/** The playable campaign opens after the renunciation and runs to the fire. */
-export const EPOCH_YEAR = 1304;
+/** The playable campaign opens during the ars notoria years — before his
+ * own renunciation, so that Bridget's teaching, her affliction, her
+ * renunciation and finally his all happen in play — and runs to the fire. */
+export const EPOCH_YEAR = 1301;
 export const FIRE_YEAR = 1323;
 
 const DAYS_PER_YEAR = 365;

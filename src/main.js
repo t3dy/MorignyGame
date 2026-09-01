@@ -45,6 +45,10 @@ import {
 } from './engine/address.js';
 import { PLACES, PLACE_IDS } from './data/places.js';
 import {
+  loadLifepath, currentScene, chooseLifepath, asMemories, lifepathCatalog,
+} from './engine/lifepath.js';
+import { LIFEPATH_CODA } from './content/lifepath.js';
+import {
   FACTIONS, loadFactions, reactTo, ecclesiasticalPressure, poles,
 } from './engine/factions.js';
 import {
@@ -421,6 +425,7 @@ function start(seed, opts = {}) {
   chronicle.bridget = loadBridget(chronicle.bridget);
   chronicle.addresses = loadLedger(chronicle.addresses);
   chronicle.factions = loadFactions(chronicle.factions);
+  chronicle.lifepath = loadLifepath(chronicle.lifepath);
   // Sim-time: a played day is a day the record remembers, and the
   // calendar moves weeks or a season between them (engine/calendar.js).
   if (chronicle.days > 0) {
@@ -1077,7 +1082,10 @@ function maybeEncounter(then) {
 
 /** A memory's echo, if it fired and had one — the narrator citing the boy. */
 function memoryEcho(id) {
-  const text = echoFor(chronicle.memories, MEMORIES, id);
+  // Echoes resolve against both the in-play vignettes and the prologue,
+  // so the boy at Chartres can be cited by the man at his desk.
+  const text = echoFor(chronicle.memories, MEMORIES, id)
+    ?? echoFor(asMemories(chronicle.lifepath), lifepathCatalog(), id);
   if (text) ui.body(passage({ sources: [], status: 'invented' }, text, 'narrator echo'));
 }
 
@@ -1999,19 +2007,77 @@ renderApparatus();
 
 function incipit() {
   john = null; day = null; journal = null;
+  chronicle = loadChronicle(storage());
+  // The prologue writes into these, so they must exist before it runs —
+  // not only from start(), which happens after (caught in play).
+  chronicle.lifepath = loadLifepath(chronicle.lifepath);
+  chronicle.practice = loadPractice(chronicle.practice);
+  chronicle.faculties = loadFaculties(chronicle.faculties);
   ui.setHour('Incipit');
   ui.scene({ rubric: '¶ Here begins the book of the flowers of heavenly teaching.', verso: '' });
   ui.leaf(LEAVES.incipit);
   ui.body(el('p', null,
-    'MORIGNY — one day and one night in the life of Brother John, monk of Morigny, ' +
+    'MORIGNY — the life of Brother John, monk of Morigny, priest and canon lawyer, ' +
     'who practiced a forbidden art, repented of it, and rebuilt it in the Virgin’s name; ' +
     'and who wrote down his temptations so exactly that we can, seven centuries on, attempt this.'));
   ui.body(el('p', 'pencil-note', CONTENT_NOTE));
   const seed = `witness-${Math.floor(Math.random() * 1e6)}`;
-  act('B', 'Begin at Matins — a day within the walls.', `seed: ${seed}`, () => start(seed));
-  act('E', 'Begin at Matins — a road day: the errand to Étampes.',
-    'The world, with witnesses. Arrow keys walk; T talks.', () => start(seed, { journey: true }));
+  if (!chronicle.lifepath.done) {
+    // The opening is his early life, played — not a mode-select menu
+    // (docs/LOOP_SYNTHESIS.md §10; rebuilt 2026-09-01).
+    act('B', 'Begin at the beginning: Chartres, and a boy of thirteen.',
+      'Five scenes of the life before the life. What you choose here is the man you will play.',
+      () => lifepathStage(seed));
+  } else {
+    act('B', 'Take up the day again.', `seed: ${seed}`, () => start(seed));
+    act('E', 'Take up the day again — a road day: the errand to Étampes.',
+      'The world, with witnesses. Arrow keys walk; T talks.', () => start(seed, { journey: true }));
+  }
   renderCommands();
+}
+
+/** The prologue, scene by scene, then into the first Matins. */
+function lifepathStage(seed) {
+  const lp = chronicle.lifepath;
+  const scene = currentScene(lp);
+  if (!scene) return lifepathCoda(seed);
+
+  // A minimal John exists during the prologue so choices have somewhere
+  // to land; start() will rebuild him from what the prologue wrote.
+  if (!john) {
+    john = createJohn();
+    john.faculties = loadFaculties(chronicle.faculties);
+  }
+  clearActs();
+  ui.scene({ rubric: scene.rubric, verso: scene.age });
+  ui.body(deliberation(scene));
+  for (const choice of scene.choices) {
+    act(choice.key, choice.label, choice.why, () => {
+      const applied = chooseLifepath(lp, john, chronicle.practice, scene, choice);
+      chronicle.faculties = john.faculties;
+      chronicle.disposition = (chronicle.disposition ?? 0) + (applied.state.disposition ?? 0);
+      saveChronicle(storage(), chronicle);
+      clearActs();
+      ui.body(deliberation(choice.outcome));
+      const gs = el('div', 'gamestate');
+      const bits = [
+        ...applied.faculty.map(([id, n]) => `${FACULTIES[id].label} ${n > 0 ? '+' : ''}${n}`),
+        ...applied.practice.map(([id, n]) => `${id} ${n > 0 ? '+' : ''}${n}`),
+        ...Object.entries(applied.state).map(([k, n]) => `${k} ${n > 0 ? '+' : ''}${n}`),
+      ];
+      gs.appendChild(el('div', null, `${scene.id}. ${bits.length ? bits.join(', ') + '.' : 'Nothing measurable.'}`));
+      ui.body(gs);
+      act('B', 'And then?', '', () => lifepathStage(seed));
+    });
+  }
+}
+
+function lifepathCoda(seed) {
+  clearActs();
+  ui.scene({ rubric: LIFEPATH_CODA.rubric, verso: '' });
+  ui.body(deliberation(LIFEPATH_CODA));
+  saveChronicle(storage(), chronicle);
+  act('B', 'To Matins.', '', () => start(seed));
 }
 
 incipit();

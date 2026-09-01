@@ -26,6 +26,7 @@ describe('Sim-time: a life, not a week', () => {
   test('the campaign opens after the renunciation and runs to the fire', () => {
     const cal = createCalendar();
     assert.equal(cal.year, EPOCH_YEAR);
+    assert.ok(EPOCH_YEAR < 1308, 'the campaign begins before the provostship');
     assert.equal(yearsToFire(cal), FIRE_YEAR - EPOCH_YEAR);
     assert.ok(HISTORICAL_BEATS.some(b => b.year === FIRE_YEAR), '1323 is pinned');
     assert.ok(HISTORICAL_BEATS.some(b => b.year === 1308), 'so is the provostship');
@@ -45,14 +46,14 @@ describe('Sim-time: a life, not a week', () => {
     const cal = createCalendar();
     const none = advance(cal, 30);
     assert.deepEqual(none, [], 'a month crosses nothing');
-    const crossed = advance(cal, 365 * 5); // 1304 → 1309
+    const crossed = advance(cal, 365 * 8);
     assert.ok(crossed.some(b => b.id === 'provost'), '1308 was crossed and reported');
-    assert.equal(cal.year, EPOCH_YEAR + 5);
+    assert.equal(cal.year, EPOCH_YEAR + 8);
   });
 
   test('the date reads in the house\'s own idiom', () => {
     const cal = createCalendar();
-    assert.match(format(cal), /1304/);
+    assert.match(format(cal), new RegExp(String(EPOCH_YEAR)));
     assert.ok(season(cal).length > 3);
     advance(cal, 100);
     assert.match(format(cal), /Lent|Eastertide|winter|Pentecost/i);
