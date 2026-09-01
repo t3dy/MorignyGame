@@ -35,7 +35,14 @@ import {
   loadCalendar, stride, advance as advanceTime, format as formatDate, weeks as toWeeks,
 } from './engine/calendar.js';
 import { loadPractice, bookCharacter } from './engine/practice.js';
-import { loadBridget } from './engine/bridget.js';
+import {
+  loadBridget, METHOD, teach, inCrisis, renunciationAvailable,
+  renounce as bridgetRenounce, analyse as bridgetAnalyse, literate,
+} from './engine/bridget.js';
+import {
+  BRIDGET_ASKS, TEACH_OPTIONS, TEACH_OUTCOME, ALLELUIA, ALLELUIA_AFTER,
+  BRIDGET_NIGHT, BRIDGET_NIGHT_OPTIONS, BRIDGET_NIGHT_OUTCOME, TRAMPLE,
+} from './content/bridget_content.js';
 import { nightThreatens, resolveNight, successChance } from './engine/struggle.js';
 import { dreamEligible, createVision, judge, reckonCorruption } from './engine/vision.js';
 import { COMMANDS, LETTERS, NIGHT_KEYS } from './engine/commands.js';
@@ -176,6 +183,13 @@ function deliberation(scene) {
   if (scene.narrator) nodes.push(passage(scene.narrator, scene.narrator.text, 'narrator'));
   if (scene.monologue) nodes.push(passage(scene.monologue, scene.monologue.text, 'monologue'));
   return nodes;
+}
+
+/** Bridget's own hand: her voice, not John's (bridget_content.js
+ *  register note). Rendered in its own class so a reader always knows
+ *  whose head they are in. */
+function herVoice(record) {
+  return passage(record, record.text, 'bridget');
 }
 
 /** Renders either shape through one call site. */
@@ -705,7 +719,122 @@ function daylight(stage) {
     }
     subPrompt(promptText.replace(/·$/, '?'), keys);
   });
+  const b = chronicle.bridget;
+  if (b.asked && !b.method && b.literacy < 100) {
+    act('K', 'Your sister has asked again to be taught her letters.',
+      'Fifteen, and late for it. There is a slow road and a short one.', () => bridgetTeachStage());
+  } else if (b.method && b.literacy < 100 && !inCrisis(b)) {
+    act('K', `Another lesson with your sister. (${Math.round(b.literacy)} of 100.)`,
+      METHOD[b.method].label, () => bridgetLesson(b.method));
+  } else if (inCrisis(b)) {
+    act('K', 'Go to your sister. She has not slept in nine days.',
+      'The nights have become constant. This will not keep.', () => bridgetNightStage());
+  }
   act('B', 'Let the hour pass in choir and garden.', 'Nothing gained, nothing risked.', leaveDaylight);
+}
+
+// ── Bridget (decided 2026-09-01: a person with her own arc) ────────────
+
+function bridgetTeachStage() {
+  clearActs();
+  $('rubric').textContent = BRIDGET_ASKS.rubric;
+  ui.body(deliberation(BRIDGET_ASKS));
+  for (const [id, key] of [['scholastic', 'S'], ['notory', 'N'], ['refuse', 'R']]) {
+    act(key, TEACH_OPTIONS[id].label, TEACH_OPTIONS[id].why, () => {
+      if (id === 'refuse') {
+        chronicle.bridget.asked = false;
+        saveChronicle(storage(), chronicle);
+        clearActs();
+        ui.body(deliberation(TEACH_OUTCOME.refuse));
+        ui.body(herVoice(TEACH_OUTCOME.refuse.bridget));
+        act('B', 'To Vespers.', '', leaveDaylight);
+        return;
+      }
+      bridgetLesson(id, true);
+    });
+  }
+}
+
+function bridgetLesson(methodId, first = false) {
+  clearActs();
+  const b = chronicle.bridget;
+  const result = teach(b, methodId, toWeeks(lastStrideForLesson()), {
+    solomonicNodes: chronicle.practice.solomonic,
+  });
+  // The couplings the engine reported, applied where they belong.
+  if (result.john.learning) john.faculties.learning += result.john.learning;
+  if (result.john.discretio) {
+    john.faculties.discretio = Math.max(0, john.faculties.discretio + result.john.discretio);
+  }
+  addSuspicion(john, result.john.suspicion);
+  saveChronicle(storage(), chronicle);
+
+  if (first) ui.body(deliberation(TEACH_OUTCOME[methodId]));
+  ui.body(herVoice(TEACH_OUTCOME[methodId].bridget));
+
+  for (const ev of result.events) {
+    if (ev.type === 'alleluia') {
+      $('rubric').textContent = ALLELUIA.rubric;
+      ui.body(deliberation(ALLELUIA));
+      ui.body(herVoice(ALLELUIA.bridget));
+      if (ev.viaArt) ui.body(deliberation(ALLELUIA_AFTER));
+      addSuspicion(john, -2); // the house reads it as a small marvel
+    }
+  }
+  const gs = el('div', 'gamestate');
+  const line = `Bridget: letters ${Math.round(result.literacy)} of 100` +
+    (result.gained.burden ? `; what the art presses on her, up ${Math.round(result.gained.burden)}` : '') +
+    `. Method: ${methodId}.`;
+  gs.appendChild(el('div', null, line));
+  beatlog.line('gamestate', line);
+  ui.body(gs);
+  renderStatus();
+  act('B', 'To Vespers.', '', leaveDaylight);
+}
+
+/** Played from her side: John is on the other side of a wall. */
+function bridgetNightStage() {
+  clearActs();
+  const b = chronicle.bridget;
+  $('rubric').textContent = BRIDGET_NIGHT.rubric;
+  ui.body(passage(BRIDGET_NIGHT.narrator, BRIDGET_NIGHT.narrator.text, 'narrator'));
+  ui.body(herVoice(BRIDGET_NIGHT.bridget));
+
+  const finish = (id) => {
+    clearActs();
+    ui.body(deliberation(BRIDGET_NIGHT_OUTCOME[id]));
+    ui.body(herVoice(BRIDGET_NIGHT_OUTCOME[id].bridget));
+    if (id === 'renounce') {
+      bridgetRenounce(b);
+      if (!chronicle.practice.renounced) {
+        // She gets there first. His own renunciation is a separate act.
+        log('She reached it before you did. You have not yet.', 'pencil-log');
+      }
+      ui.body(deliberation(TRAMPLE));
+      ui.body(herVoice(TRAMPLE.bridget));
+    }
+    saveChronicle(storage(), chronicle);
+    const gs = el('div', 'gamestate');
+    const line = id === 'renounce'
+      ? 'Bridget renounced the art. The weight is gone, and the power over it is hers.'
+      : `Bridget: ${id}. The nights continue.`;
+    gs.appendChild(el('div', null, line));
+    beatlog.line('gamestate', line);
+    ui.body(gs);
+    renderStatus();
+    act('B', 'To Vespers.', '', leaveDaylight);
+  };
+
+  act('W', BRIDGET_NIGHT_OPTIONS.endure.label, BRIDGET_NIGHT_OPTIONS.endure.why, () => finish('endure'));
+  act('T', BRIDGET_NIGHT_OPTIONS.tell.label, BRIDGET_NIGHT_OPTIONS.tell.why, () => finish('tell'));
+  if (renunciationAvailable(b)) {
+    act('G', BRIDGET_NIGHT_OPTIONS.renounce.label, BRIDGET_NIGHT_OPTIONS.renounce.why, () => finish('renounce'));
+  }
+}
+
+/** Sim-time since the last played day, in weeks, for a lesson block. */
+function lastStrideForLesson() {
+  return Math.max(14, chronicle.calendar.elapsed > 0 ? 28 : 14);
 }
 
 /**

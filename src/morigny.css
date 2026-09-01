@@ -513,3 +513,17 @@ canvas.worldmap {
   padding: 0.5rem 0;
   margin: 0.6rem 0;
 }
+
+/* Bridget's own hand — the one place the game leaves John's head.
+   Her voice is not his: plainer, and set on the other side of the
+   gutter so a reader always knows whose head they are in. */
+.bridget {
+  font-style: italic;
+  padding-right: 0.9rem;
+  padding-left: 0;
+  border-right: 2px solid var(--vermilion, #a63a22);
+  border-left: none;
+  margin-left: 2rem;
+  text-align: right;
+  color: var(--ink, #3b3226);
+}
