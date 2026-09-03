@@ -411,6 +411,7 @@ let pendingMemory = null;      // a vignette owed, to be paid at the reckoning
 /** At most one special beat per day — a memory OR an encounter, never
  *  both. Keeps the input budget at 10 and the pacing readable. */
 let specialFiredToday = false;
+let onRoad = false;          // the world stage is live
 let talkExplained = false;   // the Talk controls are stated once per run
 let currentPlace = null;      // the room the daylight hour is being spent in
 let pendingUndertext = null;  // a scrapeable old fault, computed once per day
@@ -459,6 +460,7 @@ function start(seed, opts = {}) {
   }
   specialFiredToday = false;
   currentPlace = null;
+  onRoad = false;
   pendingUndertext = scrapeLeaf(new SeededRandom(`${seed}-scrape`), loadWitnesses(storage()));
   journal = {
     seed, journey: !!opts.journey,
@@ -1102,10 +1104,19 @@ function maybeMemory(event, then) {
  * At most one special beat per day, memories taking precedence — they
  * are rarer and tied to specific moments.
  */
+/** What the current situation affords an encounter to hang on. */
+function encounterAffordances() {
+  if (onRoad) return ['road', 'town', 'world'];
+  const place = currentPlace ? PLACES[currentPlace] : null;
+  return place ? [...place.affords] : ['cloister'];
+}
+
 function maybeEncounter(then) {
   if (specialFiredToday) return then();
   const ctx = {
-    affordances: ['cloister'],
+    // The room the hour was spent in decides what can happen in it
+    // (docs/LOOP_SYNTHESIS.md §5). On the road, the world's own tags.
+    affordances: encounterAffordances(),
     faculties: john.faculties,
     disposition: john.disposition,
     risk: chronicle.risk,
@@ -1367,6 +1378,7 @@ const VIEW_W = 15, VIEW_H = 11;
 let talkOpen = false;
 
 function worldStage() {
+  onRoad = true;
   ui.setHour('The Road');
   ui.scene({ rubric: JOURNEY.depart.rubric, verso: '' });
   ui.body(passage(JOURNEY.depart));
@@ -1404,7 +1416,10 @@ function worldStage() {
     for (const _ of missed) addPressure(john, 1);
     if (missed.length) log(JOURNEY.officeMissedLine, 'refused');
     renderStatus();
-    next();
+    $('verso-body').replaceChildren();
+    // The road gets its rider too — road/town encounters could never
+    // fire before this, because nothing on the world stage drew one.
+    maybeEncounter(() => { onRoad = false; next(); });
   };
 
   worldCtl = {

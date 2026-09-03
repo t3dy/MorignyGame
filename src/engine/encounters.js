@@ -94,19 +94,44 @@ export function eligible(encounter, ctx) {
 }
 
 /**
+ * How specific an encounter's demands are. `cloister` is the tag every
+ * room in the abbey carries, so it says nothing about WHERE; anything
+ * else — `seals`, `bodies`, `quiet`, `town` — names a particular place.
+ */
+function specificity(encounter) {
+  return (encounter.affordances ?? []).filter(a => a !== 'cloister').length;
+}
+
+/**
  * Draw the first eligible encounter from the deck head, skipping (but
- * NOT discarding) those whose moment has not come — an encounter
- * gated on a faculty John has not trained waits in place for the run
- * where he trains it.
+ * NOT discarding) those whose moment has not come — an encounter gated
+ * on a faculty John has not trained waits in place for the run where he
+ * trains it.
+ *
+ * PLACE BEATS DECK POSITION, WITHIN A TIER. The deck's order is the
+ * escalation ladder and must be respected across tiers, but inside the
+ * tier that comes up, the most place-specific eligible encounter wins.
+ * Without this the rooms are cosmetic: every room carries `cloister`,
+ * so a generic cloister encounter always sat ahead of the one written
+ * for the lead workshop, and the workshop encounter would essentially
+ * never fire. Caught by verification, 2026-09-02.
+ *
  * Returns { encounter, index } or null.
  */
 export function drawEncounter(deck, catalog, ctx) {
+  let best = null;
   for (let i = 0; i < deck.length; i++) {
     const encounter = catalog[deck[i]];
-    if (!encounter) continue;
-    if (eligible(encounter, ctx)) return { encounter, index: i };
+    if (!encounter || !eligible(encounter, ctx)) continue;
+    if (!best) {
+      best = { encounter, index: i };
+      continue;
+    }
+    // Only ever trade up within the tier the ladder has reached.
+    if (encounter.tier !== best.encounter.tier) break;
+    if (specificity(encounter) > specificity(best.encounter)) best = { encounter, index: i };
   }
-  return null;
+  return best;
 }
 
 /** Spend a drawn encounter: it leaves the deck, and one-shots are logged. */

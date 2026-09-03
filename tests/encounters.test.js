@@ -128,6 +128,49 @@ describe('Drawing and spending', () => {
     assert.equal(drawEncounter([], ENCOUNTERS, ctx()), null);
   });
 
+  test('within a tier, the place-specific encounter beats the generic one', () => {
+    // Caught by verification 2026-09-02: every room carries `cloister`,
+    // so a generic cloister encounter always sat ahead of the one
+    // written for that room, and the room-specific ones would never
+    // have fired. The rooms would have been cosmetic.
+    const generic = Object.values(ENCOUNTERS).find(
+      e => e.tier === 'minor' && e.affordances.length === 1 && e.affordances[0] === 'cloister');
+    const specific = Object.values(ENCOUNTERS).find(
+      e => e.tier === 'minor' && !e.affordances.includes('cloister'));
+    assert.ok(generic && specific, 'the pool has both a generic and a place-specific minor');
+
+    // Generic first in the deck: the specific one must still win.
+    const deck = [generic.id, specific.id];
+    const drawn = drawEncounter(deck, ENCOUNTERS, ctx({ affordances: [...specific.affordances, 'cloister'] }));
+    assert.equal(drawn.encounter.id, specific.id, 'the room decides, not deck position');
+
+    // But only where it is afforded — elsewhere the generic one stands.
+    const elsewhere = drawEncounter(deck, ENCOUNTERS, ctx({ affordances: ['cloister'] }));
+    assert.equal(elsewhere.encounter.id, generic.id);
+  });
+
+  test('specificity never overrides the escalation ladder across tiers', () => {
+    const minor = Object.values(ENCOUNTERS).find(e => e.tier === 'minor' && e.affordances.includes('cloister'));
+    const graveSpecific = Object.values(ENCOUNTERS).find(e => e.tier !== 'minor' && !e.affordances.includes('cloister'));
+    if (!graveSpecific) return;
+    const deck = [minor.id, graveSpecific.id];
+    const drawn = drawEncounter(deck, ENCOUNTERS, ctx({
+      affordances: [...graveSpecific.affordances, 'cloister'], days: 9,
+    }));
+    assert.equal(drawn.encounter.tier, 'minor',
+      'a later-tier card cannot jump the ladder just because the room suits it');
+  });
+
+  test('the road can draw at all, which it could not before', () => {
+    const townEncounters = Object.values(ENCOUNTERS).filter(e => e.affordances.includes('town'));
+    assert.ok(townEncounters.length >= 3, 'a road day needs somewhere to draw from');
+    const deck = buildEncounterDeck(new SeededRandom('road'), ENCOUNTERS);
+    const drawn = drawEncounter(deck, ENCOUNTERS, ctx({ affordances: ['road', 'town', 'world'] }));
+    assert.ok(drawn, 'the errand to Étampes meets somebody');
+    assert.ok(!drawn.encounter.affordances.includes('cloister'),
+      'and it is not an abbey encounter wearing a hat');
+  });
+
   test('no single run can meet the whole pool: the deck outlasts the days', () => {
     // A generous run: 8 days, at most one encounter each.
     const deck = buildEncounterDeck(new SeededRandom('run'), ENCOUNTERS);

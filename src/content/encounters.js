@@ -1,7 +1,14 @@
 /**
- * MORIGNY — the encounter pool (v4 §6b). Twelve to start, across the
- * three registers and the three tiers of the escalation ladder. The
- * deck outlasts a run by design: no witness meets all of these.
+ * MORIGNY — the encounter pool (v4 §6b), across the three registers
+ * and the three tiers of the escalation ladder. The deck outlasts a run
+ * by design: no witness meets all of these.
+ *
+ * AFFORDANCES decide where an encounter can happen at all, and they are
+ * the tags the places carry (src/data/places.js) plus the road's own.
+ * An encounter tagged 'seals' happens in the workshop or nowhere; one
+ * tagged 'town' happens on the errand to Étampes or never. Until the
+ * world stage drew a rider, every encounter said 'cloister' and a road
+ * day met nothing at all.
  *
  * REGISTER is load-bearing (D-21): `cloister` is Sophie Page's
  * sociology — professed brothers in good standing, acquiring and
@@ -919,6 +926,405 @@ export const ENCOUNTERS = {
             sources: [...BAILEY, ...FANGER], status: 'adapted',
           },
           monologue: { ...INV, text: 'I said: she gave it to me, and you were not there. One of them started writing before I had finished the sentence.' },
+        },
+      },
+    ],
+  },
+
+  // ══ ROAD & TOWN — the errand to Étampes ══════════════════════════════
+  'apothecary-question': {
+    id: 'apothecary-question',
+    register: 'cloister',
+    tier: 'minor',
+    affordances: ['town'],
+    once: true,
+    rubric: '¶ Of the apothecary at Étampes, and a question about weights.',
+    narrator: {
+      text:
+        'The infirmary sent him for poppy, and the apothecary wants to talk shop. This is the ' +
+        'ordinary traffic that made monastic houses part of a wider knowledge economy: a ' +
+        'monk who can read Latin and handle a balance is useful to a townsman, and a townsman ' +
+        'with a stockroom is useful right back. Page\'s point about the cloister as a ' +
+        'production environment does not stop at the gate — half the materials came through ' +
+        'exactly this sort of conversation.',
+      sources: PAGE, status: 'adapted',
+    },
+    monologue: {
+      ...INV,
+      text: 'He wanted to know whether the book he cannot read says two drachms or three. I can read it. I am aware of how pleasant that is, and of what pleasant things cost.',
+    },
+    options: [
+      {
+        id: 'help', key: 'H',
+        label: 'Read it for him, and correct the dose.',
+        why: 'A useful man is remembered kindly. (Worldliness +1.)',
+        effect: {},
+        outcome: {
+          narrator: {
+            text:
+              'He reads the passage, corrects a dose that would have done real harm, and is ' +
+              'thanked in the coin such men have: he will be recognised in this town, and ' +
+              'spoken well of, and that is worth more on a road than money.',
+            sources: [], status: 'invented',
+          },
+          monologue: { ...INV, text: 'Two drachms. He wrote it on the jar in charcoal and thanked me twice, and I walked out taller than a man should over a jar.' },
+        },
+      },
+      {
+        id: 'trade', key: 'T',
+        label: 'Read it, and ask what he has under the counter.',
+        why: 'The trade in materials runs both ways. Leans Radical. (+1 exposure risk.)',
+        effect: { disposition: 1, risk: { exposure: 1 } },
+        outcome: {
+          narrator: {
+            text:
+              'The transaction turns. An apothecary\'s back shelf held things a physic garden ' +
+              'does not: imported resins, minerals, the odd book of recipes that came north ' +
+              'with the goods. None of it is illegal. All of it is the sort of thing an ' +
+              'inventory later describes badly.',
+            sources: [...PAGE, ...KIECKHEFER], status: 'adapted',
+          },
+          monologue: { ...INV, text: 'He has more than poppy and he knew that I knew. Neither of us said a forbidden word and we both understood the whole conversation.' },
+        },
+      },
+      {
+        id: 'brief', key: 'B',
+        label: 'Take the poppy and go.',
+        why: 'The errand, and nothing but the errand.',
+        effect: {},
+        outcome: {
+          narrator: {
+            text: 'He buys what he was sent for and leaves, which is what the prior had in mind.',
+            sources: [], status: 'invented',
+          },
+          monologue: { ...INV, text: 'Poppy, and the road home. I have been good today in the small way that nobody notices, which is the only way that counts.' },
+        },
+      },
+    ],
+  },
+
+  'the-bell-in-the-market': {
+    id: 'the-bell-in-the-market',
+    register: 'cloister',
+    tier: 'minor',
+    affordances: ['town'],
+    once: true,
+    rubric: '¶ Of an hour falling due in a public square.',
+    narrator: {
+      text:
+        'Sext rings from the collegiate church while he is standing among fishmongers. The ' +
+        'Rule expects brethren working at a distance to keep the hours where they are, which ' +
+        'sounds simple and is not: an office kept in the open is a performance, whether or ' +
+        'not he intends one. Medieval townspeople were entirely capable of reading a monk\'s ' +
+        'devotion as sanctity, as reproach, or as a man making a point.',
+      sources: [{ work: 'RB 1980 (Rule of St Benedict)', locus: 'RB 50, brethren working at a distance (frame)' }],
+      status: 'adapted',
+    },
+    monologue: {
+      ...INV,
+      text: 'The bell, and forty people between me and any wall to face. I have never once minded saying the hours. I mind being watched saying them, which is a fault and I know its name.',
+    },
+    options: [
+      {
+        id: 'keep', key: 'K',
+        label: 'Keep it where you stand, aloud.',
+        why: 'The Rule satisfied, in front of everyone. (Suspicion −1; the town remembers a devout monk.)',
+        effect: { suspicion: -1 },
+        outcome: {
+          narrator: {
+            text:
+              'He says it plainly in the middle of a market and the market makes room for ' +
+              'him, because that is what markets did. Nothing is gained that can be counted, ' +
+              'and a story about him now exists in a town where he has no other reputation.',
+            sources: [], status: 'invented',
+          },
+          monologue: { ...INV, text: 'I said it and a woman selling eels said the responses with me, which I did not expect, and which undid me rather.' },
+        },
+      },
+      {
+        id: 'defer', key: 'D',
+        label: 'Find a doorway and say it quietly.',
+        why: 'Kept, and unobserved. Nothing gained either way.',
+        effect: {},
+        outcome: {
+          narrator: {
+            text:
+              'He steps out of the current and keeps the hour against a wall. The Rule is ' +
+              'satisfied and nobody knows, which is precisely the outcome most monks in most ' +
+              'centuries would have chosen.',
+            sources: [], status: 'invented',
+          },
+          monologue: { ...INV, text: 'A doorway and the smell of fish, and the hour kept. God is not fastidious about doorways. I am, apparently.' },
+        },
+      },
+      {
+        id: 'skip', key: 'S',
+        label: 'Let it go. The errand is not finished.',
+        why: 'An hour missed on the road costs the same as one missed in choir. (Pressure +1.)',
+        effect: { pressure: 1 },
+        outcome: {
+          narrator: {
+            text:
+              'He lets it pass, for a good reason, which is how most observance actually ' +
+              'erodes — not by decision but by errand. The pressure of a thing undone is its ' +
+              'own weather, and he will carry it back through the gate.',
+            sources: [], status: 'invented',
+          },
+          monologue: { ...INV, text: 'I told myself I would say it doubled at Vespers. I have made that bargain before and I do not remember ever paying it.' },
+        },
+      },
+    ],
+  },
+
+  'the-pardoner': {
+    id: 'the-pardoner',
+    register: 'underworld',
+    tier: 'major',
+    affordances: ['town'],
+    once: true,
+    requires: { minDays: 2 },
+    rubric: '¶ Of a man selling what he does not own.',
+    narrator: {
+      text:
+        'A pardoner is working the square with a relic and a sheaf of letters, and John — a ' +
+        'priest, a canon lawyer, and a man who has thought harder than most about what makes ' +
+        'a ritual legitimate — is standing in the crowd. The interesting thing is not that ' +
+        'the pardoner may be a fraud. It is that the question he raises is the same one John ' +
+        'is spending his life on: what makes an efficacious sign efficacious, and who is ' +
+        'entitled to say so.',
+      sources: [...BAILEY, ...PETERS], status: 'adapted',
+    },
+    monologue: {
+      ...INV,
+      text: 'He has a bone in a box and a letter with a seal I could pick apart in an afternoon. The crowd is not wrong to want what he is selling. That is the part I cannot get past.',
+    },
+    options: [
+      {
+        id: 'expose', key: 'E',
+        label: 'Take the letter apart in front of the crowd.',
+        why: 'You are the best-qualified man in this square. Needs learning. Leans Obedient. (Suspicion −1, disposition −1.)',
+        requires: { faculty: { learning: 2 } },
+        effect: { suspicion: -1, disposition: -1 },
+        outcome: {
+          narrator: {
+            text:
+              'He does it properly — seal, formula, the authority claimed and the authority ' +
+              'that could actually grant it — and the crowd turns. It is a genuinely good ' +
+              'act, and it is also a public demonstration that this monk knows exactly how ' +
+              'documents of authorization work. People remember that about a man.',
+            sources: PETERS, status: 'adapted',
+          },
+          monologue: { ...INV, text: 'I dismantled him in four sentences and enjoyed three of them. Afterwards a man asked me whether MY letters were in order, meaning it kindly, and I did not sleep on it well.' },
+        },
+      },
+      {
+        id: 'watch', key: 'W',
+        label: 'Watch how he does it.',
+        why: 'The mechanics of a persuasive sign, studied at no cost. (Worldliness +1.)',
+        effect: {},
+        outcome: {
+          narrator: {
+            text:
+              'He watches a professional work a crowd with a sign, a story, and a warrant — ' +
+              'and takes notes he would not admit to taking. Everything the pardoner does, ' +
+              'the Liber florum also does; the difference John insists on is where the ' +
+              'authority comes from, and he is watching a man who insists on the same thing.',
+            sources: BAILEY, status: 'adapted',
+          },
+          monologue: { ...INV, text: 'He is very good. He knows to pause before the naming. God forgive me, I learned something.' },
+        },
+      },
+      {
+        id: 'buy', key: 'B',
+        label: 'Buy a letter, and say nothing.',
+        why: 'Cheap, and it makes you complicit in exactly the thing you argue you are not doing. Leans Radical. (+1 scandal risk.)',
+        effect: { disposition: 1, risk: { scandal: 1 } },
+        outcome: {
+          narrator: {
+            text:
+              'He buys one. Whatever else it is, it is a purchase of unauthorised remission ' +
+              'by a man who claims his own unauthorised practice is legitimate — and if he ' +
+              'is ever asked to explain the difference, he will have to do it with this in ' +
+              'his history.',
+            sources: PETERS, status: 'adapted',
+          },
+          monologue: { ...INV, text: 'A penny for a paper. I do not believe in it and I have it in my scrip, and I have not worked out yet which of those facts is worse.' },
+        },
+      },
+    ],
+  },
+
+  // ══ THE ROOMS — encounters that only happen where they happen ═════════
+  'the-dying-armarius': {
+    id: 'the-dying-armarius',
+    register: 'cloister',
+    tier: 'major',
+    affordances: ['bodies'],
+    once: true,
+    requires: { minDays: 2 },
+    rubric: '¶ Of a man who kept the books for forty years, and is going.',
+    narrator: {
+      text:
+        'The old armarius is dying, and he knows what is on every shelf in the house, ' +
+        'including the ones nobody reads from at table. Page\'s work is full of exactly this ' +
+        'figure: the senior monk whose personal interests shaped a collection over decades, ' +
+        'and whose knowledge of it dies with him unless somebody sits down and asks. Sitting ' +
+        'with him is a work of mercy the Rule commands. Asking him is something else, and ' +
+        'both are available in the same hour.',
+      sources: [...PAGE, { work: 'RB 1980 (Rule of St Benedict)', locus: 'RB 36, the care of the sick (frame)' }],
+      status: 'adapted', verify: true,
+    },
+    monologue: {
+      ...INV,
+      text: 'He taught me to rule a page. He is eighty and frightened and he keeps asking whether the psalter is put away properly, and I keep saying yes.',
+    },
+    options: [
+      {
+        id: 'sit', key: 'S',
+        label: 'Sit with him, and let the shelves keep their secrets.',
+        why: 'The work of mercy, and nothing else. (Fatigue +1, despair −1.)',
+        effect: { fatigue: 1, despair: -1 },
+        outcome: {
+          narrator: {
+            text:
+              'He stays until it is over, or until the bell, and asks nothing. What he has ' +
+              'done is what the Rule asked for and what the man needed, and the collection\'s ' +
+              'history goes into the ground with its keeper.',
+            sources: [], status: 'invented',
+          },
+          monologue: { ...INV, text: 'I held his hand and said the psalms and did not ask, and I will not pretend that cost me nothing, and I will also not pretend I regret it.' },
+        },
+      },
+      {
+        id: 'ask', key: 'A',
+        label: 'Ask him what is behind the cupboard, while he can still say.',
+        why: 'Forty years of the collection, or nothing, forever. Leans Radical. (+1 exposure risk, learning +1.)',
+        effect: { disposition: 1, risk: { exposure: 1 } },
+        outcome: {
+          narrator: {
+            text:
+              'He asks, and the old man — lucid for a quarter of an hour — tells him: what ' +
+              'came from where, which volumes were bound together to keep them quiet, what ' +
+              'the house owns that the catalogue describes as something else. It is ' +
+              'irreplaceable, and the infirmarian was in the room.',
+            sources: PAGE, status: 'adapted', verify: true,
+          },
+          monologue: { ...INV, text: 'He told me everything and was glad to. He has wanted for years to tell somebody. I have written it down and I feel like a man who robbed a church very gently.' },
+        },
+      },
+    ],
+  },
+
+  'the-seal': {
+    id: 'the-seal',
+    register: 'cloister',
+    tier: 'major',
+    affordances: ['seals'],
+    once: true,
+    rubric: '¶ Of a press that makes things official.',
+    narrator: {
+      text:
+        'The sealing press is in the workshop because an abbey is a corporation and its ' +
+        'documents need authenticating. It is also, in physical terms, a device for making a ' +
+        'piece of wax say that the house stands behind whatever is written above it. John is ' +
+        'the provost. He has legitimate access. Page found presses and metalworking in ' +
+        'exactly such houses, and the point is not that they were used for magic — it is ' +
+        'that the same equipment served the licit and the illicit without knowing the ' +
+        'difference.',
+      sources: PAGE, status: 'adapted', verify: true,
+    },
+    monologue: {
+      ...INV,
+      text: 'Wax, and a die, and my own office. Everything I might do with this in the next hour is something I am entitled to do, which is the trouble with entitlement.',
+    },
+    options: [
+      {
+        id: 'business', key: 'B',
+        label: 'Seal the abbey\'s business, and put it away.',
+        why: 'The office done properly. (Suspicion −1.)',
+        effect: { suspicion: -1 },
+        outcome: {
+          narrator: {
+            text:
+              'Rents, a receipt, a letter to a tenant. He does the provost\'s work and the ' +
+              'house is fractionally better run for it, and being visibly good at the office ' +
+              'is the cheapest protection he has.',
+            sources: [], status: 'invented',
+          },
+          monologue: { ...INV, text: 'Four documents and the press away in its box. A man who does his office well is a man nobody looks at twice.' },
+        },
+      },
+      {
+        id: 'figure', key: 'F',
+        label: 'Cast a figure in lead, and seal it.',
+        why: 'A drawing becomes an object that exists in the world. Leans Radical. (+1 exposure risk, address rises.)',
+        effect: { disposition: 1, risk: { exposure: 1 } },
+        outcome: {
+          narrator: {
+            text:
+              'The figure stops being a page and becomes a thing: cast, impressed, portable, ' +
+              'findable. This is where image magic and devotional practice become physically ' +
+              'indistinguishable — the object does not carry its own intention, and a man ' +
+              'holding it up in a room in Paris will supply one.',
+            sources: [...PAGE, ...KLAASSEN], status: 'adapted', verify: true,
+          },
+          monologue: { ...INV, text: 'It has a weight. I did not expect the weight to change the argument and it changes the whole argument.' },
+        },
+      },
+    ],
+  },
+
+  'the-garden-hour': {
+    id: 'the-garden-hour',
+    register: 'cloister',
+    tier: 'minor',
+    affordances: ['quiet'],
+    once: true,
+    rubric: '¶ Of an hour in the beds, and a brother who wants to talk.',
+    narrator: {
+      text:
+        'Another monk is working the same row and evidently wants conversation. Communities ' +
+        'run on this — the unstructured hour where things get said that would never be said ' +
+        'in chapter — and it is also where a man learns what the house actually thinks of ' +
+        'him, which no formal proceeding will ever tell him.',
+      sources: [{ work: 'RB 1980 (Rule of St Benedict)', locus: 'RB 48, the ordering of labour (frame)' }],
+      status: 'adapted',
+    },
+    monologue: {
+      ...INV,
+      text: 'Brother Aymon, and half a row of beans, and the particular silence of a man working up to something.',
+    },
+    options: [
+      {
+        id: 'listen', key: 'L',
+        label: 'Let him talk, and listen properly.',
+        why: 'You will learn what the house says about you. (Worldliness +1, despair −1.)',
+        effect: { despair: -1 },
+        outcome: {
+          narrator: {
+            text:
+              'He listens, and gets more than he gave: the ordinary gossip of a closed house, ' +
+              'including a sentence about himself that he was not meant to hear and cannot ' +
+              'now unhear. This is how anyone in such a place learns their own standing.',
+            sources: [], status: 'invented',
+          },
+          monologue: { ...INV, text: 'He talked for an hour and said one thing about me near the end, sideways, and kindly, and it has been going round in me since.' },
+        },
+      },
+      {
+        id: 'work', key: 'W',
+        label: 'Work in silence, as the hour intends.',
+        why: 'The Rule\'s own preference. Restores what the day has spent. (Fatigue −2.)',
+        effect: { fatigue: -2 },
+        outcome: {
+          narrator: {
+            text:
+              'They work the row without speaking, which is what the hour was for, and John ' +
+              'comes back to the Office with something restored that neither the Rule nor the ' +
+              'Work has any way of giving him.',
+            sources: [], status: 'invented',
+          },
+          monologue: { ...INV, text: 'Beans, and no words. I came back able to think again and I am not going to write down why that is remarkable.' },
         },
       },
     ],
